@@ -134,6 +134,8 @@ def run_outer(
     delta2v = np.zeros(k_outer + 1)
     fvals = np.zeros(k_outer + 1)
     fvals[0] = F_obj(A, b, x0)
+    alphav = np.zeros(k_outer)
+    etav = np.zeros(k_outer + 1)
     x_last = x0.copy()
 
     for k in range(1, k_outer + 1):
@@ -166,6 +168,8 @@ def run_outer(
         eps2v[k - 1] = eps2
         delta1v[k] = delta1
         delta2v[k] = delta2
+        alphav[k - 1] = alpha
+        etav[k] = eta1
         fvals[k] = F_obj(A, b, x)
         x_last = x
 
@@ -176,6 +180,8 @@ def run_outer(
         "delta1": delta1v,
         "delta2": delta2v,
         "Fvals": fvals,
+        "alpha": alphav,
+        "eta": etav,
         "x_last": x_last,
     }
 
@@ -194,7 +200,12 @@ def run_classical(
     return fvals
 
 
-def main() -> None:
+def run_all() -> dict[str, object]:
+    """Chay toan bo thi nghiem, tra ve ket qua + so lan vi pham hai chan.
+
+    Tach rieng khoi main() de test kiem tra duoc cac bat dang thuc ly thuyet
+    ma khong can sinh hinh hay ghi file.
+    """
     rng = np.random.default_rng(SEED)
 
     A = rng.standard_normal((M, N)) / np.sqrt(M)
@@ -242,6 +253,23 @@ def main() -> None:
     viol2 = int(np.sum(actual > bound2 + 1e-9))
     print(f"Vi pham chan loai 1 (S4): {viol1} / {K + 1}")
     print(f"Vi pham chan loai 2 (S4): {viol2} / {K + 1}")
+
+    return {
+        "A": A, "b": b, "L": L, "f_star": f_star, "x_star": x_star,
+        "R": R, "schedules": schedules, "f_classical": f_classical,
+        "actual": actual, "bound1": bound1, "bound2": bound2,
+        "beta_k": beta_k, "phi0_gap": phi0_gap,
+        "viol1": viol1, "viol2": viol2, "n_steps": K + 1,
+    }
+
+
+def main() -> None:
+    res = run_all()
+    A, b, f_star = res["A"], res["b"], res["f_star"]
+    R, schedules, f_classical = res["R"], res["schedules"], res["f_classical"]
+    actual, bound1, bound2 = res["actual"], res["bound1"], res["bound2"]
+    viol1, viol2 = res["viol1"], res["viol2"]
+    x0 = np.zeros(N)
 
     clip = lambda v: np.maximum(v, NOISE_FLOOR)  # noqa: E731
     kk = np.arange(1, K + 1)

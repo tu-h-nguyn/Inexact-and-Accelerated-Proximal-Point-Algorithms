@@ -161,10 +161,33 @@ def log_slope(values: np.ndarray, start: int = 500, end: int = 2000) -> float:
     return float(np.polyfit(np.log(idx[mask]), np.log(values[idx][mask]), 1)[0])
 
 
-def main() -> None:
+def run_all(q: float = Q) -> dict[str, object]:
+    """Chay ca ba phuong phap va tra ve moi dai luong da do duoc.
+
+    Tach rieng khoi main() de test goi duoc ma khong sinh hinh / ghi file.
+    """
     exact = run_exact()
-    iappa1, cert1, delta1 = run_iappa1(Q)
-    iappa2, cert2, delta2 = run_iappa2(Q)
+    iappa1, cert1, delta1 = run_iappa1(q)
+    iappa2, cert2, delta2 = run_iappa2(q)
+    return {
+        "exact": exact,
+        "iappa1": iappa1,
+        "iappa2": iappa2,
+        "cert1": cert1,
+        "cert2": cert2,
+        "delta1": delta1,
+        "delta2": delta2,
+        "slope1": log_slope(delta1),
+        "slope2": log_slope(delta2),
+        "max_cert_dev1": float(np.max(np.abs(cert1 - 1.0))),
+        "max_cert_dev2": float(np.max(np.abs(cert2 - 1.0))),
+    }
+
+
+def main() -> None:
+    res = run_all()
+    exact, iappa1, iappa2 = res["exact"], res["iappa1"], res["iappa2"]
+    delta1, delta2 = res["delta1"], res["delta2"]
 
     k = np.arange(N + 1)
     pd.DataFrame(
@@ -178,10 +201,8 @@ def main() -> None:
         }
     ).to_csv(OUT / "quartic-results.csv", index=False)
 
-    slope1 = log_slope(delta1)
-    slope2 = log_slope(delta2)
-    dev1 = float(np.max(np.abs(cert1 - 1.0)))
-    dev2 = float(np.max(np.abs(cert2 - 1.0)))
+    slope1, slope2 = res["slope1"], res["slope2"]
+    dev1, dev2 = res["max_cert_dev1"], res["max_cert_dev2"]
 
     summary = pd.DataFrame(
         {

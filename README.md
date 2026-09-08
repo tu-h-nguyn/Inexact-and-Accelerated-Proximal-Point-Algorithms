@@ -91,13 +91,13 @@ Kết quả: lịch trình $T_k \sim \sqrt{k}$ giữ được tốc độ $\math
 │
 ├── code/
 │   ├── matlab/           Thực nghiệm LASSO gốc (sinh 3 hình vector cho báo cáo)
-│   └── python/           quartic_iappa.py + lasso_iappa.py (bản port, chạy được trong CI)
+│   └── python/           quartic_iappa.py + lasso_iappa.py + test_iappa.py (52 phép kiểm)
 │
 ├── figures/              Toàn bộ hình dùng trong tài liệu (.pdf vector + .png)
 ├── results/              Bảng số liệu .csv do thực nghiệm sinh ra
 │
-├── Makefile              make all / figures / clean
-└── .github/workflows/    CI: build 5 PDF + chạy lại thực nghiệm mỗi lần push
+├── Makefile              make all / test / figures / clean
+└── .github/workflows/    CI: build 5 PDF + kiểm chứng số học + chạy lại thực nghiệm
 ```
 
 ---
@@ -123,8 +123,26 @@ pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
 
 ```bash
 pip install -r code/python/requirements.txt
+make test           # ~25 giây, 52 phép kiểm chứng số học
 make figures        # ~13 giây, ghi đè figures/*.png và results/*.csv
 ```
+
+`make test` **không** kiểm tra "script có chạy không" — việc đó `make figures` đã làm.
+Nó kiểm tra **các khẳng định toán học còn đúng hay không**, và nó *thất bại được*:
+
+| Nhóm | Kiểm cái gì |
+|---|---|
+| Khối cơ bản | `prox`, `soft_threshold` thoả điều kiện tối ưu bậc một; `F*` đúng là liên hợp Fenchel (đẳng thức Fenchel–Young đạt tại $v=F'(x)$) |
+| Chứng chỉ sai số | Điểm dựng nằm **đúng** trên biên ngân sách ($\rho_k=1$), không tự cho mình xấp xỉ tốt hơn mức khai báo |
+| Dạng đóng của $\delta_k$ | $\delta_k=\frac{\beta_k}{2}\sum\frac{\varepsilon_i^2}{\lambda_i\beta_{i+1}}$ (IAPPA2) và $\delta_k=\frac{A\beta_k}{2}\sum\eta_{i+1}^2$ (IAPPA1) |
+| Chặn hội tụ | Không bước nào vi phạm chặn loại 1 hoặc loại 2 |
+| Bậc hội tụ | Hệ số góc của $\delta_k$ khớp $-1/2$ và $-2$ trong sai số $0{,}1$ |
+| Không trôi số | `results/quartic-summary.csv` đã commit khớp với lần chạy mới |
+
+Bộ kiểm này đã được **kiểm tra ngược bằng đột biến**: cố tình gài 10 lỗi vào mã nguồn
+(đổi hệ số trong công thức cập nhật $\delta$, bỏ nhân $(1-\alpha)$, sai hệ số chuyển
+loại 1 → loại 2, dùng nửa ngân sách sai số để kết quả đẹp giả, chọn điểm biên có lợi
+thay vì bất lợi…) — **cả 10 đều bị bắt**.
 
 Bản MATLAB (sinh 3 hình vector `.pdf` dùng trong báo cáo) chạy riêng:
 
@@ -175,7 +193,7 @@ Chứng minh chi tiết và lập luận dài nằm trong `essayonly` (chỉ và
 | `essay/essay.pdf` — Tiểu luận | 12 | ✅ Biên dịch sạch, số liệu khớp `results/` |
 | `docs/ghi-chu-bai-bao.pdf` | 9 | ✅ Biên dịch sạch |
 
-Cả năm tài liệu: **0 tham chiếu/trích dẫn treo, 0 chỗ tràn lề quá 20pt**. CI kiểm tra lại toàn bộ điều trên ở mỗi lần push, đồng thời chạy lại hai thực nghiệm số.
+Cả năm tài liệu: **0 tham chiếu/trích dẫn treo, 0 chỗ tràn lề quá 20pt**. CI kiểm tra lại toàn bộ điều trên ở mỗi lần push, chạy lại hai thực nghiệm số và **chạy 52 phép kiểm chứng toán học** — nếu một kết luận trong báo cáo không còn đúng với mã nguồn, CI đỏ.
 
 ---
 

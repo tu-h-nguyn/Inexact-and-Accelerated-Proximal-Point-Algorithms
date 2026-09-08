@@ -8,6 +8,7 @@
 #  make essay      chỉ tiểu luận rút gọn (essay/essay.pdf)
 #  make notes      ghi chú đọc bài báo (docs/ghi-chu-bai-bao.pdf)
 #  make figures    chạy lại thực nghiệm Python, sinh lại hình + bảng số liệu
+#  make test       kiểm chứng số học (các khẳng định toán học phải còn đúng)
 #  make clean      xoá file trung gian, giữ lại PDF
 #  make distclean  xoá cả PDF
 # ============================================================================
@@ -16,7 +17,7 @@ LATEXMK   ?= latexmk
 LATEXMKFLAGS ?= -pdf -interaction=nonstopmode -halt-on-error
 PYTHON    ?= python3
 
-.PHONY: all report slides transcript essay notes figures clean distclean help
+.PHONY: all report slides transcript essay notes figures test clean distclean help
 
 all: report slides transcript essay
 
@@ -42,6 +43,12 @@ figures:
 	$(PYTHON) code/python/quartic_iappa.py
 	$(PYTHON) code/python/lasso_iappa.py
 
+# Kiem chung so hoc: khac `make figures` o cho no CO THE THAT BAI.
+# Kiem cac dang thuc dong cua delta_k, hai chan hoi tu, chung chi sai so,
+# va tinh dung dan cua prox / soft-threshold / lien hop Fenchel.
+test:
+	cd code/python && $(PYTHON) -m pytest -q
+
 clean:
 	$(LATEXMK) -c main.tex slide.tex transcript.tex
 	cd essay && $(LATEXMK) -c essay.tex
@@ -53,4 +60,4 @@ distclean:
 	cd docs  && $(LATEXMK) -C ghi-chu-bai-bao.tex
 
 help:
-	@sed -n '2,14p' $(MAKEFILE_LIST)
+	@sed -n '2,15p' $(MAKEFILE_LIST)
