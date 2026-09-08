@@ -1,0 +1,168 @@
+\begin{definition}[Xấp xỉ loại 1]
+Cho $\lambda>0$, $y\in\Hil$ và $\eps\ge0$. Một điểm $z\in\Hil$ được gọi là xấp xỉ loại~1 của $\prox_{\lambda F}(y)$ với độ chính xác $\eps$, ký hiệu
+\[
+z\approx_1\prox_{\lambda F}(y)
+\]
+nếu
+\begin{equation}
+0\in\partial_{\eps^2/(2\lambda)}\Phi_\lambda(z).
+\tag{AT1}
+\label{eq:AT1}
+\end{equation}
+\end{definition}
+
+\begin{essayonly}
+Đây là khái niệm xấp xỉ tự nhiên nhất khi điểm gần kề được tính bằng một thuật toán cực tiểu hóa hàm phụ
+\[
+\Phi_\lambda(x)
+=
+F(x)+\frac1{2\lambda}\norm{x-y}^2.
+\]
+Thật vậy, áp dụng \eqref{eq:eps-subopt} cho $\Phi_\lambda$, điều kiện
+\eqref{eq:AT1} tương đương với
+\[
+\Phi_\lambda(z)
+\le
+\Phi_\lambda^*
++
+\frac{\eps^2}{2\lambda}
+\]
+trong đó $\Phi_\lambda^*$ là giá trị tối ưu của bài toán gần kề. Nói cách khác, $z$ chỉ cần cực tiểu hóa bài toán con với sai số hàm mục tiêu không vượt quá $\eps^2/(2\lambda)$. Đây cũng chính là tiêu chí dừng thường gặp trong các thuật toán giải bài toán gần kề.
+
+Điều kiện trên không chỉ bảo đảm sai số về giá trị hàm mục tiêu mà còn cho phép kiểm soát trực tiếp khoảng cách từ nghiệm gần đúng đến điểm gần kề chính xác, như kết quả sau đây.
+\end{essayonly}
+
+\begin{proposition}
+\label{prop:type1-bound}
+Nếu
+\[
+z\approx_1\prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}
+\]
+thì
+\[
+z\in\dom F
+\qquad
+\norm{z-\prox_{\lambda F}(y)}
+\le
+\eps.
+\]
+\end{proposition}
+
+\begin{essayonly}
+\begin{proof}
+Đặt
+\[
+x^*=\prox_{\lambda F}(y).
+\]
+Do $\Phi_\lambda$ là hàm $1/\lambda$-lồi mạnh và $x^*$ là điểm cực tiểu của nó, bất đẳng thức lồi mạnh cho
+\[
+\Phi_\lambda(z)-\Phi_\lambda(x^*)
+\ge
+\frac1{2\lambda}\norm{z-x^*}^2.
+\]
+
+Mặt khác, từ \eqref{eq:AT1} và hệ quả \eqref{eq:eps-subopt} suy ra
+\[
+\Phi_\lambda(z)
+\le
+\Phi_\lambda^*
++
+\frac{\eps^2}{2\lambda}
+=
+\Phi_\lambda(x^*)
++
+\frac{\eps^2}{2\lambda}.
+\]
+Kết hợp hai bất đẳng thức trên, ta được
+\[
+\frac1{2\lambda}\norm{z-x^*}^2
+\le
+\frac{\eps^2}{2\lambda}
+\;\text{hay}\;
+\norm{z-x^*}\le\eps.
+\]
+Đặc biệt,
+$\Phi_\lambda(z)<+\infty$, nên $F(z)<+\infty$, tức
+$z\in\dom F$.
+\end{proof}
+\end{essayonly}
+
+\begin{definition}[Xấp xỉ loại 2]
+Cho $\lambda>0$, $y\in\Hil$ và $\eps\ge0$. Một điểm $z\in\Hil$ được gọi là xấp xỉ loại~2 của $\prox_{\lambda F}(y)$ với độ chính xác $\eps$, ký hiệu
+\[
+z\approx_2\prox_{\lambda F}(y),
+\]
+nếu
+\begin{equation}
+\frac{y-z}{\lambda}
+\in
+\partial_{\eps^2/(2\lambda)}F(z).
+\tag{AT2}
+\label{eq:AT2}
+\end{equation}
+\end{definition}
+
+So với điều kiện tối ưu chính xác \eqref{eq:opt-cond}, định nghĩa trên chỉ thay dưới vi phân $\partial F(z)$ bằng $\eps^2/(2\lambda)$-dưới vi phân của $F$ tại $z$. Vì thế, xấp xỉ loại~2 có thể được xem như một dạng mở rộng của điều kiện tối ưu cho toán tử gần kề.
+
+\begin{definition}[Xấp xỉ loại 3]
+Cho $\lambda>0$, $y\in\Hil$ và $\eps\ge0$. Một điểm
+$z\in\Hil$ được gọi là xấp xỉ loại~3 của
+$\prox_{\lambda F}(y)$ với độ chính xác $\eps$, ký hiệu
+\[
+z\approx_3\prox_{\lambda F}(y),
+\]
+nếu
+\begin{equation}
+d\bigl(0,\partial\Phi_\lambda(z)\bigr)
+\le
+\frac{\eps}{\lambda}.
+\tag{AT3}
+\label{eq:AT3}
+\end{equation}
+\end{definition}
+Điểm nổi bật của xấp xỉ loại~3 là nó có một cách diễn giải rất trực quan. Thật vậy, từ công thức
+\[
+\partial\Phi_\lambda(z)
+=
+\partial F(z)
++
+\frac{z-y}{\lambda},
+\]
+điều kiện \eqref{eq:AT3} tương đương với sự tồn tại một vectơ
+$e\in\Hil$ thỏa $\norm e\le\eps$ sao cho
+\[
+\frac{y+e-z}{\lambda}
+\in
+\partial F(z).
+\]
+Kết hợp với đặc trưng của toán tử gần kề trong
+\eqref{eq:opt-cond}, ta thu được
+\begin{equation}
+z\approx_3\prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}
+\iff
+\exists\,e\in\Hil,\;
+\norm e\le\eps,\;
+z=\prox_{\lambda F}(y+e).
+\label{eq:AT3-equiv}
+\end{equation}
+
+\begin{essayonly}
+Nói cách khác, một xấp xỉ loại~3 chính là điểm gần kề chính xác ứng với một đầu vào bị nhiễu. Cách diễn giải này đặc biệt thuận tiện khi phân tích ảnh hưởng của nhiễu hoặc khi chủ động đưa sai số vào các mô phỏng số.
+\end{essayonly}
+
+\begin{remark}
+Khi $\varepsilon=0$, cả ba khái niệm xấp xỉ đều trở về điều kiện tối ưu chính xác của toán tử gần kề. Thật vậy,
+\[
+\begin{aligned}
+\text{(AT1)}&\iff 0\in\partial\Phi_\lambda(z),\\
+\text{(AT2)}&\iff \frac{y-z}{\lambda}\in\partial F(z),\\
+\text{(AT3)}&\iff d(0,\partial\Phi_\lambda(z))=0
+           \iff 0\in\partial\Phi_\lambda(z).
+\end{aligned}
+\]
+Do đặc trưng \eqref{eq:opt-cond}, cả ba điều kiện trên đều tương đương với
+\[
+z=\operatorname{prox}_{\lambda F}(y).
+\]
+Vì vậy, ba mô hình xấp xỉ được trình bày ở trên đều là các mở rộng tự nhiên của khái niệm điểm gần kề chính xác.
+\end{remark}

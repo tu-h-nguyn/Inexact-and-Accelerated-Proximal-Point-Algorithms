@@ -1,0 +1,89 @@
+Chứng minh việc sử dụng sai số loại 2 giúp khôi phục tốc độ hội tụ của phiên bản thuật toán điểm cận biên tăng tốc chính xác tuy tương tự phần trước, điểm khác biệt nằm ở công thức cập nhật của đại lượng $\delta_k$.
+\begin{theorem}
+    Cố định $\lambda>0$ và $\eps\ge0$. Cho $x,\nu\in X$ và $\varphi=\varphi^*+\tfrac A2\norm{\cdot-\nu}^2$ sao cho $F(x)\le\varphi_*+\delta$ với $\delta\ge0$. Nếu $\tfrac{\alpha^2}{(1-\alpha)A\lambda}\le2$, chọn
+    \begin{align*}
+        y&=(1-\alpha)x+\alpha\nu\\
+        \hat x&\approx_2\prox{\lambda F}(y)\quad\text{với $\eps$-chính xác}\\
+        \hat \varphi&=U(\hat x,0,\xi,\alpha)\,\varphi\quad\text{với}\;\;\xi\dfrac{y-\hat x}{\lambda}\in\partial_{\eps^2/(2\lambda)}F(\hat x)\\
+        \hat A&=(1-\alpha)A\\
+        \hat\nu&=\nu-\frac{\alpha}{\hat A}\xi\\
+        \hat\delta&=(1-\alpha)\delta+\frac{\eps^2}{2\lambda}
+    \end{align*}
+    thu được $\hat\delta+\hat\varphi_*\ge F(\hat x)+\dfrac{c}{2\lambda}\norm{y-\hat x}^2\ge F(\hat x)$ với $c=\left(\dfrac{2-\alpha^2}{\hat A\lambda}\right)\ge0$.
+\end{theorem}
+\begin{essayonly}
+\begin{proof}
+    Từ Bổ đề \ref{lem:core}, nếu chọn $\hat x\in\Hil$ sao cho $\dfrac{y-\hat x}{\lambda}\in\partial_{\eps^2/(2\lambda)F(\hat x)}$ và đặt $\xi=\frac{y-\hat x}{\lambda}$, thu được $\xi\in\partial_{\eps^2/(2\lambda)}F(\hat x)$ và $y-(\lambda\xi-\hat x)=0$ và
+    $$(1-\alpha)\delta+\frac{\eps^2}{2\lambda}\hat\varphi_*\ge F(\hat x)+\frac{\lambda}{2}\left(2-\frac{\alpha^2}{(1-\alpha)A\lambda}\right)\norm{\xi}^2$$
+    thay $\xi=\dfrac{y-\hat x}{\lambda}$, thu được kết quả cần tìm.
+\end{proof}
+Định lý trên đã cho phép định nghĩa được quá trình của thuật toán. Cho chuỗi cố định $(\lambda_k)_{k\in\N}$ với $\lambda_k>0$, $\eps\ge0$, $A>0$, $a\in(0,2]$, gán $A_0=A$, $\delta_0=0$, $x_0=\nu_0\in\dom(F)$ và với mỗi $k\in\N$, đặt
+\end{essayonly}
+\begin{equation*}
+    \left[\begin{aligned}
+    \alpha_k&\in[0,1)\;\text{sao cho}\;a\le\frac{\alpha_k^2}{(1-\alpha_k)A_k\lambda_k}\le2\\
+    y_k&=(1-\alpha_k)x_k+\alpha_k\nu_k\\
+    x_{k+1}&\approx_2\prox_{\lambda_kF}(y_k)\text{ với }\eps_k\text{-chính xác}\\
+    A_{k+1}&=(1-\alpha_k)A_k\\
+    \nu_{k+1}&=\nu_k-\frac{\alpha_k}{(1-\alpha_k)A_k\lambda_k}(y_k-x_{k+1})\\
+    \delta_{k+1}&=(1-\alpha_k)\delta+\frac{\eps_k^2}{2\lambda_k}
+\end{aligned}\right.\label{IAPPA2}\tag{IAPPA2}
+\end{equation*}
+\begin{remark}
+Định lý trên đưa ra đánh giá dựa trên tham số \(c_k\), từ đó suy ra nếu \(c_k \ge 2-a>0\) và \(\lambda_k\) bị chặn trên thì \(\|y_{k-1}-x_k\| \to 0\).
+Sai số tích lũy \(\delta_k\) được cho bởi:
+\begin{equation*}
+    \delta_k = \frac{\beta_k}{2} \sum_{i=0}^{k-1} \frac{\varepsilon_i^2}{\lambda_i \beta_{i+1}}
+\end{equation*}
+Kết hợp với cận của \(\beta_k\) từ Bổ đề \ref{lem:beta-rate}, ta có cận trên:
+\begin{equation*}
+    \delta_k \le \frac{\beta_k}{2} \sum_{i=0}^{k-1} \varepsilon_i^2 \frac{\left(1 + \sqrt{2A} \sum_{j=0}^{i} \sqrt{\lambda_j}\right)^2}{\lambda_i}
+\end{equation*}
+Để \(\delta_k\) hội tụ cùng bậc với \(\beta_k\) (tức \(\order(1/k^2)\)), cần áp đặt sai số \(\varepsilon_k\) thỏa mãn:
+\begin{equation*}
+    \varepsilon_k \le \frac{c\sqrt{\lambda_k}}{(k+1)^p\left(1 + \sqrt{2A} \sum_{j=0}^{k} \sqrt{\lambda_j}\right)}, \quad p > 1/2
+\end{equation*}
+Nếu chỉ cần sự hội tụ mà không cần tốc độ, có thể nới lỏng điều kiện cho \(\varepsilon_k\).
+\end{remark}
+\begin{theorem}
+    Xét thuật toán được miêu tả trong \eqref{IAPPA2} cho chuỗi $\lambda_k>0$ thỏa $\lambda_j\le M\lambda_i$ khi $j\le i$ với $M>0$. Khi này, nếu $\eps_k=\order(1/k^q)$ với $q>\frac12$, chuỗi $(x_k)_{k\in\N}$ là tối tiểu hóa với $F$ và nếu $F$ chứa tối tiểu thì được tốc độ hội tụ
+    \begin{align*}
+        F(x_k)-F_*=\left\{\begin{aligned}
+            &\order(1/k^2)\;&\text{nếu}\;q>3/2\\
+            &\order(1/k^2)+\order(\log k/k^2)\;&\text{nếu}\;q=3/2\\
+            &\order(1/k^2)+\order(1/k^{2q-1})\;&\text{nếu}\;q<3/2
+        \end{aligned}\right.
+    \end{align*}
+\end{theorem}
+\begin{essayonly}
+\begin{proof}
+    Từ Bổ đề \ref{lem:beta-rate}, xét:
+    $$\frac{1}{\left(1+\sqrt{bA}\sum_{i=0}^{k-1}\sqrt{\lambda_j}\right)^2}\le\beta_k\le\frac{1}{\left(1+\frac{\sqrt{aA}}{2}\sum_{i=0}^{k-1}\sqrt{\lambda_j}\right)^2}$$
+    Tách vế trái, áp dụng Bổ đề \ref{lem:beta-rate} với \(b=2\) và \(\lambda_j\le M\lambda_i\Rightarrow \sqrt{\lambda_j/\lambda_i}\le\sqrt{M}\), được:
+    \begin{align*}
+        \frac{1}{\lambda_i \beta_{i+1}} &\le \left( \frac{1}{\sqrt{\lambda_i}} + \sqrt{2A} \sum_{j=0}^i \sqrt{\lambda_j/\lambda_i} \right)^2 \\
+        &\le \left( \sqrt{M/\lambda_0} + \sqrt{2}(i+1)\sqrt{AM} \right)^2 \\
+        &\le c(i+1)^2
+    \end{align*}
+    Chọn \(c > 0\). Với giả thiết \(\eps_k = \order(1/(k+1)^q)\), sai số \(\delta_k\) có thể được đánh giá như sau:
+    \begin{align*}
+        \delta_k &= \frac{\beta_k}{2} \sum_{i=0}^{k-1} \frac{\eps_i^2}{\lambda_i \beta_{i+1}} \\
+        &\le \frac{c}{2(k+1)^2} \sum_{i=0}^{k-1} \eps_i^2 (i+1)^2 \le \frac{\tilde{c}}{(k+1)^2} \sum_{i=0}^{k-1} \frac{1}{(i+1)^{2(q-1)}}
+    \end{align*}
+    Chuỗi \(\sum_{i=0}^{\infty} \frac{1}{(i+1)^{2(q-1)}}\) hội tụ nếu \(q>3/2\) và:
+    $$\sum_{i=0}^{k-1} \frac{1}{(i+1)^{2(q-1)}}=\left\{\begin{aligned}
+        &\order(1)\;&\text{nếu}\;q>3/2\\
+        &\order(\log k)\;&\text{nếu}\;q=3/2\\
+        &\order(k^{3-2q})\;&\text{nếu}\;q<3/2
+    \end{aligned}\right.$$
+    Thay các cận này vào bất đẳng thức của \(\delta_k\), thu được kết luận:
+    \begin{align*}
+        \delta_k = 
+        \begin{cases}
+            \order\left(1/k^2\right)\;&\text{nếu}\;q>3/2\\
+            \order\left(\log k/k^2\right) = \order\left(1/k^2\right) + \order\left(\log k/k^2\right)\;&\text{nếu}\;q=3/2\\
+            \order\left(k^{3-2q}/k^2\right) = \order\left(1/k^{2q-1}\right)\;&\text{nếu}\;q<3/2
+        \end{cases}
+    \end{align*}
+\end{proof}
+\end{essayonly}

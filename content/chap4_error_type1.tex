@@ -1,0 +1,150 @@
+Từ bổ đề~\ref{lem:core}, S. Salzo và S. Villa chứng minh được rằng:
+\begin{theorem}\label{thm:4.1}
+    Cố định $\lambda>0$ và $\eps\ge0$. Cho $x,\nu\in X$ và $\varphi=\varphi^*+\tfrac A2\norm{\cdot-\nu}^2$ sao cho $F(x)\le\varphi_*+\delta$ với $\delta\ge0$. Nếu $\tfrac{\alpha^2}{(1-\alpha)A\lambda}=1$, chọn
+    \begin{align*}
+        t&=(1-\alpha)x+\alpha\nu\\
+        \hat x&\approx_1\prox{\lambda F}(t)\quad\text{với $\eps$-chính xác}\\
+        \hat \varphi&=U(z,0,\xi,\alpha)\quad\text{với }z=\prox{\lambda F}(t),\xi\dfrac{t-z}{\lambda}\in\partial F(\hat x)\\
+        \hat A&=(1-\alpha)A\\
+        \hat\nu&=\nu-\frac{\lambda}{\alpha}\xi\\
+        \hat\delta&=(1-\alpha)\delta+\frac{\eps^2}{2\lambda}
+    \end{align*}
+    thu được $\hat\delta+\hat\varphi_*\ge F(\hat x)+\dfrac{1}{2\lambda}\norm{t-\hat x}^2$
+\end{theorem}
+\begin{essayonly}
+\begin{proof}
+    Áp dụng Bổ đề \ref{lem:core} với $\eps=0$, $y=t$ và $\xi=\frac{t-z}{\lambda}$, được
+    \begin{align*}
+        (1-\alpha)\delta+\hat\varphi_*\ge F(z)+\frac{1}{2\lambda}\norm{t-z}^2=\Phi_\lambda(z)&\ge(\Phi_\lambda)_*\\
+        &\ge\Phi_\lambda(\hat x)-\frac{\eps^2}{2\lambda}
+    \end{align*}
+\end{proof}
+\begin{remark}
+    Guler từng cố gắng dùng định lý trước để chứng minh sự hội tụ, nhưng Salzo và Villa đã chỉ ra lập luận này không chính xác do quá trình lặp yêu cầu cập nhật đồng thời $x, \nu, A, \alpha$. Cụ thể, công thức cập nhật biến $\nu$ phụ thuộc vào điểm xấp xỉ chính xác vốn là thứ không thể biết trước, khiến việc dựng chuỗi quy nạp trở nên bất khả thi. Mặc dù Guler đã gợi ý dùng điểm xấp xỉ thực tế $\bar{x}$ trong phát biểu định lý, phần chứng minh của ông lại đi giải quyết một quy tắc khác, tạo ra sự đứt gãy logic nghiêm trọng.
+\end{remark}
+Salzo và Villa nhận định rằng để vượt qua rào cản trên, chúng buộc phải khảo sát trường hợp biến $\nu$ chỉ được xác định với một độ chính xác sai số nhất định. Do đó, họ tiến hành phân tích tác động của các yếu tố nhiễu loạn lên $\nu$ dựa trên các kết quả trước đó, bắt đầu bằng việc đặt $u \in \mathcal{H}$ như sau:
+\end{essayonly}
+$$u=\nu+\Delta,\quad\text{với}\norm{\Delta}\le\eta$$
+Nếu đặt
+\begin{align*}
+    y&=(1-\alpha)x+\alpha u\\
+    \hat x&\approx_1\prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}
+\end{align*}
+thì thu được $y=t+\alpha\Delta$ và từ Bổ đề \ref{lem:equiv-AT1} tồn tại $\eps_1,\eps_2\ge0$ sao cho $0\le\eps_1^2+\eps_2^2\le\eps^2$ và
+\begin{align*}
+    &\frac{y-\hat x+e}{\lambda}\in\partial_{\eps^2/(2\lambda)}F(\hat x),\quad\text{với $\norm{e}\le\eps_2$}\\
+    =&\;\frac{t-\hat x+e+\alpha\Delta}{\lambda}\in\partial_{\eps^2/(2\lambda)}F(\hat x),\quad\text{với $\norm{e+\alpha\Delta}\le\eps_2+\alpha\eta$}
+\end{align*}
+\begin{essayonly}
+nhằm hiểu rằng $\hat x\approx_1\prox_{\lambda F}(t)\;\text{với $(\eps+\alpha\eta)$-chính xác}$. Điều nay cho phép xây dụng phiên bản mới hơn của định lý trên để sử dụng vào thuật toán.
+\end{essayonly}
+\begin{theorem}
+    Cố định $\lambda>0$, $\eps>0$, $x, u \in \Hil$, $A>0$, và $\delta, \eta \ge 0$. Giả sử tồn tại $\varphi_* \in \R$ và $\nu \in \Hil$ với $\norm{\nu - u} \le \eta$ sao cho nếu đặt $\varphi = \varphi_* + \tfrac A2\norm{\cdot-\nu}^2$, được $\delta + \varphi_* \ge F (x)$. Cho $\alpha \in [0, 1]$ sao cho $\alpha^2 = (1 - \alpha)A\lambda$ và đặt
+    \begin{align*}
+        y&=(1-\alpha)x+\alpha u\\
+        \hat x&\approx_1\prox{\lambda F}(y)\quad\text{với $\eps$-chính xác}\\
+        \hat u&=u-\tfrac{1}{\alpha}(y-\hat x)\\
+        \hat A&=(1-\alpha)A\\
+        \hat\eta&=\eta+\frac{\eps}{\alpha}\\
+        \hat\delta&=(1-\alpha)\delta+\frac{(\alpha\hat\eta)^2}{2\lambda}
+    \end{align*}
+    Thì tồn tại $\hat\nu\in\Hil$, $\norm{\hat\nu-\hat u}\le\hat\eta$ và $\varphi_*\in\R$ sao cho nếu $\varphi=\varphi^*+\tfrac A2\norm{\cdot-\nu}^2$, được
+    \[
+    \hat\varphi-F\le(1-\alpha)(\varphi-F)
+    \]\[
+    \hat\delta+\varphi_*\ge F(\hat x)
+    \]
+    Cụ thể hơn, hàm $\hat\varphi$ thu được bởi $\hat\varphi=U(t,0,\xi,\alpha)\varphi$ với $t=(1-\alpha)x+\alpha\nu$ và $\xi=\dfrac{t-\prox{\lambda F}(t)}{\lambda}$
+\end{theorem}
+\begin{essayonly}
+\begin{proof}\label{thm:4.3}
+    Áp dụng Định lý \ref{thm:4.1} vào $\hat x\approx_1\prox_{\lambda F}(t)$ với $(\eps+\alpha\eta)$-chính xác, đặt $\eps+\alpha\eta=\eps$. Chọn $t,\xi,\hat\nu,\hat\varphi$ giống Định lý \ref{thm:4.1}, thu được:
+    $$\hat\delta+\hat\varphi_*\ge F(\hat x),\quad\text{với}\;\hat\delta=(1-\alpha)\delta+\frac{1}{2\lambda}(\alpha\eta+\eps)^2$$
+    Từ $\hat x$ là xấp xỉ loại 1 của $\prox_{\lambda F}(t)$ với $(\eps+\alpha\eta)$-chính xác, được $\norm{\hat x-z}\le\eps+\alpha\eta$ và
+    \begin{align*}
+        \hat u&=u-\frac{1}{\alpha}(y-\hat x)\\
+        &=\nu+\Delta-\frac{1}{\alpha}(y-z)-\frac{1}{\alpha}(z-\hat x)\\
+        &=\nu+\Delta=\frac{1}{\alpha}(t+\alpha\Delta-z)-\frac{1}{\alpha}(z-\hat x)\\
+        &=\hat\nu-\frac{1}{\alpha}(z-\hat x)\\
+        \Rightarrow\norm{\hat u-\hat\nu}&\le\alpha^{-1}\norm{z-\hat x}\le\eta+\frac{\eps}{\alpha}
+    \end{align*}
+\end{proof}
+Trái ngược với Định lý \ref{thm:4.1}, mọi quy tắc cập nhật trong Định lý \ref{thm:4.3} hoàn toàn không phụ thuộc vào các đại lượng vô định, nhờ đó cho phép thiết lập thành công một quá trình lặp thực tế. Cụ thể, cho trước các dãy số dương $(\lambda_k)_{k\in\mathbb{N}}$, $(\eps_k)_{k\in\mathbb{N}}$, hằng số $A > 0$ cùng điểm khởi tạo $x_0 \in \dom(F)$, $u_0 = x_0, \eta_0 = 0$, có thể xây dựng các chuỗi lặp tương ứng một cách tường minh.
+\end{essayonly}
+\begin{equation*}
+    \left[\begin{aligned}
+    \alpha_k&=\frac{\sqrt{(A_k\lambda_k)^2+4A_k\lambda_k}-A_k\lambda_k}{2}\\
+    y_k&=(1-\alpha_k)x_k+\alpha_ku_k\\
+    x_{k+1}&\approx_1\prox_{\lambda_kF}(y_k)\text{ với }\eps_k\text{-chính xác}\\
+    A_{k+1}&=(1-\alpha_k)A_k\\
+    u_{k+1}&=u_k-\frac{1}{\alpha_k}(y_k-x_{k+1})\\
+    \eta_{k+1}&=\eta_k+\frac{\eps_k}{\alpha_k}\\
+    \delta_{k+1}&=(1-\alpha_k)\delta+\frac{(\alpha_k\eta_{k+1})^2}{2\lambda_k}
+\end{aligned}\right.\label{IAPPA1}\tag{IAPPA1}
+\end{equation*}
+\begin{remark}
+Định lý trên đảm bảo sự tồn tại của chuỗi \((\nu_k)\) và chuỗi ước lượng \((\varphi_k)\) sao cho \(F(x_k) \le (\varphi_k)_* + \delta_k\). Mặc dù \(\varphi_k\) có các tham số chưa biết \(\nu_k, \xi_k\), không cần biểu thức tường minh của nó để chạy thuật toán. Nhằm suy ra tốc độ hội tụ, theo Bổ đề \ref{lem:beta-rate}, cần \(\beta_k = O(1/k^2)\) và tính các sai số tích lũy \(\eta_k, \delta_k\). Từ định nghĩa \(\eta_k = \eta_{k-1} + \varepsilon_{k-1}/\alpha_{k-1}\) và tương tự cho \(\delta_k\), kết hợp điều kiện \(\alpha_i^2/(A_{i+1}\lambda_i)=1\), \(A_{i+1}=\beta_{i+1}A\), thu được:
+\begin{align*}
+    \eta_k &= \sum_{i=0}^{k-1} \frac{\varepsilon_i}{\alpha_i}, \\
+    \delta_k &= \frac{A\beta_k}{2} \sum_{i=0}^{k-1} \eta_{i+1}^2, \qquad \eta_{i+1} = \sum_{j=0}^{i} \frac{\varepsilon_j}{\alpha_j}\autotag
+\end{align*}
+Công thức \eqref{eq:3.1} là mấu chốt để dẫn ra tốc độ hội tụ cho thuật toán \eqref{IAPPA1}.
+\end{remark}
+\begin{theorem}
+    Xét thuật toán được miêu tả trong \eqref{IAPPA1} cho chuỗi $\lambda_k>0$ thỏa $\lambda_j\le M\lambda_i$ khi $j\le i$ với $M>0$. Khi này, nếu $\eps_k=\order(1/k^q)$ với $q>\frac32$, chuỗi $(x_k)_{k\in\N}$ là tối tiểu hóa với $F$ và nếu $F$ chứa tối tiểu thì được tốc độ hội tụ
+    \begin{align*}
+        F(x_k)-F_*=\left\{\begin{aligned}
+            &\order(1/k^{2q-3})\;&\text{nếu}\;q<2\\
+            &\order(\log^2k/k)\;&\text{nếu}\;q=2\\
+            &\order(1/k)\;&\text{nếu}\;q>2
+        \end{aligned}\right.
+    \end{align*}
+\end{theorem}
+\begin{essayonly}
+\begin{proof}
+    Sử dụng Định lý \ref{thm:estimate-main}, xét chuỗi $(1/\alpha_j)_{j\in\N}$ từ $\alpha_j^2=\beta_{j+1}A\lambda_j$ và Bổ đề \ref{lem:beta-rate} (với $a=b=1$):
+    \begin{equation*}
+        \frac{\sqrt{A\lambda_j}}{1+\sqrt{A}\sum_{k=0}^{j}\sqrt{\lambda_k}}\le\alpha_j\le\frac{\sqrt{A\lambda_j}}{1+\sqrt{A}/2\sum_{k=0}^{j}\sqrt{\lambda_k}}
+    \end{equation*}
+    Tách vế trái cùng với điều kiện $\lambda_j\le M\lambda_i$, thu được:
+    \begin{equation*}
+        \frac{1}{\alpha_j}\le\frac{1}{\sqrt{A}}+\sum_{k=0}^{j}\sqrt{\frac{\lambda_k}{\lambda_j}}\le\frac{1}{\sqrt{A}}+\sqrt{M}(j+1)
+    \end{equation*}
+    nên $1/\alpha_j=\order(j)$. Từ việc giả sử $\eps_j$, thu được:
+    $$\frac{\eps_j}{\alpha_j}\le\frac{c}{(j+1)^p}\;\text{với}\;p=q-1>1/2,c>0$$
+    Tiếp tục thu được:
+    \begin{align*}
+        \eta_{i+1}=\sum_{j=0}^{j}\frac{\eps_j}{\alpha_j}\le c\sum_{j=1}^{i+1}\frac{1}{j^p}&=c\left(1+\sum_{j=2}^{i+1}\frac{1}{j^p}\right)\\
+        &\le c\left(1+\int_{1}^{i+1}t^{-p}dt\right)
+        =\left\{\begin{aligned}
+            &\frac{c}{1-p}\left((i+1)^{1-p}-p\right)&\text{nếu}&\;1/2<p<1\\
+            &c\,(1+\log(i+1))&\text{nếu}&\;p=1\\
+            &\frac{c}{1-p}\left(p-\frac{1}{(i+1)^{p-1}}\right)&\text{nếu}&\;p>1
+        \end{aligned}\right.
+    \end{align*}
+    Giả sử $p\neq1$. Hàm $t\mapsto(t^{1-p}-p)^2$ là hàm tăng với $t\ge1$, được:
+    \begin{align*}
+        \sum_{i=0}^{k-1}\eta_{i+1}^2&\le\frac{c^2}{(1-p)^2}\sum_{i=1}^{k}(i^{1-p}-p)^2\\
+        &\le\frac{c^2}{(1-p)^2}\int_{1}^{k+1}(t^{1-p}-p)^2dt\\
+        &=\frac{c^2}{(1-p)^2}\left(\frac{(k+1)^{3-2p}}{3-2p}-2p\frac{(k+1)^{2-p}}{2-p}+p^k-\frac{4p^2-7p+2}{(3-2p)(2-p)}\right)\autotag
+    \end{align*}
+    Với $p=1$:
+    \begin{align*}
+        \sum_{i=0}^{k-1}\eta_{i+1}^2&\le c^2\sum_{i=1}^{k}(1+\log\,i)^2\\
+        &\le c^2\left(1+\int_{2}^{k+2}(1+\log t)^2dt\right)\\
+        &=c^2\left(k+(k+1)\log^2(k+1)-2\log^22\right)\autotag
+    \end{align*}
+    Kết hợp \eqref{eq:3.2} và \eqref{eq:3.3}, thu được:
+    $$\sum_{i=0}^{k-1}\eta_{i+1}^2=\left\{\begin{aligned}
+        &\order(k^{3-2p})\;&\text{nếu}&\;1/2<p<1\\
+        &\order(k\log^2k)\;&\text{nếu}&\;p=1\\
+        &\order(k)\;&\text{nếu}&\;p>1
+    \end{aligned}\right.$$
+    Lần nữa kết hợp $\order(1/k^2)$ của $\beta_k$ trong Bổ đề \ref{lem:beta-rate} và từ $p=q-1$, thu được:
+    $$\delta_k=\left\{\begin{aligned}
+        &\order(k^{3-2q})\;&\text{nếu}&\;3/2<q<2\\
+        &\order(log^2k/k)\;&\text{nếu}&\;q=2\\
+        &\order(1/k)\;&\text{nếu}&\;q>2
+    \end{aligned}\right.$$
+\end{proof}
+\end{essayonly}

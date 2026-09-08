@@ -1,0 +1,178 @@
+\begin{essayonly}
+Mệnh đề~\ref{prop:recursive} cho thấy để xây dựng một dãy ước lượng, chỉ cần thiết lập một quan hệ truy hồi có dạng \eqref{eq:recursive-ineq}. Trong tiểu mục này, chúng tôi trình bày một cơ chế xây dựng như vậy thông qua một toán tử cập nhật đơn giản. Đặc biệt, khi khởi đầu từ một hàm toàn phương, phép cập nhật này vẫn bảo toàn cấu trúc toàn phương, nhờ đó việc xây dựng dãy ước lượng được quy về việc cập nhật một số hữu hạn tham số.
+
+Để xây dựng cụ thể một dãy $(\varphi_k)$ thoả \eqref{eq:recursive-ineq}, ta định nghĩa với mỗi bộ tham số $(z,\eps,\xi,\alpha)\in\dom F\times\R_+\times\Hil\times[0,1)$ một toán tử cập nhật hàm
+\[
+  U(z,\eps,\xi,\alpha)(\varphi)(x)
+  := (1-\alpha)\varphi(x) + \alpha\big(F(z)+\iprod{x-z}{\xi}-\eps\big).
+\]
+Nếu $\xi\in\partial_\eps F(z)$ thì $F(z)+\iprod{x-z}{\xi}-\eps \le F(x)$ với mọi $x$, nên với $\hat\varphi := U(z,\eps,\xi,\alpha)(\varphi)$:
+\[
+  \begin{aligned}
+  \hat\varphi(x) - F(x)
+  &= (1-\alpha)(\varphi(x)-F(x))
+    + \alpha\underbrace{\big(F(z)+\iprod{x-z}{\xi}-\eps-F(x)\big)}_{\le\ 0} \\
+  &\le (1-\alpha)(\varphi(x)-F(x)),
+  \end{aligned}
+\]
+
+Do đó, toán tử $U$ luôn làm giảm sai khác giữa hàm ước lượng và hàm mục tiêu theo đúng dạng truy hồi \eqref{eq:recursive-ineq}. Cụ thể, nếu cho một dãy
+\[
+(z_k,\varepsilon_k,\xi_k,\alpha_k),
+\]
+với
+\[
+\xi_{k+1}\in\partial_{\varepsilon_k}F(z_{k+1}),
+\qquad
+\sum_{k=0}^{\infty}\alpha_k=+\infty,
+\]
+và khởi tạo bởi một hàm $\varphi_0$, thì dãy
+\[
+\varphi_{k+1}
+=
+U(z_{k+1},\varepsilon_k,\xi_{k+1},\alpha_k)(\varphi_k)
+\]
+thỏa mãn điều kiện của Mệnh đề~\ref{prop:recursive}. Vì vậy, $((\varphi_k),(\beta_k))$ là một dãy ước lượng của $F$, với
+\[
+\beta_k=\prod_{i=0}^{k-1}(1-\alpha_i).
+\]
+
+Điểm quan trọng của phép cập nhật trên là nó bảo toàn lớp các hàm toàn phương. Thật vậy, giả sử
+\[
+\varphi(x)
+=
+\varphi_*
++\frac A2\|x-\nu\|^2,
+\qquad
+A>0,
+\]
+thì hàm
+\[
+\hat\varphi
+=
+U(z,\varepsilon,\xi,\alpha)(\varphi)
+\]
+vẫn có dạng toàn phương. Cụ thể,
+\begin{equation}
+  \begin{aligned}
+  \hat\varphi_* &= (1-\alpha)\varphi_* + \alpha F(z) + \alpha\iprod{\nu-z}{\xi}
+    - \frac{\alpha^2}{2(1-\alpha)A}\norm{\xi}^2 - \alpha\eps, \\
+  \hat A &= (1-\alpha)A,
+  \qquad\qquad
+  \hat\nu = \nu - \frac{\alpha}{(1-\alpha)A}\xi.
+  \end{aligned}
+  \label{eq:quad-update}
+\end{equation}
+Các công thức trên thu được bằng cách khai triển trực tiếp định nghĩa của $U$ rồi hoàn thành bình phương. Vì đây chỉ là một phép biến đổi đại số đơn giản nên chúng tôi lược bỏ chi tiết.
+Do đó, lớp các hàm toàn phương là bất biến đối với phép cập nhật $U$. Nói cách khác, thay vì theo dõi toàn bộ dãy hàm $(\varphi_k)$, ta chỉ cần cập nhật ba tham số
+\[
+(\varphi_k^*,A_k,\nu_k),
+\]
+điều này sẽ đóng vai trò thiết yếu trong việc xây dựng các thuật toán tăng tốc ở các mục sau.
+\end{essayonly}
+
+\begin{essayonly}
+Bước tiếp theo là liên hệ dãy hàm ước lượng với một dãy điểm lặp cụ thể. Kết quả dưới đây chính là công cụ then chốt để thực hiện bước này. Nó tổng quát hóa các kết quả tương ứng của Güler \citep{guler1992} và Birge et al.~\citep{birge1998} bằng cách cho phép sử dụng $\varepsilon$-dưới gradient thay cho dưới gradient chính xác.
+\end{essayonly}
+
+\begin{lemma}
+\label{lem:core}
+Cho $x,\nu\in\Hil$, $A>0$, $\varphi=\varphi_*+\tfrac A2\norm{\cdot-\nu}^2$
+sao cho $F(x)\le\varphi_*+\delta$ với $\delta\ge0$ nào đó. Cho
+$z,\xi\in\Hil$, $\eps\ge0$ với $\xi\in\partial_\eps F(z)$, và
+$\hat\varphi=U(z,\eps,\xi,\alpha)(\varphi)$ với $\alpha\in[0,1)$. Đặt
+$y=(1-\alpha)x+\alpha\nu$. Khi đó với mọi $\lambda>0$,
+\[
+  (1-\alpha)\delta + \eps + \hat\varphi_*
+  \ge F(z) + \frac\lambda2\Big(2-\frac{\alpha^2}{(1-\alpha)A\lambda}\Big)\norm{\xi}^2
+  + \iprod{y-(\lambda\xi+z)}{\xi}.
+\]
+\end{lemma}
+\begin{essayonly}
+\begin{proof}
+Theo công thức \eqref{eq:quad-update},
+\[
+\hat\varphi_*
+=
+(1-\alpha)\varphi_*
++\alpha F(z)
++\alpha\langle\nu-z,\xi\rangle
+-\frac{\alpha^2}{2(1-\alpha)A}\|\xi\|^2
+-\alpha\varepsilon.
+\]
+Mặt khác, từ giả thiết $F(x)\le\varphi_*+\delta$ suy ra
+\[
+(1-\alpha)\delta+(1-\alpha)\varphi_*
+\ge
+(1-\alpha)F(x),
+\]
+điều kiện $\xi\in\partial_\varepsilon F(z)$ cho
+\[
+F(x)\ge
+F(z)+\langle x-z,\xi\rangle-\varepsilon.
+\]
+Kết hợp ba hệ thức trên, ta thu được
+\[
+\begin{aligned}
+(1-\alpha)\delta+\hat\varphi_*
+&\ge
+(1-\alpha)F(x)
++\alpha F(z)
++\alpha\langle\nu-z,\xi\rangle
+-\frac{\alpha^2}{2(1-\alpha)A}\|\xi\|^2
+-\alpha\varepsilon\\
+&\ge
+F(z)
++\bigl\langle (1-\alpha)x+\alpha\nu-z,\xi\bigr\rangle
+-\varepsilon
+-\frac{\alpha^2}{2(1-\alpha)A}\|\xi\|^2.
+\end{aligned}
+\]
+Đặt
+\[
+y=(1-\alpha)x+\alpha\nu.
+\]
+Khi đó,
+\[
+\langle y-z,\xi\rangle
+=
+\langle y-(z+\lambda\xi),\xi\rangle
++\lambda\|\xi\|^2,
+\]
+nên
+\[
+\begin{aligned}
+(1-\alpha)\delta+\varepsilon+\hat\varphi_*
+&\ge
+F(z)
++\langle y-(z+\lambda\xi),\xi\rangle\\
+&\qquad
++\left(
+\lambda-\frac{\alpha^2}{2(1-\alpha)A}
+\right)\|\xi\|^2.
+\end{aligned}
+\]
+Với,
+\[
+\lambda-\frac{\alpha^2}{2(1-\alpha)A}
+=
+\frac{\lambda}{2}
+\left(
+2-\frac{\alpha^2}{(1-\alpha)A\lambda}
+\right),
+\]
+đúng với bất đẳng thức cần chứng minh.
+\end{proof}
+\end{essayonly}
+
+\begin{essayonly}
+Bổ đề~\ref{lem:core} cho thấy việc lựa chọn vectơ $\xi$ quyết định khả năng kiểm soát vế phải của bất đẳng thức trên. Đặc biệt, nếu $\xi$ được chọn sao cho
+\[
+\xi\approx\frac{y-z}{\lambda},
+\]
+thì tích vô hướng
+\[
+\langle y-(\lambda\xi+z),\xi\rangle
+\]
+sẽ triệt tiêu hoặc có thể được khống chế bởi một số hạng không dương. Khi đó, vế phải chỉ còn bao gồm $F(z)$ và một số hạng không âm, tạo ra đúng dạng đánh giá cần thiết để áp dụng Định lý~\ref{thm:estimate-main}. Đây chính là ý tưởng chung đứng sau hai thuật toán sẽ được trình bày trong các Mục~\ref{sec:type1} và~\ref{sec:type2}.
+\end{essayonly}

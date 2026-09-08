@@ -1,0 +1,197 @@
+\begin{definition}
+\label{def:estimate-seq}
+Một cặp dãy $(\varphi_k)_{k\in\N}$ (các hàm $\varphi_k:\Hil\to\R$) và
+$(\beta_k)_{k\in\N}$ ($\beta_k\ge0$) được gọi là một dãy ước lượng
+của hàm chính thường $F:\Hil\to\R\cup\{+\infty\}$ nếu
+\begin{equation}
+  \forall x\in\Hil,\ \forall k\in\N:\quad
+  \varphi_k(x) - F(x) \le \beta_k\big(\varphi_0(x)-F(x)\big)
+  \quad\text{và}\quad \beta_k\to0.
+  \label{eq:estimate-def}
+\end{equation}
+\end{definition}
+
+\begin{essayonly}
+Ý tưởng cốt lõi là xây dựng một dãy hàm ${\varphi_k}$ đóng vai trò như các hàm ước lượng ngày càng chặt đối với $F$, với sai số được điều khiển bởi hệ số $\beta_k \to 0$. Khi đó, chỉ cần mỗi điểm lặp $x_k$ đạt được giá trị $F(x_k)$ đủ gần với $\inf \varphi_k$, ta có thể suy ra rằng $F(x_k)$ hội tụ đến giá trị tối ưu $F^*$. Nội dung này được phát biểu một cách chính xác trong định lý sau.
+\end{essayonly}
+
+\begin{theorem}
+\label{thm:estimate-main}
+Cho $((\varphi_k),(\beta_k))$ là một dãy ước lượng của $F$, ký hiệu
+$\varphi_k^* := \inf\varphi_k$. Giả sử tồn tại các dãy $(x_k)\subset\Hil$
+và $(\delta_k)$, $\delta_k\ge0$, sao cho
+\begin{equation}
+  F(x_k) \le \varphi_k^* + \delta_k.
+  \label{eq:thm1-hyp}
+\end{equation}
+Khi đó, với mọi $x\in\dom F$,
+\begin{equation}
+  F(x_k) \le \beta_k\big(\varphi_0(x)-F(x)\big) + \delta_k + F(x).
+  \label{eq:thm1-concl}
+\end{equation}
+Nếu $\delta_k\to0$ (và $\beta_k\to0$), $(x_k)$ là một dãy cực tiểu
+hoá của $F$: $\lim_k F(x_k) = F^*$. Hơn nữa nếu $F^*$ đạt được tại
+$x^*\in\Hil$ thì
+\[
+  F(x_k) - F^* \le \beta_k\big(\varphi_0(x^*)-F^*\big) + \delta_k.
+\]
+\end{theorem}
+\begin{essayonly}
+\begin{proof}
+Từ giả thiết \eqref{eq:thm1-hyp} và định nghĩa của infimum, với mọi
+$x\in\Hil$,
+\[
+F(x_k)\le \varphi_k^*+\delta_k
+      \le \varphi_k(x)+\delta_k.
+\]
+Kết hợp với điều kiện của dãy ước lượng \eqref{eq:estimate-def}, suy ra
+\[
+F(x_k)
+\le
+F(x)+\beta_k\bigl(\varphi_0(x)-F(x)\bigr)+\delta_k,
+\qquad \forall\,x\in\dom F,
+\]
+đây chính là \eqref{eq:thm1-concl}.
+
+Giả sử $\beta_k\to0$ và $\delta_k\to0$. Lấy giới hạn trên khi
+$k\to\infty$ trong bất đẳng thức trên, ta được
+\[
+\limsup_{k\to\infty}F(x_k)\le F(x),
+\qquad \forall\,x\in\dom F.
+\]
+Do đó,
+\[
+\limsup_{k\to\infty}F(x_k)
+\le
+\inf_{x\in\dom F}F(x)
+=F^*.
+\]
+Mặt khác, do $F^*$ là cận dưới của $F$, nên
+\[
+F^*\le \liminf_{k\to\infty}F(x_k).
+\]
+Suy ra
+\[
+F^*
+\le
+\liminf_{k\to\infty}F(x_k)
+\le
+\limsup_{k\to\infty}F(x_k)
+\le
+F^*,
+\]
+và vì thế
+\[
+\lim_{k\to\infty}F(x_k)=F^*.
+\]
+
+Cuối cùng, nếu $x^*\in\argmin F$, thì thay $x=x^*$ vào
+\eqref{eq:thm1-concl} thu được
+\[
+F(x_k)-F^*
+\le
+\beta_k\bigl(\varphi_0(x^*)-F^*\bigr)+\delta_k,
+\]
+là bất đẳng thức cần chứng minh.
+\end{proof}
+\end{essayonly}
+
+\begin{essayonly}
+Định lý~\ref{thm:estimate-main} cho thấy toàn bộ việc phân tích hội tụ được quy về hai thành phần: (i) xây dựng một dãy ước lượng của $F$, và (ii) tìm các điểm $x_k$ sao cho $F(x_k)$ đủ gần với giá trị cực tiểu của $\varphi_k$. Khi hai điều kiện này được thỏa mãn và các sai số $\beta_k,\delta_k$ triệt tiêu, sự hội tụ $F(x_k)\to F^*$ suy ra một cách tự động.
+
+Một điểm đáng lưu ý là kết luận trên không đòi hỏi $F$ phải đạt giá trị tối ưu. Giả thiết tồn tại nghiệm $x^*\in\argmin F$ chỉ được sử dụng để chuyển kết quả hội tụ về giá trị tối ưu thành cận sai số tường minh
+\begin{equation*}
+    F(x_k)-F^*
+    \le
+    \beta_k\bigl(\varphi_0(x^*)-F^*\bigr)+\delta_k.
+\end{equation*}
+
+Mặc dù Định nghĩa~\ref{eq:estimate-def} được phát biểu dưới dạng một bất đẳng thức toàn cục, trong thực tế rất hiếm khi kiểm chứng trực tiếp điều kiện \eqref{eq:estimate-def}. Thay vào đó, dãy ước lượng thường được xây dựng thông qua một quan hệ truy hồi giữa hai hàm liên tiếp. Quan hệ truy hồi này vừa dễ thiết lập trong quá trình thiết kế thuật toán, vừa tự động bảo đảm tính chất của dãy ước lượng. Mệnh đề sau đây phát biểu chính xác nguyên lý đó.
+\end{essayonly}
+
+\begin{proposition}
+\label{prop:recursive}
+Giả sử tồn tại một dãy $(\alpha_k)\subset[0,1)$ sao cho
+\begin{equation}
+\varphi_{k+1}(x)-F(x)
+\le
+(1-\alpha_k)\bigl(\varphi_k(x)-F(x)\bigr),
+\qquad \forall x\in\dom F.
+\label{eq:recursive-ineq}
+\end{equation}
+Đặt
+\[
+\beta_k:=\prod_{i=0}^{k-1}(1-\alpha_i),
+\qquad k\ge1,\qquad
+\beta_0:=1.
+\]
+Nếu
+\[
+\sum_{k=0}^{\infty}\alpha_k=+\infty,
+\]
+thì $((\varphi_k),(\beta_k))$ là một dãy ước lượng của $F$. Hơn nữa,
+\begin{equation}
+\beta_k\longrightarrow0
+\quad\Longleftrightarrow\quad
+\sum_{k=0}^{\infty}\alpha_k=+\infty.
+\label{eq:beta-alpha-equiv}
+\end{equation}
+\end{proposition}
+\begin{essayonly}
+\begin{proof}
+Lặp bất đẳng thức \eqref{eq:recursive-ineq} từ $0$ đến $k-1$ cho ta
+\[
+\varphi_k(x)-F(x)
+\le
+\Bigl(\prod_{i=0}^{k-1}(1-\alpha_i)\Bigr)
+\bigl(\varphi_0(x)-F(x)\bigr)
+=
+\beta_k\bigl(\varphi_0(x)-F(x)\bigr),
+\]
+đúng với mọi $x\in\dom F$. Vì vậy, chỉ còn cần chứng minh
+\eqref{eq:beta-alpha-equiv}.
+
+Do
+\[
+\beta_k=\prod_{i=0}^{k-1}(1-\alpha_i),
+\]
+nên
+\[
+\beta_k\to0
+\iff
+\sum_{i=0}^{\infty}\log(1-\alpha_i)=-\infty.
+\]
+
+Nếu $\sum_i\alpha_i=+\infty$, thì từ bất đẳng thức
+$\log(1-t)\le -t$ với mọi $t\in[0,1)$ suy ra
+\[
+\sum_i\log(1-\alpha_i)
+\le
+-\sum_i\alpha_i
+=
+-\infty,
+\]
+và do đó $\beta_k\to0$.
+
+Ngược lại, giả sử $\beta_k\to0$. Nếu tồn tại vô số chỉ số $i$ sao cho
+$\alpha_i\ge1/2$ thì hiển nhiên
+$\sum_i\alpha_i=+\infty$. Nếu không, tồn tại $N$ sao cho
+$\alpha_i<1/2$ với mọi $i\ge N$. Khi đó, sử dụng
+\[
+\log(1-t)\ge -2t,
+\qquad t\in[0,1/2),
+\]
+ta được
+\[
+-\infty
+=
+\sum_{i=N}^{\infty}\log(1-\alpha_i)
+\ge
+-2\sum_{i=N}^{\infty}\alpha_i,
+\]
+suy ra
+\[
+\sum_{i=0}^{\infty}\alpha_i=+\infty.
+\]
+\end{proof}
+\end{essayonly}

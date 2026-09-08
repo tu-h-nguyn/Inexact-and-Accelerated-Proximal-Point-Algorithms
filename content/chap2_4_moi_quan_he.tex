@@ -1,0 +1,406 @@
+\begin{essayonly}
+Ba khái niệm xấp xỉ vừa giới thiệu không tồn tại một cách độc lập mà có mối liên hệ chặt chẽ với nhau. Để làm rõ mối quan hệ này, trước hết ta khai triển $\eps$-dưới vi phân của hàm gần kề
+\[
+\Phi_\lambda
+=
+F+\frac1{2\lambda}\norm{\cdot-y}^2.
+\]
+
+Theo công thức dưới vi phân của tổng đối với $\eps$-dưới vi phân, ta có
+\[
+\partial_{\eps^2/(2\lambda)}\Phi_\lambda(z)
+=
+\bigcup_{\substack{\eps_1,\eps_2\ge0\\
+\eps_1+\eps_2\le\eps^2/(2\lambda)}}
+\left(
+\partial_{\eps_1}F(z)
++
+\Bigl\{
+\frac{z-y+e}{\lambda}:
+\frac{\norm e^2}{2\lambda}\le\eps_2
+\Bigr\}
+\right).
+\]
+
+Từ công thức trên, điều kiện của xấp xỉ loại~1 có thể được phát biểu dưới nhiều dạng tương đương.
+\end{essayonly}
+\begin{lemma}
+\label{lem:equiv-AT1}
+Các mệnh đề sau tương đương:
+\begin{enumerate}
+  \item $z\approx_1 \prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}$
+  \item tồn tại $\eps_1,\eps_2\ge0$ với $\eps_1+\eps_2\le\eps^2/2\lambda$, tồn tại $\xi\in\partial_{\eps_1}F(z)$ và $e\in\Hil$ với $\norm{e}^2/2\lambda \le \eps_2$, sao cho $\lambda\xi+(z-y+e)=0$;
+  \item tồn tại $\eps_1,\eps_2\ge0$ với $\eps_1^2+\eps_2^2\le\eps^2$, tồn tại $e\in\Hil$ với $\norm{e}\le\eps_2$, sao cho $(y-z+e)/\lambda \in \partial_{\eps_1^2/2\lambda}F(z)$.
+\end{enumerate}
+\end{lemma}
+\begin{essayonly}
+\begin{proof}
+Trước hết, theo công thức khai triển của $\eps$-dưới vi phân đối với tổng hai hàm lồi,
+\[
+\partial_{\eps^2/(2\lambda)}\Phi_\lambda(z)
+=
+\bigcup_{\substack{\varepsilon_1,\varepsilon_2\ge0\\
+\varepsilon_1+\varepsilon_2\le\eps^2/(2\lambda)}}
+\left(
+\partial_{\varepsilon_1}F(z)
++
+\Bigl\{
+\frac{z-y+e}{\lambda}:
+\frac{\norm e^2}{2\lambda}\le\varepsilon_2
+\Bigr\}
+\right).
+\]
+
+Do đó,
+\[
+0\in\partial_{\eps^2/(2\lambda)}\Phi_\lambda(z)
+\]
+khi và chỉ khi tồn tại
+$\varepsilon_1,\varepsilon_2\ge0$ thỏa
+$\varepsilon_1+\varepsilon_2\le\eps^2/(2\lambda)$,
+$\xi\in\partial_{\varepsilon_1}F(z)$ và
+$e\in\Hil$ với
+$\norm e^2/(2\lambda)\le\varepsilon_2$ sao cho
+\[
+0
+=
+\xi+\frac{z-y+e}{\lambda}.
+\]
+Nhân hai vế với $\lambda$ ta được
+\[
+\lambda\xi+(z-y+e)=0,
+\]
+đúng với phát biểu (ii). Vì vậy,
+\[
+\mathrm{(i)}
+\Longleftrightarrow
+\mathrm{(ii)}.
+\]
+
+Tiếp theo, ta chứng minh
+\[
+\mathrm{(ii)}
+\Longleftrightarrow
+\mathrm{(iii)}.
+\]
+
+Giả sử (ii) đúng. Đặt
+\[
+\tilde\eps_1=\sqrt{2\lambda\varepsilon_1},
+\qquad
+\tilde\eps_2=\norm e.
+\]
+Từ
+\[
+\varepsilon_1+\varepsilon_2
+\le
+\frac{\eps^2}{2\lambda},
+\qquad
+\frac{\norm e^2}{2\lambda}
+\le
+\varepsilon_2,
+\]
+suy ra
+\[
+\tilde\eps_1^2+\tilde\eps_2^2
+=
+2\lambda\varepsilon_1+\norm e^2
+\le
+2\lambda(\varepsilon_1+\varepsilon_2)
+\le
+\eps^2.
+\]
+Mặt khác, từ
+\[
+\lambda\xi+(z-y+e)=0
+\]
+ta có
+\[
+\xi
+=
+\frac{y-z-e}{\lambda}
+\in
+\partial_{\tilde\eps_1^2/(2\lambda)}F(z).
+\]
+Đổi $e$ thành $-e$ (không làm thay đổi chuẩn của $e$), ta được
+\[
+\frac{y-z+e}{\lambda}
+\in
+\partial_{\tilde\eps_1^2/(2\lambda)}F(z),
+\]
+đúng với phát biểu (iii).
+
+Ngược lại, giả sử (iii) đúng. Đặt
+\[
+\varepsilon_1=\frac{\eps_1^2}{2\lambda},
+\qquad
+\varepsilon_2=\frac{\eps_2^2}{2\lambda}.
+\]
+Điều kiện
+\[
+\eps_1^2+\eps_2^2\le\eps^2
+\]
+suy ra
+\[
+\varepsilon_1+\varepsilon_2
+\le
+\frac{\eps^2}{2\lambda},
+\]
+và từ
+\[
+\frac{y-z+e}{\lambda}
+\in
+\partial_{\varepsilon_1}F(z)
+\]
+ta suy ra
+\[
+\lambda\xi+(z-y-e)=0,
+\qquad
+\xi=\frac{y-z+e}{\lambda}.
+\]
+Đổi $e$ thành $-e$ một lần nữa, ta thu được đúng phát biểu (ii).
+
+Vậy ba mệnh đề (i), (ii) và (iii) là tương đương.
+\end{proof}
+\end{essayonly}
+
+\begin{essayonly}
+Bổ đề~\ref{lem:equiv-AT1} cho thấy xấp xỉ loại~1 đóng vai trò là một mô hình tổng quát bao hàm cả xấp xỉ loại~2 và loại~3. Cụ thể, điều kiện tương đương ở Bổ đề~\ref{lem:equiv-AT1}(iii) cho phép tách sai số tổng thể thành hai đại lượng độc lập: một đại lượng bị hấp thụ bởi $\eps$-dưới vi phân của $F$, và đại lượng kia đóng vai trò là nhiễu của điểm tham chiếu. Khi dồn toàn bộ sai số vào một trong hai thành phần này (hai trường hợp cực biên), ta thu được chính xác định nghĩa của xấp xỉ loại~2 và loại~3. Mối liên hệ này được phát biểu chính xác trong các mệnh đề sau.
+\end{essayonly}
+\begin{proposition}
+\label{prop:relations}
+Các khẳng định sau đúng:
+\begin{enumerate}
+  \item $z\approx_2\prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}$ $\implies$ $z\approx_1\prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}$;
+  \item $z\approx_3\prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}$ $\implies$ $z\approx_1\prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}$;
+  \item Nếu thêm giả thiết $F$ lồi mạnh với hệ số $\mu>0$ thì
+        $z\approx_1\prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}$ $\implies$ $z\approx_2\prox_{\lambda F}(y)\quad\text{với $\eps\sqrt{(\lambda\mu+1)/\lambda\mu}$-chính xác}$; nói riêng, nếu $\lambda\ge 1/\mu$ thì độ chính xác có thể lấy là $\eps\sqrt{2}$.
+\end{enumerate}
+\end{proposition}
+\begin{essayonly}
+\begin{proof}
+
+1) Giả sử
+$
+z\approx_2\prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}
+$. Theo định nghĩa,
+\[
+\frac{y-z}{\lambda}
+\in
+\partial_{\eps^2/(2\lambda)}F(z).
+\]
+Trong Bổ đề~\ref{lem:equiv-AT1}(iii), chỉ cần chọn
+\[
+\eps_1=\eps,\qquad
+\eps_2=0,\qquad
+e=0.
+\]
+Khi đó
+\[
+\eps_1^2+\eps_2^2=\eps^2,
+\]
+và điều kiện của (iii) được thỏa mãn. Suy ra
+$
+z\approx_1\prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}
+$.
+
+\medskip
+
+2) Giả sử
+$
+z\approx_3\prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}
+$. Theo công thức tương đương \eqref{eq:AT3-equiv}, tồn tại
+$e\in\Hil$ với
+$\norm e\le\eps$ sao cho
+\[
+\frac{y-z+e}{\lambda}
+\in
+\partial F(z).
+\]
+Do
+\[
+\partial F(z)=\partial_0F(z),
+\]
+trong Bổ đề~\ref{lem:equiv-AT1}(iii) ta chỉ cần chọn
+\[
+\eps_1=0,\qquad
+\eps_2=\eps.
+\]
+Khi đó điều kiện của (iii) được thỏa mãn, và do đó
+$
+z\approx_1\prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}
+$.
+
+\medskip
+
+3) Giả sử
+$
+z\approx_1\prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}
+$. Theo Định nghĩa~\ref{eq:AT1} và hệ quả
+\eqref{eq:eps-subopt},
+\[
+\Phi_\lambda(x)
+\ge
+\Phi_\lambda(z)
+-
+\frac{\eps^2}{2\lambda},
+\qquad
+\forall x\in\Hil.
+\]
+Viết lại theo định nghĩa của $\Phi_\lambda$, ta được
+\[
+F(x)
++
+\frac1{2\lambda}\norm{x-y}^2
+\ge
+F(z)
++
+\frac1{2\lambda}\norm{z-y}^2
+-
+\frac{\eps^2}{2\lambda}.
+\]
+Khai triển
+\[
+\norm{x-y}^2
+=
+\norm{x-z}^2
++
+2\langle x-z,z-y\rangle
++
+\norm{z-y}^2,
+\]
+rút gọn hai vế, suy ra
+\[
+F(x)
+\ge
+F(z)
++
+\frac1\lambda
+\langle x-z,y-z\rangle
+-
+\frac1{2\lambda}\norm{x-z}^2
+-
+\frac{\eps^2}{2\lambda},
+\qquad
+\forall x\in\Hil.
+\]
+
+Ta khai thác giả thiết $F$ lồi mạnh với hệ số $\mu$. Với
+$\theta\in(0,1]$, đặt
+\[
+x_\theta
+=
+\theta x+(1-\theta)z.
+\]
+Theo tính lồi mạnh,
+\[
+F(x_\theta)
+\le
+\theta F(x)
++
+(1-\theta)F(z)
+-
+\frac\mu2
+\theta(1-\theta)
+\norm{x-z}^2.
+\]
+Mặt khác, áp dụng bất đẳng thức trên cho $x_\theta$ thay cho $x$,
+\[
+F(x_\theta)
+\ge
+F(z)
++
+\frac{\theta}{\lambda}
+\langle x-z,y-z\rangle
+-
+\frac{\theta^2}{2\lambda}
+\norm{x-z}^2
+-
+\frac{\eps^2}{2\lambda}.
+\]
+Kết hợp hai bất đẳng thức này, rút gọn và chia cho $\theta$, ta thu được
+\[
+F(x)
+\ge
+F(z)
++
+\left\langle
+x-z,
+\frac{y-z}{\lambda}
+\right\rangle
++
+\frac{1}{2\lambda}
+\bigl(
+\lambda\mu(1-\theta)-\theta
+\bigr)
+\norm{x-z}^2
+-
+\frac{\eps^2}{2\lambda\theta}.
+\]
+
+Nếu chọn
+\[
+\theta
+\le
+\frac{\lambda\mu}{1+\lambda\mu},
+\]
+thì
+\[
+\lambda\mu(1-\theta)-\theta\ge0,
+\]
+nên số hạng bậc hai không âm và có thể bỏ đi. Khi đó
+\[
+F(x)
+\ge
+F(z)
++
+\left\langle
+x-z,
+\frac{y-z}{\lambda}
+\right\rangle
+-
+\frac{\eps^2}{2\lambda\theta},
+\qquad
+\forall x\in\Hil,
+\]
+hay
+\[
+\frac{y-z}{\lambda}
+\in
+\partial_{\eps^2/(2\lambda\theta)}F(z).
+\]
+Chọn
+\[
+\theta
+=
+\frac{\lambda\mu}{1+\lambda\mu},
+\]
+ta thu được
+\[
+\frac{\eps}{\sqrt{\theta}}
+=
+\eps
+\sqrt{\frac{1+\lambda\mu}{\lambda\mu}},
+\]
+chính là độ chính xác trong phát biểu.
+
+Nếu thêm
+\[
+\lambda\ge\frac1\mu,
+\]
+thì
+\[
+\frac12
+\le
+\frac{\lambda\mu}{1+\lambda\mu},
+\]
+nên có thể chọn đơn giản $\theta=\frac12$, từ đó suy ra độ chính xác
+$\eps\sqrt2$.
+
+\end{proof}
+\end{essayonly}
+
+\begin{essayonly}
+Mệnh đề~\ref{prop:relations} cho thấy xấp xỉ loại~1 đóng vai trò như một khái niệm trung tâm trong ba loại xấp xỉ đang xét. Một mặt, mọi xấp xỉ loại~2 và loại~3 đều tự động là xấp xỉ loại~1 với cùng mức sai số. Mặt khác, khi $F$ lồi mạnh, một xấp xỉ loại~1 cũng có thể được chuyển thành xấp xỉ loại~2 với sự suy giảm độ chính xác chỉ bởi một hằng số nhân.
+\end{essayonly} 
+

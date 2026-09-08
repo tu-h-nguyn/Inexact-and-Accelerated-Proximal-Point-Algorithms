@@ -1,0 +1,872 @@
+Toán tử gần kề (proximal operator) là một trong những công cụ trung tâm của tối ưu lồi hiện đại. Nhiều thuật toán nổi tiếng như Proximal Gradient Method, FISTA, ADMM hay các phương pháp splitting khác đều yêu cầu tính toán tử gần kề ở mỗi bước lặp. Nhờ đó, các bài toán có thành phần không khả vi vẫn có thể được xử lý một cách hiệu quả.
+
+Tuy nhiên, trong phần lớn các bài toán thực tế, việc tính chính xác
+\[
+\prox_{\lambda F}(y)
+=
+\argmin_x
+\left\{
+F(x)+\frac1{2\lambda}\|x-y\|^2
+\right\}
+\]
+không hề đơn giản. Ngoại trừ một số trường hợp đặc biệt (chẳng hạn các chuẩn $\ell_1$, chuẩn hạt nhân, hoặc các hàm chỉ báo của những tập lồi có phép chiếu tường minh), toán tử gần kề thường không có công thức đóng. Khi đó, để tính một điểm gần kề, ta lại phải giải một bài toán tối ưu phụ, đôi khi có độ khó tương đương với chính bài toán ban đầu.
+
+Trong các thuật toán lặp quy mô lớn, việc giải chính xác bài toán con ở mọi bước lặp thường không khả thi về mặt tính toán. Vì vậy, một cách tiếp cận tự nhiên là chỉ yêu cầu nghiệm của bài toán con được tính với một mức độ chính xác nhất định. Điều này dẫn đến câu hỏi cơ bản: \emph{cần định nghĩa thế nào về một điểm gần kề xấp xỉ, và mức sai số đó ảnh hưởng ra sao đến tính hội tụ cũng như tốc độ hội tụ của thuật toán?}
+
+Có nhiều cách khác nhau để mô tả một điểm gần kề không chính xác, tùy theo cách đo lường sai số. Trong phần này, ta xét ba khái niệm xấp xỉ phổ biến trong tài liệu nghiên cứu, thường được gọi là xấp xỉ loại~1, loại~2 và loại~3. 
+\subsection{Giả thiết}
+Ta xét bài toán tối ưu lồi
+
+$$\inf_{x\in\Hil}F(x),$$
+
+trong đó $\Hil$ là một không gian Hilbert và $F:\Hil\to(-\infty,+\infty]$ là một hàm chính thường, lồi và nửa liên tục dưới.
+
+Ký hiệu $$F^*:=\inf F.$$
+
+là giá trị tối ưu của bài toán. Trừ khi được phát biểu riêng, ta \emph{không} giả sử $F$ có nghiệm cực tiểu, cũng như không giả sử $F^*$ là một số hữu hạn. Các kết quả lý thuyết được trình bày trong Mục~\ref{sec:estimate} vẫn đúng dưới những giả thiết tổng quát này. Giả thiết về sự tồn tại nghiệm cực tiểu chỉ được sử dụng ở các định lý phát biểu tốc độ hội tụ của thuật toán.
+
+\subsection{Toán tử gần kề}
+\begin{definition}
+Với $\lambda>0$ và $y\in\Hil$, điểm gần kề của $y$ theo hàm $F$ được định nghĩa bởi
+\begin{equation}
+    \prox_{\lambda F}(y)
+    :=
+    \argmin_{x\in\Hil}
+    \left\{
+    \Phi_\lambda(x)
+    :=
+    F(x)
+    +
+    \frac1{2\lambda}\norm{x-y}^2
+    \right\}.
+\end{equation}
+\end{definition}
+
+Do $\Phi_\lambda$ là tổng của một hàm lồi và một hàm toàn phương
+$1/\lambda$-lồi mạnh, bài toán trên luôn có nghiệm duy nhất. Hơn nữa,
+điều kiện tối ưu bậc một bài toán lồi cho ta đặc trưng quen thuộc
+\begin{equation}
+  z = \prox_{\lambda F}(y)
+  \iff 0 \in \partial \Phi_\lambda(z)
+  \iff \frac{y-z}{\lambda} \in \partial F(z),
+  \label{eq:opt-cond}
+\end{equation}
+Từ đặc trưng trên suy ra $$\prox_{\lambda F}=(I+\lambda\partial F)^{-1},$$ nghĩa là toán tử gần kề chính là toán tử phân giải của dưới vi phân $\partial F$.
+
+Trên thực tế, việc tính $\prox_{\lambda F}(y)$ tự nó có thể khó không kém việc giải bài toán ban đầu, nên ta cần một khái niệm về \emph{xấp xỉ} của điểm gần kề. Công cụ thường dùng là \emph{$\eps$-dưới vi phân}: với $\eps\ge 0$,
+\begin{equation}
+  \partial_\eps F(z) := \big\{ \xi\in\Hil :
+     F(x) \ge F(z) + \iprod{x-z}{\xi} - \eps,\ \forall x\in\Hil \big\}.
+  \label{eq:eps-subdiff}
+\end{equation}
+
+Khi $\eps=0$, ta thu được dưới vi phân thông thường. Ta có một tính chất cơ bản sau đây
+\begin{equation}
+  0\in\partial_\eps F(z)
+  \iff
+  F(z)\le\inf F+\eps.
+  \label{eq:eps-subopt}
+\end{equation}
+Nói cách khác, điều kiện \textit{$0$ là một $\eps$-dưới gradient tại $z$} tương đương với việc \textit{$z$ là một điểm $\eps$-tối ưu} của bài toán. 
+\begin{proof}
+Theo định nghĩa của $\eps$-dưới vi phân,
+\[
+0\in\partial_\eps F(z)
+\iff
+F(x)\ge F(z)-\eps,\qquad\forall x\in\Hil.
+\]
+Lấy infimum theo $x$ suy ra
+\[
+\inf F\ge F(z)-\eps,
+\]
+hay 
+\[
+F(z)\le\inf F+\eps.
+\]
+Ngược lại, nếu $F(z)\le\inf F+\eps$ thì với mọi $x\in\Hil$,
+\[
+F(x)\ge\inf F\ge F(z)-\eps
+=
+F(z)+\langle x-z,0\rangle-\eps,
+\]
+nên theo định nghĩa của $\partial_\eps F(z)$,
+\[
+0\in\partial_\eps F(z).
+\]
+\end{proof}
+
+Dựa trên khái niệm $\eps$-dưới vi phân, ta sẽ xét ba mô hình xấp xỉ của điểm gần kề. Cả ba đều thuộc lớp \emph{sai số tuyệt đối}, nghĩa là tham số sai số $\eps$ được quy định độc lập với vị trí của điểm $y$ cũng như độ lớn của điểm gần kề cần tính.
+
+\subsection{Xấp xỉ điểm gần kề}
+\begin{definition}[Xấp xỉ loại 1]
+Cho $\lambda>0$, $y\in\Hil$ và $\eps\ge0$. Một điểm
+$z\in\Hil$ được gọi là \emph{xấp xỉ loại~1} của
+$\prox_{\lambda F}(y)$ với độ chính xác $\eps$, ký hiệu
+\[
+z\approx_1\prox_{\lambda F}(y),
+\]
+nếu
+\begin{equation}
+0\in\partial_{\eps^2/(2\lambda)}\Phi_\lambda(z).
+\tag{AT1}
+\label{eq:AT1}
+\end{equation}
+\end{definition}
+
+Đây là khái niệm xấp xỉ tự nhiên nhất khi điểm gần kề được tính bằng một
+thuật toán cực tiểu hóa hàm phụ
+\[
+\Phi_\lambda(x)
+=
+F(x)+\frac1{2\lambda}\norm{x-y}^2.
+\]
+Thật vậy, áp dụng \eqref{eq:eps-subopt} cho $\Phi_\lambda$, điều kiện
+\eqref{eq:AT1} tương đương với
+\[
+\Phi_\lambda(z)
+\le
+\Phi_\lambda^*
++
+\frac{\eps^2}{2\lambda},
+\]
+trong đó $\Phi_\lambda^*$ là giá trị tối ưu của bài toán gần kề. Nói cách
+khác, $z$ chỉ cần cực tiểu hóa bài toán con với sai số hàm mục tiêu không
+vượt quá $\eps^2/(2\lambda)$. Đây cũng chính là tiêu chí dừng thường gặp
+trong các thuật toán giải bài toán gần kề.
+
+Điều kiện trên không chỉ bảo đảm sai số về giá trị hàm mục tiêu mà còn cho
+phép kiểm soát trực tiếp khoảng cách từ nghiệm gần đúng đến điểm gần kề
+chính xác, như kết quả sau đây.
+
+\begin{proposition}
+\label{prop:type1-bound}
+Nếu
+\[
+z\approx_1\prox_{\lambda F}(y)
+\]
+với độ chính xác $\eps$, thì
+\[
+z\in\dom F,
+\qquad
+\norm{z-\prox_{\lambda F}(y)}
+\le
+\eps.
+\]
+\end{proposition}
+
+\begin{proof}
+Đặt
+\[
+x^*=\prox_{\lambda F}(y).
+\]
+Do $\Phi_\lambda$ là hàm $1/\lambda$-lồi mạnh và $x^*$ là điểm cực tiểu của
+nó, bất đẳng thức lồi mạnh cho
+\[
+\Phi_\lambda(z)-\Phi_\lambda(x^*)
+\ge
+\frac1{2\lambda}\norm{z-x^*}^2.
+\]
+
+Mặt khác, từ \eqref{eq:AT1} và hệ quả
+\eqref{eq:eps-subopt} suy ra
+\[
+\Phi_\lambda(z)
+\le
+\Phi_\lambda^*
++
+\frac{\eps^2}{2\lambda}
+=
+\Phi_\lambda(x^*)
++
+\frac{\eps^2}{2\lambda}.
+\]
+Kết hợp hai bất đẳng thức trên, ta được
+\[
+\frac1{2\lambda}\norm{z-x^*}^2
+\le
+\frac{\eps^2}{2\lambda},
+\]
+hay tương đương
+\[
+\norm{z-x^*}\le\eps.
+\]
+Đặc biệt,
+$\Phi_\lambda(z)<+\infty$, nên $F(z)<+\infty$, tức
+$z\in\dom F$.
+\end{proof}
+
+\begin{definition}[Xấp xỉ loại 2]
+Cho $\lambda>0$, $y\in\Hil$ và $\eps\ge0$. Một điểm
+$z\in\Hil$ được gọi là \emph{xấp xỉ loại~2} của
+$\prox_{\lambda F}(y)$ với độ chính xác $\eps$, ký hiệu
+\[
+z\approx_2\prox_{\lambda F}(y),
+\]
+nếu
+\begin{equation}
+\frac{y-z}{\lambda}
+\in
+\partial_{\eps^2/(2\lambda)}F(z).
+\tag{AT2}
+\label{eq:AT2}
+\end{equation}
+\end{definition}
+
+So với điều kiện tối ưu chính xác
+\eqref{eq:opt-cond}, định nghĩa trên chỉ thay dưới vi phân
+$\partial F(z)$ bằng $\eps^2/(2\lambda)$-dưới vi phân của $F$ tại $z$. Vì thế, xấp xỉ loại~2 có thể được xem như một dạng \emph{mở rộng} của điều kiện tối ưu cho toán tử gần kề.
+
+\begin{definition}[Xấp xỉ loại 3]
+Cho $\lambda>0$, $y\in\Hil$ và $\eps\ge0$. Một điểm
+$z\in\Hil$ được gọi là \emph{xấp xỉ loại~3} của
+$\prox_{\lambda F}(y)$ với độ chính xác $\eps$, ký hiệu
+\[
+z\approx_3\prox_{\lambda F}(y),
+\]
+nếu
+\begin{equation}
+d\bigl(0,\partial\Phi_\lambda(z)\bigr)
+\le
+\frac{\eps}{\lambda}.
+\tag{AT3}
+\label{eq:AT3}
+\end{equation}
+\end{definition}
+
+Điểm nổi bật của xấp xỉ loại~3 là nó có một cách diễn giải rất trực quan.
+
+Thật vậy, từ công thức
+\[
+\partial\Phi_\lambda(z)
+=
+\partial F(z)
++
+\frac{z-y}{\lambda},
+\]
+điều kiện \eqref{eq:AT3} tương đương với sự tồn tại một vectơ
+$e\in\Hil$ thỏa $\norm e\le\eps$ sao cho
+\[
+\frac{y+e-z}{\lambda}
+\in
+\partial F(z).
+\]
+Kết hợp với đặc trưng của toán tử gần kề trong
+\eqref{eq:opt-cond}, ta thu được
+\begin{equation}
+z\approx_3\prox_{\lambda F}(y)
+\text{ với độ chính xác }\eps
+\iff
+\exists\,e\in\Hil,\;
+\norm e\le\eps,\;
+z=\prox_{\lambda F}(y+e).
+\label{eq:AT3-equiv}
+\end{equation}
+
+Nói cách khác, một xấp xỉ loại~3 chính là điểm gần kề chính xác ứng với một đầu vào bị nhiễu. Cách diễn giải này đặc biệt thuận tiện khi phân tích ảnh hưởng của nhiễu hoặc khi chủ động đưa sai số vào các mô phỏng số.
+\subsection{Mối quan hệ giữa các xấp xỉ}
+Ba khái niệm xấp xỉ vừa giới thiệu không tồn tại một cách độc lập mà có
+mối liên hệ chặt chẽ với nhau. Để làm rõ mối quan hệ này, trước hết ta
+khai triển $\eps$-dưới vi phân của hàm gần kề
+\[
+\Phi_\lambda
+=
+F+\frac1{2\lambda}\norm{\cdot-y}^2.
+\]
+
+Theo công thức dưới vi phân của tổng đối với $\eps$-dưới vi phân, ta có
+\[
+\partial_{\eps^2/(2\lambda)}\Phi_\lambda(z)
+=
+\bigcup_{\substack{\eps_1,\eps_2\ge0\\
+\eps_1+\eps_2\le\eps^2/(2\lambda)}}
+\left(
+\partial_{\eps_1}F(z)
++
+\Bigl\{
+\frac{z-y+e}{\lambda}:
+\frac{\norm e^2}{2\lambda}\le\eps_2
+\Bigr\}
+\right).
+\]
+
+Từ công thức trên, điều kiện của xấp xỉ loại~1 có thể được phát biểu dưới
+nhiều dạng tương đương.
+\begin{lemma}
+\label{lem:equiv-AT1}
+Các mệnh đề sau tương đương:
+\begin{enumerate}
+  \item $z\approx_1 \prox_{\lambda F}(y)$ với độ chính xác $\eps$;
+  \item tồn tại $\eps_1,\eps_2\ge0$ với $\eps_1+\eps_2\le\eps^2/2\lambda$,
+        tồn tại $\xi\in\partial_{\eps_1}F(z)$ và $e\in\Hil$ với
+        $\norm{e}^2/2\lambda \le \eps_2$, sao cho $\lambda\xi+(z-y+e)=0$;
+  \item tồn tại $\eps_1,\eps_2\ge0$ với $\eps_1^2+\eps_2^2\le\eps^2$, tồn
+        tại $e\in\Hil$ với $\norm{e}\le\eps_2$, sao cho
+        $(y-z+e)/\lambda \in \partial_{\eps_1^2/2\lambda}F(z)$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+Trước hết, theo công thức khai triển của $\eps$-dưới vi phân đối với tổng
+hai hàm lồi,
+\[
+\partial_{\eps^2/(2\lambda)}\Phi_\lambda(z)
+=
+\bigcup_{\substack{\varepsilon_1,\varepsilon_2\ge0\\
+\varepsilon_1+\varepsilon_2\le\eps^2/(2\lambda)}}
+\left(
+\partial_{\varepsilon_1}F(z)
++
+\Bigl\{
+\frac{z-y+e}{\lambda}:
+\frac{\norm e^2}{2\lambda}\le\varepsilon_2
+\Bigr\}
+\right).
+\]
+
+Do đó,
+\[
+0\in\partial_{\eps^2/(2\lambda)}\Phi_\lambda(z)
+\]
+khi và chỉ khi tồn tại
+$\varepsilon_1,\varepsilon_2\ge0$ thỏa
+$\varepsilon_1+\varepsilon_2\le\eps^2/(2\lambda)$,
+$\xi\in\partial_{\varepsilon_1}F(z)$ và
+$e\in\Hil$ với
+$\norm e^2/(2\lambda)\le\varepsilon_2$ sao cho
+\[
+0
+=
+\xi+\frac{z-y+e}{\lambda}.
+\]
+Nhân hai vế với $\lambda$ ta được
+\[
+\lambda\xi+(z-y+e)=0,
+\]
+đúng với phát biểu (ii). Vì vậy,
+\[
+\mathrm{(i)}
+\Longleftrightarrow
+\mathrm{(ii)}.
+\]
+
+Tiếp theo, ta chứng minh
+\[
+\mathrm{(ii)}
+\Longleftrightarrow
+\mathrm{(iii)}.
+\]
+
+Giả sử (ii) đúng. Đặt
+\[
+\tilde\eps_1=\sqrt{2\lambda\varepsilon_1},
+\qquad
+\tilde\eps_2=\norm e.
+\]
+Từ
+\[
+\varepsilon_1+\varepsilon_2
+\le
+\frac{\eps^2}{2\lambda},
+\qquad
+\frac{\norm e^2}{2\lambda}
+\le
+\varepsilon_2,
+\]
+suy ra
+\[
+\tilde\eps_1^2+\tilde\eps_2^2
+=
+2\lambda\varepsilon_1+\norm e^2
+\le
+2\lambda(\varepsilon_1+\varepsilon_2)
+\le
+\eps^2.
+\]
+Mặt khác, từ
+\[
+\lambda\xi+(z-y+e)=0
+\]
+ta có
+\[
+\xi
+=
+\frac{y-z-e}{\lambda}
+\in
+\partial_{\tilde\eps_1^2/(2\lambda)}F(z).
+\]
+Đổi $e$ thành $-e$ (không làm thay đổi chuẩn của $e$), ta được
+\[
+\frac{y-z+e}{\lambda}
+\in
+\partial_{\tilde\eps_1^2/(2\lambda)}F(z),
+\]
+đúng với phát biểu (iii).
+
+Ngược lại, giả sử (iii) đúng. Đặt
+\[
+\varepsilon_1=\frac{\eps_1^2}{2\lambda},
+\qquad
+\varepsilon_2=\frac{\eps_2^2}{2\lambda}.
+\]
+Điều kiện
+\[
+\eps_1^2+\eps_2^2\le\eps^2
+\]
+suy ra
+\[
+\varepsilon_1+\varepsilon_2
+\le
+\frac{\eps^2}{2\lambda},
+\]
+và từ
+\[
+\frac{y-z+e}{\lambda}
+\in
+\partial_{\varepsilon_1}F(z)
+\]
+ta suy ra
+\[
+\lambda\xi+(z-y-e)=0,
+\qquad
+\xi=\frac{y-z+e}{\lambda}.
+\]
+Đổi $e$ thành $-e$ một lần nữa, ta thu được đúng phát biểu (ii).
+
+Vậy ba mệnh đề (i), (ii) và (iii) là tương đương.
+\end{proof}
+
+Bổ đề~\ref{lem:equiv-AT1} cho thấy xấp xỉ loại~1 đóng vai trò là một mô hình tổng quát bao hàm cả xấp xỉ loại~2 và loại~3. Cụ thể, điều kiện tương đương ở Bổ đề~\ref{lem:equiv-AT1}(iii) cho phép tách sai số tổng thể thành hai đại lượng độc lập: một đại lượng bị hấp thụ bởi $\eps$-dưới vi phân của $F$, và đại lượng kia đóng vai trò là nhiễu của điểm tham chiếu. Khi dồn toàn bộ sai số vào một trong hai thành phần này (hai trường hợp cực biên), ta thu được chính xác định nghĩa của xấp xỉ loại~2 và loại~3. Mối liên hệ này được phát biểu chính xác trong các mệnh đề sau.
+
+\begin{proposition}
+\label{prop:relations}
+Các khẳng định sau đúng:
+\begin{enumerate}
+  \item $z\approx_2\prox_{\lambda F}(y)$ với độ chính xác $\eps$
+        $\implies$ $z\approx_1\prox_{\lambda F}(y)$ với cùng độ chính
+        xác $\eps$;
+  \item $z\approx_3\prox_{\lambda F}(y)$ với độ chính xác $\eps$
+        $\implies$ $z\approx_1\prox_{\lambda F}(y)$ với cùng độ chính
+        xác $\eps$;
+  \item Nếu thêm giả thiết $F$ lồi mạnh với hệ số $\mu>0$ thì
+        $z\approx_1\prox_{\lambda F}(y)$ với độ chính xác $\eps$
+        $\implies$ $z\approx_2\prox_{\lambda F}(y)$ với độ chính xác
+        $\eps\sqrt{(\lambda\mu+1)/\lambda\mu}$; nói riêng, nếu
+        $\lambda\ge 1/\mu$ thì độ chính xác có thể lấy là $\eps\sqrt{2}$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+
+\emph{1)} Giả sử
+$
+z\approx_2\prox_{\lambda F}(y)
+$
+với độ chính xác $\eps$. Theo định nghĩa,
+\[
+\frac{y-z}{\lambda}
+\in
+\partial_{\eps^2/(2\lambda)}F(z).
+\]
+Trong Bổ đề~\ref{lem:equiv-AT1}(iii), chỉ cần chọn
+\[
+\eps_1=\eps,\qquad
+\eps_2=0,\qquad
+e=0.
+\]
+Khi đó
+\[
+\eps_1^2+\eps_2^2=\eps^2,
+\]
+và điều kiện của (iii) được thỏa mãn. Suy ra
+$
+z\approx_1\prox_{\lambda F}(y)
+$
+với cùng độ chính xác $\eps$.
+
+\medskip
+
+\emph{2)} Giả sử
+$
+z\approx_3\prox_{\lambda F}(y)
+$
+với độ chính xác $\eps$. Theo công thức tương đương
+\eqref{eq:AT3-equiv}, tồn tại
+$e\in\Hil$ với
+$\norm e\le\eps$ sao cho
+\[
+\frac{y-z+e}{\lambda}
+\in
+\partial F(z).
+\]
+Do
+\[
+\partial F(z)=\partial_0F(z),
+\]
+trong Bổ đề~\ref{lem:equiv-AT1}(iii) ta chỉ cần chọn
+\[
+\eps_1=0,\qquad
+\eps_2=\eps.
+\]
+Khi đó điều kiện của (iii) được thỏa mãn, và do đó
+$
+z\approx_1\prox_{\lambda F}(y)
+$
+với cùng độ chính xác $\eps$.
+
+\medskip
+
+\emph{3)} Giả sử
+$
+z\approx_1\prox_{\lambda F}(y)
+$
+với độ chính xác $\eps$. Theo Định nghĩa~\ref{eq:AT1} và hệ quả
+\eqref{eq:eps-subopt},
+\[
+\Phi_\lambda(x)
+\ge
+\Phi_\lambda(z)
+-
+\frac{\eps^2}{2\lambda},
+\qquad
+\forall x\in\Hil.
+\]
+Viết lại theo định nghĩa của $\Phi_\lambda$, ta được
+\[
+F(x)
++
+\frac1{2\lambda}\norm{x-y}^2
+\ge
+F(z)
++
+\frac1{2\lambda}\norm{z-y}^2
+-
+\frac{\eps^2}{2\lambda}.
+\]
+Khai triển
+\[
+\norm{x-y}^2
+=
+\norm{x-z}^2
++
+2\langle x-z,z-y\rangle
++
+\norm{z-y}^2,
+\]
+rút gọn hai vế, suy ra
+\[
+F(x)
+\ge
+F(z)
++
+\frac1\lambda
+\langle x-z,y-z\rangle
+-
+\frac1{2\lambda}\norm{x-z}^2
+-
+\frac{\eps^2}{2\lambda},
+\qquad
+\forall x\in\Hil.
+\]
+
+Ta khai thác giả thiết $F$ lồi mạnh với hệ số $\mu$. Với
+$\theta\in(0,1]$, đặt
+\[
+x_\theta
+=
+\theta x+(1-\theta)z.
+\]
+Theo tính lồi mạnh,
+\[
+F(x_\theta)
+\le
+\theta F(x)
++
+(1-\theta)F(z)
+-
+\frac\mu2
+\theta(1-\theta)
+\norm{x-z}^2.
+\]
+Mặt khác, áp dụng bất đẳng thức trên cho $x_\theta$ thay cho $x$,
+\[
+F(x_\theta)
+\ge
+F(z)
++
+\frac{\theta}{\lambda}
+\langle x-z,y-z\rangle
+-
+\frac{\theta^2}{2\lambda}
+\norm{x-z}^2
+-
+\frac{\eps^2}{2\lambda}.
+\]
+Kết hợp hai bất đẳng thức này, rút gọn và chia cho $\theta$, ta thu được
+\[
+F(x)
+\ge
+F(z)
++
+\left\langle
+x-z,
+\frac{y-z}{\lambda}
+\right\rangle
++
+\frac{1}{2\lambda}
+\bigl(
+\lambda\mu(1-\theta)-\theta
+\bigr)
+\norm{x-z}^2
+-
+\frac{\eps^2}{2\lambda\theta}.
+\]
+
+Nếu chọn
+\[
+\theta
+\le
+\frac{\lambda\mu}{1+\lambda\mu},
+\]
+thì
+\[
+\lambda\mu(1-\theta)-\theta\ge0,
+\]
+nên số hạng bậc hai không âm và có thể bỏ đi. Khi đó
+\[
+F(x)
+\ge
+F(z)
++
+\left\langle
+x-z,
+\frac{y-z}{\lambda}
+\right\rangle
+-
+\frac{\eps^2}{2\lambda\theta},
+\qquad
+\forall x\in\Hil,
+\]
+hay
+\[
+\frac{y-z}{\lambda}
+\in
+\partial_{\eps^2/(2\lambda\theta)}F(z).
+\]
+Chọn
+\[
+\theta
+=
+\frac{\lambda\mu}{1+\lambda\mu},
+\]
+ta thu được
+\[
+\frac{\eps}{\sqrt{\theta}}
+=
+\eps
+\sqrt{\frac{1+\lambda\mu}{\lambda\mu}},
+\]
+chính là độ chính xác trong phát biểu.
+
+Nếu thêm
+\[
+\lambda\ge\frac1\mu,
+\]
+thì
+\[
+\frac12
+\le
+\frac{\lambda\mu}{1+\lambda\mu},
+\]
+nên có thể chọn đơn giản $\theta=\frac12$, từ đó suy ra độ chính xác
+$\eps\sqrt2$.
+
+\end{proof}
+
+Mệnh đề~\ref{prop:relations} cho thấy xấp xỉ loại~1 đóng vai trò như một khái niệm trung tâm trong ba loại xấp xỉ đang xét. Một mặt, mọi xấp xỉ loại~2 và loại~3 đều tự động là xấp xỉ loại~1 với cùng mức sai số. Mặt khác, khi $F$ lồi mạnh, một xấp xỉ loại~1 cũng có thể được chuyển thành xấp xỉ loại~2 với sự suy giảm độ chính xác chỉ bởi một hằng số nhân. 
+
+\subsection{Ví dụ: Phép chiếu lên một tập lồi}
+\label{sec:example-projection}
+Một trường hợp đặc biệt giúp minh họa rõ ý nghĩa của ba khái niệm xấp xỉ là khi
+\[
+F=\iota_C,
+\]
+trong đó $\iota_C$ là hàm chỉ báo của một tập lồi đóng
+$C\subset\Hil$, tức
+\[
+\iota_C(x)=
+\begin{cases}
+0, & x\in C,\\
++\infty, & x\notin C.
+\end{cases}
+\]
+Khi đó bài toán điểm gần kề trở thành bài toán chiếu trực giao lên $C$, vì
+\[
+\prox_{\lambda F}=P_C,
+\]
+không phụ thuộc vào tham số $\lambda$. Do đó, ba khái niệm xấp xỉ của điểm gần kề có thể được diễn giải hoàn toàn bằng hình học, giúp thấy rõ sự khác biệt giữa chúng.
+
+\paragraph{Xấp xỉ loại 1.}
+Từ định nghĩa của xấp xỉ loại~1 và tính chất của phép chiếu trực giao, ta suy ra
+\begin{equation}
+  z\approx_1 P_C(y)
+  \text{ với độ chính xác }\eps
+  \iff
+  z\in C
+  \text{ và }
+  \norm{z-y}^2
+  \le
+  d(y,C)^2+\eps^2.
+  \label{eq:proj-type1}
+\end{equation}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figures/type_1.png}
+    \caption{Minh họa xấp xỉ loại~1. Điểm $z$ chỉ cần nằm trong phần tô đậm, tức giao của tập $C$ với hình cầu tâm $y$ có bán kính $\sqrt{d(y,C)^2+\eps^2}$. Vì vậy, $z$ không nhất thiết phải nằm gần điểm chiếu $P_C(y)$.}
+    \label{fig:loai_1}
+\end{figure}
+
+Nói cách khác, thay vì yêu cầu $z$ phải là hình chiếu chính xác của $y$ lên $C$, ta chỉ đòi hỏi khoảng cách từ $y$ đến $z$ không vượt quá khoảng cách tối ưu $d(y,C)$ quá một lượng $\eps$. Vì vậy, tập các điểm xấp xỉ loại~1 chính là giao của tập $C$ với hình cầu tâm $y$ có bán kính $\sqrt{d(y,C)^2+\eps^2}$.
+
+Điều này cho thấy xấp xỉ loại~1 là khái niệm \textit{mềm} nhất trong ba loại. Thật vậy, nếu $y\notin C$ thì một điểm xấp xỉ loại~1 chỉ cần thuộc vùng giao nói trên; nó không nhất thiết nằm gần điểm chiếu $P_C(y)$, mà vẫn có thể nằm khá sâu bên trong tập $C$, miễn là điều kiện khoảng cách được thỏa mãn.
+
+
+
+\paragraph{Xấp xỉ loại 2.}
+
+Trong trường hợp $F=\iota_C$, điều kiện \eqref{eq:AT2} tương đương với
+\begin{equation}
+  z\approx_2 P_C(y)
+  \text{ với độ chính xác }\eps
+  \iff
+  z\in C
+  \text{ và }
+  \iprod{x-z}{y-z}
+  \le
+  \frac{\eps^2}{2},
+  \quad \forall x\in C.
+  \label{eq:proj-type2}
+\end{equation}
+
+Điều kiện trên có thể được hiểu như một sự nới lỏng của đặc trưng hình học đối với phép chiếu trực giao. Thật vậy, điểm chiếu chính xác
+$P_C(y)$ được đặc trưng bởi
+\[
+\iprod{x-P_C(y)}{y-P_C(y)}\le0,
+\qquad \forall x\in C,
+\]
+nghĩa là toàn bộ tập lồi $C$ nằm trong một nửa không gian được xác định bởi siêu phẳng tiếp xúc với $C$ tại $P_C(y)$.
+
+Đối với xấp xỉ loại~2, bất đẳng thức trên được thay bằng
+\[
+\iprod{x-z}{y-z}\le\frac{\eps^2}{2},
+\]
+cho phép toàn bộ tập $C$ vượt qua siêu phẳng tiếp xúc một lượng hữu hạn phụ thuộc vào $\eps$. Cụ thể, $C$ chỉ cần nằm trong nửa không gian giới hạn bởi siêu phẳng affine
+\[
+h_\eps:
+\Big\langle
+x-z,\,
+\frac{y-z}{\norm{y-z}}
+\Big\rangle
+=
+\frac{\eps^2}{2\norm{y-z}},
+\]
+là siêu phẳng vuông góc với vectơ $y-z$ và song song với siêu phẳng tiếp xúc chính xác. So với trường hợp $\eps=0$, siêu phẳng này được tịnh tiến theo hướng từ $z$ tới $y$ một khoảng
+\[
+\frac{\eps^2}{2\norm{y-z}}.
+\]
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figures/type_2.png}
+    \caption{Minh họa xấp xỉ loại 2. Siêu phẳng $h_0$ là siêu phẳng đỡ chính xác tại $z$, còn $h_\varepsilon$ là siêu phẳng song song thu được bằng cách tịnh tiến $h_0$ về phía $y$ một khoảng $\varepsilon^2/(2\|y-z\|)$. Điều kiện \eqref{eq:proj-type2} yêu cầu toàn bộ tập lồi $C$ vẫn nằm trong nửa không gian giới hạn bởi $h_\varepsilon$.}
+\label{fig:type2}
+    \label{fig:my_label}
+\end{figure}
+
+Do đó, khác với xấp xỉ loại~1 vốn chỉ kiểm soát giá trị của khoảng cách, xấp xỉ loại~2 còn kiểm soát cả hướng hình học của phép chiếu thông qua một điều kiện tiếp xúc gần đúng. Khi $\eps$ giảm về $0$, siêu phẳng $h_\eps$ tiến dần tới siêu phẳng tiếp xúc thực sự, và ta thu lại đúng điều kiện đặc trưng của phép chiếu trực giao. Hình~\ref{fig:type2} minh họa trực quan ý
+nghĩa hình học của khái niệm này.
+\paragraph{Xấp xỉ loại 3.}
+Theo đặc trưng \eqref{eq:AT3-equiv}, xấp xỉ loại~3 của phép chiếu được mô tả bởi
+\begin{equation}
+  z\approx_3 P_C(y) \text{ với độ chính xác } \eps
+  \iff
+  z=P_C(y+e),\qquad \norm{e}\le\eps.
+  \label{eq:proj-type3}
+\end{equation}
+
+Nói cách khác, thay vì làm tròn trực tiếp điểm chiếu, ta cho phép điểm đầu vào $y$ chịu một nhiễu có chuẩn không vượt quá $\eps$, rồi thực hiện phép chiếu chính xác. Vì vậy, mọi xấp xỉ loại~3 đều là ảnh chiếu của một điểm nằm trong hình cầu tâm $y$, bán kính $\eps$.
+
+Về mặt hình học, đây là đặc điểm khác biệt nhất của loại~3. Thật vậy, nếu $y\notin C$ thì phép chiếu của bất kỳ điểm nào bên ngoài $C$ luôn nằm trên biên của $C$. Do đó, mọi xấp xỉ loại~3 đều nằm trên biên của tập lồi, không thể xuất hiện ở phía trong như đối với xấp xỉ loại~1. Tập các điểm xấp xỉ khả dĩ chính là ảnh của hình cầu
+\[
+B(y,\eps)=\{\,y+e:\ \norm e\le\eps\,\}
+\]
+qua phép chiếu $P_C$, tạo thành một cung trên biên của $C$
+(Hình~\ref{fig:type3}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figures/type_3.png}
+    \caption{Xấp xỉ loại~3: các điểm xấp xỉ là ảnh chiếu của các điểm trong hình cầu $B(y,\eps)$, do đó luôn nằm trên biên của $C$.}
+    \label{fig:type_3}
+\end{figure}
+
+\begin{remark}
+Một điểm đáng chú ý là, đối với các tập lồi bị chặn, xấp xỉ loại~3 luôn kéo theo xấp xỉ loại~2, mặc dù phải đánh đổi bằng một hằng số trong độ chính xác. Nói cách khác, nếu một điểm là hình chiếu chính xác của một điểm bị nhiễu không quá $\eps$, thì nó đồng thời cũng thỏa điều kiện siêu phẳng của xấp xỉ loại~2 với một sai số lớn hơn nhưng vẫn được kiểm soát tường minh.
+
+Cụ thể, nếu
+\[
+z\approx_3P_C(y)
+\quad\text{với độ chính xác }\eps,
+\]
+thì
+\[
+z\approx_2P_C(y)
+\quad\text{với độ chính xác }
+\sqrt{2\,\diam(C)\,\eps}.
+\]
+
+Thật vậy, theo đặc trưng của xấp xỉ loại~3 trong
+\eqref{eq:proj-type3}, tồn tại một vectơ nhiễu
+$e\in\Hil$ sao cho
+\[
+z=P_C(y+e),\qquad \|e\|\le\eps.
+\]
+Vì $z$ là hình chiếu của $y+e$ lên $C$, nên từ đặc trưng biến phân của phép chiếu suy ra
+\[
+\langle x-z,\,(y+e)-z\rangle\le0,
+\qquad \forall x\in C.
+\]
+Do đó,
+\[
+\begin{aligned}
+\langle x-z,\;y-z\rangle
+&=\langle x-z,\,(y+e)-z\rangle-\langle x-z,e\rangle\\
+&\le -\langle x-z,e\rangle\\
+&\le \|x-z\|\,\|e\|,
+\end{aligned}
+\]
+trong đó bất đẳng thức cuối cùng là hệ quả của bất đẳng thức Cauchy--Schwarz.
+
+Mặt khác, vì cả $x$ và $z$ đều thuộc $C$ nên
+\[
+\|x-z\|\le\diam(C).
+\]
+Kết hợp với $\|e\|\le\eps$ thu được
+\[
+\langle x-z,\;y-z\rangle
+\le
+\diam(C)\,\eps,
+\qquad \forall x\in C.
+\]
+So sánh với điều kiện đặc trưng của xấp xỉ loại~2 trong
+\eqref{eq:proj-type2},
+\[
+\langle x-z,\;y-z\rangle
+\le
+\frac{\eps'^2}{2},
+\]
+chỉ cần chọn
+$
+\eps'
+=
+\sqrt{2\,\diam(C)\,\eps}.
+$
+Điều này chứng minh kết luận.
+\end{remark}

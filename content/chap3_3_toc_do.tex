@@ -1,0 +1,90 @@
+\begin{essayonly}
+Theo Định lý~\ref{thm:estimate-main}, tốc độ hội tụ của dãy giá trị $F(x_k)$ được quyết định bởi tốc độ triệt tiêu của hệ số $\beta_k$. Do đó, để thu được các ước lượng hội tụ tường minh, cần đánh giá định lượng dãy $(\beta_k)$. Bổ đề dưới đây, là một mở rộng của kết quả tương ứng trong ~\citep{guler1992}, cung cấp các cận hai phía cho $\beta_k$ dưới một giả thiết đơn giản trên các tham số cập nhật.
+\end{essayonly}
+
+\begin{lemma}
+\label{lem:beta-rate}
+Cho dãy $(\lambda_k)_{k\in\N}$, $\lambda_k>0$, và $A>0$, $0<a\le b$. Định nghĩa $(A_k)$, $(\alpha_k)$ bởi $A_0=A$ và, với mỗi $k$,
+\[
+  \alpha_k\in[0,1),\qquad
+  a \le \frac{\alpha_k^2}{(1-\alpha_k)A_k\lambda_k} \le b,
+  \qquad A_{k+1}=(1-\alpha_k)A_k.
+\]
+Đặt $\beta_k:=\prod_{i=0}^{k-1}(1-\alpha_i)$. Khi đó
+\begin{equation}
+  \frac{1}{\Big(1+\sqrt{bA}\sum_{j=0}^{k-1}\sqrt{\lambda_j}\Big)^2}
+  \ \le\ \beta_k \ \le\
+  \frac{1}{\Big(1+\tfrac{\sqrt{aA}}2\sum_{j=0}^{k-1}\sqrt{\lambda_j}\Big)^2}.
+  \label{eq:beta-bound}
+\end{equation}
+Đặc biệt $\beta_k\to0$ khi và chỉ khi $\sum_k\sqrt{\lambda_k}=+\infty$; và
+nếu $\lambda_k\ge\lambda>0$ với mọi $k$ thì $\beta_k=O(1/k^2)$.
+\end{lemma}
+\begin{essayonly}
+\begin{proof}
+Từ hệ thức truy hồi $A_{k+1}=(1-\alpha_k)A_k$ nên $A_k = A\beta_k$, và từ giả thiết, $(1-\alpha_k)A_k\lambda_k = A_{k+1}\lambda_k$, do đó điều kiện đã cho viết lại thành
+\[
+  \sqrt{aA_{k+1}\lambda_k} \ \le\ \alpha_k \ \le\ \sqrt{bA_{k+1}\lambda_k}.
+\]
+Mặt khác, từ $A_{k+1}=(1-\alpha_k)A_k$ suy ra $A_k-A_{k+1}=\alpha_k A_k$,
+và ta khai triển
+\[
+  \frac{1}{\sqrt{A_{k+1}}} - \frac{1}{\sqrt{A_k}}
+  = \frac{\sqrt{A_k}-\sqrt{A_{k+1}}}{\sqrt{A_kA_{k+1}}}
+  = \frac{A_k-A_{k+1}}{\sqrt{A_kA_{k+1}}\big(\sqrt{A_k}+\sqrt{A_{k+1}}\big)}
+  = \frac{\alpha_k\sqrt{A_k}}{\sqrt{A_{k+1}}\big(\sqrt{A_k}+\sqrt{A_{k+1}}\big)}.
+\]
+Vì $A_{k+1}\le A_k$ (do $\alpha_k\ge0$), ta có
+$\sqrt{A_k}\le\sqrt{A_k}+\sqrt{A_{k+1}}\le2\sqrt{A_k}$, nên
+\[
+  \frac{\alpha_k}{2\sqrt{A_{k+1}}}
+  \ \le\ \frac{1}{\sqrt{A_{k+1}}}-\frac{1}{\sqrt{A_k}}
+  \ \le\ \frac{\alpha_k}{\sqrt{A_{k+1}}}.
+\]
+Thay chặn của $\alpha_k$ ở trên, số hạng $\alpha_k/\sqrt{A_{k+1}}$ nằm
+giữa $\sqrt{a\lambda_k}$ và $\sqrt{b\lambda_k}$, nên
+\[
+  \frac{\sqrt{a\lambda_k}}{2}
+  \ \le\ \frac{1}{\sqrt{A_{k+1}}}-\frac{1}{\sqrt{A_k}}
+  \ \le\ \sqrt{b\lambda_k}.
+\]
+Lấy tổng từ $k=0$ đến $k-1$ và dùng $A_0=A$:
+\[
+  \frac{1}{\sqrt A} + \frac{\sqrt a}2\sum_{j=0}^{k-1}\sqrt{\lambda_j}
+  \ \le\ \frac{1}{\sqrt{A_k}}
+  \ \le\ \frac{1}{\sqrt A} + \sqrt b\sum_{j=0}^{k-1}\sqrt{\lambda_j}.
+\]
+Nhân cả hai vế với $\sqrt A$ và dùng $A_k=A\beta_k$ (nên
+$\sqrt A/\sqrt{A_k}=1/\sqrt{\beta_k}$):
+\[
+  1+\frac{\sqrt{aA}}2\sum_{j=0}^{k-1}\sqrt{\lambda_j}
+  \ \le\ \frac{1}{\sqrt{\beta_k}}
+  \ \le\ 1+\sqrt{bA}\sum_{j=0}^{k-1}\sqrt{\lambda_j}.
+\]
+Nghịch đảo và bình phương cho đúng \eqref{eq:beta-bound}.
+\begin{equation*}
+  \frac{1}{\Big(1+\sqrt{bA}\sum_{j=0}^{k-1}\sqrt{\lambda_j}\Big)^2}
+  \ \le\ \beta_k \ \le\
+  \frac{1}{\Big(1+\tfrac{\sqrt{aA}}2\sum_{j=0}^{k-1}\sqrt{\lambda_j}\Big)^2}.
+\end{equation*}
+
+Hệ quả
+\[
+\beta_k\to0
+\iff
+\sum_{k=0}^{\infty}\sqrt{\lambda_k}=+\infty
+\]
+là hiển nhiên từ \eqref{eq:beta-bound}. Nếu thêm giả thiết
+$\lambda_k\ge\lambda>0$ với mọi $k$, thì
+\[
+\sum_{j=0}^{k-1}\sqrt{\lambda_j}
+\ge
+k\sqrt\lambda,
+\]
+và do đó vế phải của \eqref{eq:beta-bound} có bậc $O(1/k^2)$.
+\end{proof}
+\end{essayonly}
+
+\begin{essayonly}
+Các kết quả thu được trong mục này tạo thành khung phân tích chung cho toàn bộ phần còn lại của chương. Cụ thể, Định lý~\ref{thm:estimate-main} chuyển bài toán đánh giá sai số của thuật toán thành bài toán xây dựng một dãy ước lượng; Bổ đề~\ref{lem:core} cung cấp cơ chế liên kết dãy ước lượng với phép cập nhật sinh bởi toán tử điểm gần kề xấp xỉ; còn Bổ đề~\ref{lem:beta-rate} cho phép lượng hóa tốc độ triệt tiêu của hệ số $\beta_k$. Trong hai mục tiếp theo, ba kết quả này sẽ được kết hợp để thiết lập các ước lượng hội tụ cho hai lớp thuật toán điểm gần kề tăng tốc tương ứng với sai số loại~1 và sai số loại~2.
+\end{essayonly}

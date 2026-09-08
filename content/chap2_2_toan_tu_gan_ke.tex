@@ -1,0 +1,73 @@
+\begin{definition}
+Với $\lambda>0$ và $y\in\Hil$, điểm gần kề của $y$ theo hàm $F$ được định nghĩa bởi
+\begin{equation}
+    \prox_{\lambda F}(y)
+    :=
+    \argmin_{x\in\Hil}
+    \left\{
+    \Phi_\lambda(x)
+    :=
+    F(x)
+    +
+    \frac1{2\lambda}\norm{x-y}^2
+    \right\}.
+\end{equation}
+\end{definition}
+
+\begin{essayonly}
+Do $\Phi_\lambda$ là tổng của một hàm lồi và một hàm toàn phương $1/\lambda$-lồi mạnh, bài toán trên luôn có nghiệm duy nhất. Hơn nữa, điều kiện tối ưu bậc một bài toán lồi cho ta đặc trưng quen thuộc
+\end{essayonly}
+\begin{equation}
+  z = \prox_{\lambda F}(y)
+  \iff 0 \in \partial \Phi_\lambda(z)
+  \iff \frac{y-z}{\lambda} \in \partial F(z),
+  \label{eq:opt-cond}
+\end{equation}
+\begin{essayonly}
+Từ đặc trưng trên suy ra $$\prox_{\lambda F}=(I+\lambda\partial F)^{-1},$$ nghĩa là toán tử gần kề chính là toán tử phân giải của dưới vi phân $\partial F$.
+\end{essayonly}
+Trên thực tế, việc tính $\prox_{\lambda F}(y)$ tự nó có thể khó không kém việc giải bài toán ban đầu, nên ta cần một khái niệm về xấp xỉ của điểm gần kề. Công cụ thường dùng là $\eps$-dưới vi phân: với $\eps\ge 0$,
+\begin{equation}
+  \partial_\eps F(z) := \big\{ \xi\in\Hil :
+     F(x) \ge F(z) + \iprod{x-z}{\xi} - \eps,\ \forall x\in\Hil \big\}.
+  \label{eq:eps-subdiff}
+\end{equation}
+Khi $\eps=0$, ta thu được dưới vi phân thông thường. Ta có một tính chất cơ bản sau đây
+\begin{equation}
+  0\in\partial_\eps F(z)
+  \iff
+  F(z)\le\inf F+\eps.
+  \label{eq:eps-subopt}
+\end{equation}
+\begin{essayonly}
+Nói cách khác, điều kiện \textit{$0$ là một $\eps$-dưới gradient tại $z$} tương đương với việc \textit{$z$ là một điểm $\eps$-tối ưu} của bài toán.
+\begin{proof}
+Theo định nghĩa của $\eps$-dưới vi phân,
+\[
+0\in\partial_\eps F(z)
+\iff
+F(x)\ge F(z)-\eps,\qquad\forall x\in\Hil.
+\]
+Lấy infimum theo $x$ suy ra
+\[
+\inf F\ge F(z)-\eps,
+\iff
+F(z)\le\inf F+\eps.
+\]
+Ngược lại, nếu $F(z)\le\inf F+\eps$ thì với mọi $x\in\Hil$,
+\[
+F(x)\ge\inf F\ge F(z)-\eps
+=
+F(z)+\langle x-z,0\rangle-\eps,
+\]
+nên theo định nghĩa của $\partial_\eps F(z)$,
+\[
+0\in\partial_\eps F(z).
+\]
+\end{proof}
+\end{essayonly}
+
+\begin{essayonly}
+Dựa trên khái niệm $\eps$-dưới vi phân, ta sẽ xét ba mô hình xấp xỉ của điểm gần kề. Cả ba đều thuộc lớp sai số tuyệt đối, nghĩa là tham số sai số $\eps$ được quy định độc lập với vị trí của điểm $y$ cũng như độ lớn của điểm gần kề cần tính.
+\end{essayonly}
+

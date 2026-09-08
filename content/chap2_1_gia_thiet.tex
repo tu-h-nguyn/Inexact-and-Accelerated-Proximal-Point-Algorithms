@@ -1,0 +1,16 @@
+﻿Toán tử gần kề (proximal operator) là một công cụ cốt lõi trong tối ưu lồi hiện đại, xuất hiện trong nhiều thuật toán nổi tiếng như Proximal Gradient, FISTA, hay ADMM. Tại mỗi bước lặp, các thuật toán này yêu cầu tính toán tử
+\[
+\operatorname{prox}_{\lambda F}(y) = \operatorname*{argmin}_{x}\left\{ F(x)+\frac{1}{2\lambda}\|x-y\|^2 \right\}.
+\]
+Tuy nhiên, trong các bài toán thực tế quy mô lớn, việc tính chính xác toán tử này bằng công thức đóng thường không khả thi; thay vào đó, người ta phải giải một bài toán tối ưu phụ ngay tại mỗi bước lặp. 
+Điều này dẫn đến nhu cầu nghiên cứu các điểm gần kề không chính xác (inexact proximal points), được phân loại thành ba loại sai số phổ biến: loại 1, loại 2 và loại 3. Xét bài toán tối ưu lồi tổng quát trên không gian Hilbert \(\mathcal{H}\):
+\[
+\inf_{x\in\mathcal{H}} F(x), \quad \text{với } F: \mathcal{H} \to (-\infty, +\infty] \text{ là hàm chính thường, lồi, nửa liên tục dưới.}
+\]
+Kí hiệu \(F^* := \inf F\) là giá trị tối ưu. Các kết quả được trình bày không yêu cầu giả thiết \(F\) có nghiệm cực tiểu hay \(F^*\) hữu hạn, ngoại trừ các định lý phát biểu về tốc độ hội tụ cụ thể.
+Trong công trình nghiên cứu của S. Salzo và S. Villa \cite{salzovilla2012} được nhóm tìm hiểu và báo cáo, thuật toán Proximal Point tăng tốc được phát triển bởi Nesterov/Güler đạt hội tụ bậc \(\order(1/k^2)\). Tuy nhiên, Salzo và Villa đã chỉ ra rằng chứng minh của Güler cho trường hợp không chính xác tồn tại một lỗi tinh tế, dẫn đến việc hội tụ của PPA tăng tốc không chính xác vẫn là một bài toán mở.
+Trong bài báo này, các tác giả đã xây dựng một phương pháp phân tích chuỗi ước tính linh hoạt để giải quyết vấn đề đó. Các đóng góp chính có thể được tóm gọn như sau:
+\begin{itemize}
+    \item Có thể khôi phục được tốc độ hội tụ bậc hai (dạng chính xác) nếu sai số được đánh giá theo loại 2.
+    \item Thuật toán vẫn đảm bảo hội tụ với tốc độ \(\order(1/k)\) nếu sử dụng sai số loại 1; quan trọng hơn, kết quả này vẫn đúng kể cả khi chuỗi sai số không có tính khả tổng (nonsummable).
+\end{itemize}
