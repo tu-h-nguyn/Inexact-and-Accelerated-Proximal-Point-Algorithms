@@ -86,9 +86,9 @@ Trái ngược với Định lý \ref{thm:4.1}, mọi quy tắc cập nhật tro
 Định lý trên đảm bảo sự tồn tại của chuỗi \((\nu_k)\) và chuỗi ước lượng \((\varphi_k)\) sao cho \(F(x_k) \le (\varphi_k)_* + \delta_k\). Mặc dù \(\varphi_k\) có các tham số chưa biết \(\nu_k, \xi_k\), không cần biểu thức tường minh của nó để chạy thuật toán. Nhằm suy ra tốc độ hội tụ, theo Bổ đề \ref{lem:beta-rate}, cần \(\beta_k = O(1/k^2)\) và tính các sai số tích lũy \(\eta_k, \delta_k\). Từ định nghĩa \(\eta_k = \eta_{k-1} + \varepsilon_{k-1}/\alpha_{k-1}\) và tương tự cho \(\delta_k\), kết hợp điều kiện \(\alpha_i^2/(A_{i+1}\lambda_i)=1\), \(A_{i+1}=\beta_{i+1}A\), thu được:
 \begin{align*}
     \eta_k &= \sum_{i=0}^{k-1} \frac{\varepsilon_i}{\alpha_i}, \\
-    \delta_k &= \frac{A\beta_k}{2} \sum_{i=0}^{k-1} \eta_{i+1}^2, \qquad \eta_{i+1} = \sum_{j=0}^{i} \frac{\varepsilon_j}{\alpha_j}\autotag
+    \delta_k &= \frac{A\beta_k}{2} \sum_{i=0}^{k-1} \eta_{i+1}^2, \qquad \eta_{i+1} = \sum_{j=0}^{i} \frac{\varepsilon_j}{\alpha_j}\autotag{eq:eta-delta-closed}
 \end{align*}
-Công thức \eqref{eq:3.1} là mấu chốt để dẫn ra tốc độ hội tụ cho thuật toán \eqref{IAPPA1}.
+Công thức \eqref{eq:eta-delta-closed} là mấu chốt để dẫn ra tốc độ hội tụ cho thuật toán \eqref{IAPPA1}.
 \end{remark}
 \begin{theorem}
     Xét thuật toán được miêu tả trong \eqref{IAPPA1} cho chuỗi $\lambda_k>0$ thỏa $\lambda_j\le M\lambda_i$ khi $j\le i$ với $M>0$. Khi này, nếu $\eps_k=\order(1/k^q)$ với $q>\frac32$, chuỗi $(x_k)_{k\in\N}$ là tối tiểu hóa với $F$ và nếu $F$ chứa tối tiểu thì được tốc độ hội tụ
@@ -126,15 +126,15 @@ Công thức \eqref{eq:3.1} là mấu chốt để dẫn ra tốc độ hội t�
     \begin{align*}
         \sum_{i=0}^{k-1}\eta_{i+1}^2&\le\frac{c^2}{(1-p)^2}\sum_{i=1}^{k}(i^{1-p}-p)^2\\
         &\le\frac{c^2}{(1-p)^2}\int_{1}^{k+1}(t^{1-p}-p)^2dt\\
-        &=\frac{c^2}{(1-p)^2}\left(\frac{(k+1)^{3-2p}}{3-2p}-2p\frac{(k+1)^{2-p}}{2-p}+p^k-\frac{4p^2-7p+2}{(3-2p)(2-p)}\right)\autotag
+        &=\frac{c^2}{(1-p)^2}\left(\frac{(k+1)^{3-2p}}{3-2p}-2p\frac{(k+1)^{2-p}}{2-p}+p^k-\frac{4p^2-7p+2}{(3-2p)(2-p)}\right)\autotag{eq:sum-eta-poly}
     \end{align*}
     Với $p=1$:
     \begin{align*}
         \sum_{i=0}^{k-1}\eta_{i+1}^2&\le c^2\sum_{i=1}^{k}(1+\log\,i)^2\\
         &\le c^2\left(1+\int_{2}^{k+2}(1+\log t)^2dt\right)\\
-        &=c^2\left(k+(k+1)\log^2(k+1)-2\log^22\right)\autotag
+        &=c^2\left(k+(k+1)\log^2(k+1)-2\log^22\right)\autotag{eq:sum-eta-log}
     \end{align*}
-    Kết hợp \eqref{eq:3.2} và \eqref{eq:3.3}, thu được:
+    Kết hợp \eqref{eq:sum-eta-poly} và \eqref{eq:sum-eta-log}, thu được:
     $$\sum_{i=0}^{k-1}\eta_{i+1}^2=\left\{\begin{aligned}
         &\order(k^{3-2p})\;&\text{nếu}&\;1/2<p<1\\
         &\order(k\log^2k)\;&\text{nếu}&\;p=1\\

@@ -1,81 +1,202 @@
-# Report-Slide-Numericals-for-Optimizations-Topic-10
+# Thuật toán điểm gần kề tăng tốc có sai số
 
-Repo chứa báo cáo (`main.tex`), slide (`slide.tex`) và kịch bản thuyết trình (`transcript.tex`) cho đề tài, cùng mã nguồn MATLAB minh họa số (`matlab/`). Ghi chú dưới đây để mọi người nắm được luồng làm việc, không cần hỏi lại.
+**Inexact and Accelerated Proximal Point Algorithms** — báo cáo, slide, kịch bản thuyết trình và thực nghiệm số tái lập được, trình bày lại công trình của **Saverio Salzo & Silvia Villa** (*Journal of Convex Analysis* 19, 2012).
 
-## Quy tắc làm việc chung
-- Overleaf chỉ cho tối đa 2 người edit cùng lúc, nên cả nhóm dùng repo này thay thế. Vì vậy **nhớ commit + push thường xuyên** để tránh conflict và mất bài.
-- Repo dùng GitHub nên mỗi người tự chuẩn bị compiler riêng (TeXworks, Overleaf tải project lên, VS Code + LaTeX Workshop, v.v.) — không có server build chung.
-- Không commit file build (`.pdf`, `.aux`, `.log`, `.bbl`,...) — các file này đã có trong `.gitignore`, chỉ commit source (`.tex`, `.bib`, hình ảnh). Ngoại lệ: 3 file `.pdf` trong `matlab/` là hình xuất từ script, được `\includegraphics` thẳng vào báo cáo nên có commit.
+[![build](https://github.com/tu-h-nguyn/inexact-and-accelerated-proximal-point-algorithms/actions/workflows/build.yml/badge.svg)](https://github.com/tu-h-nguyn/inexact-and-accelerated-proximal-point-algorithms/actions/workflows/build.yml)
+![LaTeX](https://img.shields.io/badge/LaTeX-pdflatex-008080)
+![Python](https://img.shields.io/badge/Python-3.11-3776ab)
+![MATLAB](https://img.shields.io/badge/MATLAB-R2020b%2B-e16737)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Cấu trúc thư mục
-```
-main.tex           <- báo cáo: khai báo chương/mục, rồi \input nội dung từ content/
-slide.tex          <- slide Beamer, dùng lại đúng các file trong content/ (không tự chứa nội dung riêng)
-transcript.tex      <- kịch bản thuyết trình dạng screenplay (scene/action/character/speech), đọc song song với slide
-metadata.tex       <- tên đề tài, tên nhóm, thành viên, GVHD, ngày tháng (sửa ở đây, không sửa trong main.tex/slide.tex)
-refs.bib           <- danh sách tài liệu tham khảo (BibTeX), cite bằng \citep{key} / \cite{key}
-content/           <- mỗi file là nội dung của MỘT mục hoặc tiểu mục, không tự chứa \chapter/\section
-matlab/            <- code MATLAB thực nghiệm số (xem mục riêng bên dưới)
-```
+> **In English.** This repository reproduces and extends the analysis of Salzo & Villa (2012) on
+> inexact accelerated proximal point algorithms. The paper identifies a subtle flaw in Güler's 1992
+> convergence proof for the inexact case and rebuilds the analysis on a flexible *estimate sequence*
+> framework. The deliverables are a 34-page report, a 45-slide deck, a presentation script, a
+> condensed standalone essay, and two fully reproducible numerical experiments (Python + MATLAB)
+> that verify both theoretical bounds numerically. All documents and figures are rebuilt in CI.
 
-## Luồng biên soạn: main.tex điều phối, content/ chứa nội dung
-Tiêu đề chương (`\chapter`), mục (`\section`), tiểu mục (`\subsection`) được khai báo **trong `main.tex`** (và tương ứng trong `slide.tex`). Mỗi file trong `content/` chỉ chứa phần thân bài (định lý, chứng minh, hình vẽ...) của đúng một mục/tiểu mục đó, và được chèn vào bằng `\input{content/ten_file.tex}`.
+---
 
-Quy ước đặt tên file: `chap{số chương}_{số thứ tự}_{tên gợi nhớ}.tex`, ví dụ `chap3_2_xay_dung.tex` là file thứ 2 của Chương 3.
+## Câu hỏi trung tâm
 
-**Muốn thêm một mục/tiểu mục mới:**
-1. Tạo file mới trong `content/` theo quy ước tên trên, chỉ viết nội dung (không viết `\chapter`/`\section` trong đó).
-2. Thêm dòng `\section{Tên mục}` (hoặc `\subsection{...}`) ngay trước, rồi `\input{content/ten_file_vua_tao.tex}` ngay sau — làm ở **cả `main.tex` lẫn `slide.tex`** vì hai file dùng chung nội dung.
-3. Nếu mục nào cần được `\ref{}` từ nơi khác, gắn `\label{...}` ngay sau lệnh `\section`/`\subsection` đó.
+Toán tử gần kề
 
-## Cơ chế lọc nội dung essayonly / slidesonly / scriptonly
-Cả ba file (`main.tex`, `slide.tex`, `transcript.tex`) `\input` chung các file trong `content/`, nhưng mỗi phiên bản chỉ hiện một phần nhờ package `comment`:
+$$\operatorname{prox}_{\lambda F}(y) = \arg\min_x \Big\{ F(x) + \tfrac{1}{2\lambda}\lVert x-y\rVert^2 \Big\}$$
 
-| Environment      | main.tex (báo cáo) | slide.tex (slide) | transcript.tex (kịch bản) |
+hiếm khi có công thức đóng: trong thực tế mỗi bước lặp phải **giải một bài toán con bằng một thuật toán khác**, tức là chỉ thu được một xấp xỉ. Năm 1992 Güler kết hợp PPA với ngoại suy Nesterov và công bố tốc độ $\mathcal{O}(1/k^2)$ — kể cả khi tính xấp xỉ.
+
+Salzo & Villa chỉ ra rằng chứng minh đó có một lỗ hổng tinh tế: lập luận **ngầm sử dụng dưới gradient tại điểm gần kề chính xác** — một đại lượng không thể tính được khi ta chỉ có xấp xỉ. Bài báo xây dựng lại toàn bộ phân tích trên khung *dãy ước lượng* và trả lời: **tốc độ hội tụ còn giữ được hay không phụ thuộc vào việc bộ giải bài toán con cấp cho ta loại chứng nhận sai số nào.**
+
+| Loại sai số | Điều kiện | Tốc độ thu được | Ý nghĩa thực tế |
 |---|---|---|---|
-| `essayonly`   | hiện | ẩn | ẩn |
-| `slidesonly`  | ẩn | hiện | ẩn |
-| `scriptonly`  | ẩn | ẩn | hiện |
+| **Loại 1** (AT1) | $0 \in \partial_{\varepsilon^2/2\lambda}\Phi_\lambda(z)$ | $\mathcal{O}(1/k)$, kể cả khi $\sum_k\varepsilon_k = \infty$ | Tiêu chí dừng tự nhiên nhất, nhưng **mất hết lợi thế tăng tốc** |
+| **Loại 2** (AT2) | $\frac{y-z}{\lambda} \in \partial_{\varepsilon^2/2\lambda}F(z)$ | $\mathcal{O}(1/k^2)$ nếu $\varepsilon_k = \mathcal{O}(1/k^q)$, $q>1/2$ | Khắt khe hơn, nhưng **khôi phục đầy đủ tốc độ bậc hai** |
+| **Loại 3** (AT3) | $d(0,\partial\Phi_\lambda(z)) \le \varepsilon/\lambda$ | — | Tương đương prox chính xác của một đầu vào bị nhiễu |
 
-Dùng để: chứng minh chi tiết / lập luận dài chỉ để trong `essayonly` (chỉ vào báo cáo), còn slide chỉ giữ phát biểu định lý/công thức chính. Muốn biết **chính xác nội dung nào đang hiện trên slide** thì đọc phần **không** nằm trong `\begin{essayonly}...\end{essayonly}` của file `content/` tương ứng.
+Kết luận đắt giá nhất: **tăng tốc không miễn phí.** Nếu chỉ đo được sai số theo loại 1, thuật toán tăng tốc chạy không nhanh hơn PPA thường; muốn giữ $\mathcal{O}(1/k^2)$ thì bộ giải bài toán con phải cấp được chứng nhận loại 2.
 
-## transcript.tex — kịch bản thuyết trình
-File screenplay riêng, không `\input` từ `content/` mà viết tay để khớp với đúng nội dung hiện trên slide (xem cơ chế lọc ở trên). Cấu trúc:
-- `\scene{}`, `\action{}`, `\character{}`, `\parenthetical{}` — định dạng kịch bản.
-- `\begin{speech}...\end{speech}` — từng khối lời thoại, chia nhỏ ~25 từ/khối để dễ đọc khi trình chiếu.
-- `\block{N}` — in nhãn "(~N từ)" phía trên mỗi khối, N phải khớp đúng số từ thực tế trong khối (đã được rà soát tự động, không còn khối nào lệch số).
-- Mọi khoảng trống nội dung trên slide trước đây (ví dụ: phần Ví dụ phép chiếu, Bổ đề lem:core, Định lý 4.1/4.3 + IAPPA1, Định lý 4.2 + IAPPA2) đã được thuyết minh đầy đủ, bám sát nội dung thật sự hiển thị trên slide.
+---
 
-## matlab/ — thực nghiệm số
-`main_experiment.m` là script chính, chạy bài toán LASSO tổng hợp (n=80, m=30, sparsity s=8) qua thuật toán điểm gần kề tăng tốc không chính xác, dùng các hàm phụ trợ:
-- `F_obj.m` — hàm mục tiêu (L1 + ridge).
-- `soft_threshold.m` — toán tử prox của chuẩn 1.
-- `inner_fista_trace.m` — bộ giải FISTA nội, trả về vết lặp.
-- `run_outer.m` — vòng lặp ngoài chính (IAPPA), tích lũy `delta1`/`delta2`, `eps1`/`eps2`.
-- `run_classical.m` — đường cơ sở PPA cổ điển không tăng tốc, để so sánh.
+## Kết quả thực nghiệm
 
-Script xuất ra 3 hình (đã `\includegraphics` vào `content/outro.tex`, mục "Tổng kết"):
-1. **`So sanh toc do hoi tu.pdf`** — so sánh tốc độ hội tụ giữa PPA cổ điển và các lịch trình lặp nội khác nhau (`T_k` hằng số / log / sqrt(k) / chính xác), đối chiếu với `O(1/k)` và `O(1/k^2)`.
-2. **`Kiem chung so hoc chan hoi tu cua Dinh ly 3-2.pdf`** — kiểm chứng số học chận hội tụ (Định lý 3.2 / chương 4), so sánh sai số thực tế với hai chận lý thuyết loại 1 và loại 2.
-3. **`Do chinh xac loai 1 thuc te dat duoc theo tung lich trinh lap noi.pdf`** — độ suy giảm của `\eps_k` (sai số loại 1) thực tế theo từng lịch trình lặp nội, minh họa điều kiện suy giảm cần thiết để giữ tốc độ hội tụ bậc 2.
+### 1. Kiểm chứng bậc hội tụ trên hàm bậc bốn (Python, $\mathcal{H}=\mathbb{R}$)
 
-Muốn tái tạo hình: chạy `main_experiment.m` trong MATLAB, các file `.pdf` sẽ được ghi đè tại chỗ (cùng thư mục `matlab/`).
+$F(x)=x^4/4$, sai số dựng **đúng trên biên** ngân sách $\varepsilon_k = 0{,}2/(k+1)^{7/4}$ để không vô tình tạo nhiễu có lợi. Hồi quy $\log\delta_k$ theo $\log k$ trên đoạn $500 \le k \le 2000$:
 
-## Trạng thái hiện tại
-Toàn bộ nội dung đã hoàn chỉnh và khớp nhau giữa 3 file:
-- **Báo cáo (`main.tex`)**: đầy đủ — Lời nói đầu, Chương 1 "Cơ sở toán học" (4 mục), Chương 2 "Dãy ước lượng Nesterov" (3 mục), Chương 3 "Bậc hội tụ của thuật toán" (2 mục: sai số loại 1, loại 2), Tổng kết (rút gọn thuật toán, code MATLAB, 3 hình thực nghiệm), tài liệu tham khảo.
-- **Slide (`slide.tex`)**: 41 trang, đi theo đúng cấu trúc trên, chỉ giữ phần `slidesonly`.
-- **Kịch bản (`transcript.tex`)**: khớp 1-1 với nội dung hiển thị trên từng slide, chia khối ~25 từ, đã kiểm tra biên dịch sạch (không lỗi LaTeX).
+| Phương pháp | $F(x_N)-F_\star$ | Hệ số góc của $\delta_k$ | Bậc lý thuyết | Sai lệch chứng chỉ $\lvert\rho_k-1\rvert$ |
+|---|---|---|---|---|
+| Tham chiếu (giải gần chính xác) | $5{,}266\times10^{-13}$ | — | — | — |
+| **IAPPA1**, $q=7/4$ | $6{,}067\times10^{-10}$ | $-0{,}521$ | $-1/2$ | $8{,}0\times10^{-12}$ |
+| **IAPPA2**, $q=7/4$ | $7{,}440\times10^{-16}$ | $-1{,}989$ | $-2$ | $7{,}8\times10^{-10}$ |
 
-Compile cả 3 file đều không còn lỗi (`pdflatex` sạch, chỉ còn warning "Overfull \hbox" vô hại do font Courier trong `transcript.tex`).
+Hai hệ số góc đo được khớp với hai bậc lý thuyết đến chữ số thứ hai — chênh lệch giữa loại 1 và loại 2 hiện ra rõ ràng bằng số.
 
-## Biên soạn (compile)
+<p align="center">
+  <img src="figures/quartic-error-accumulation.png" width="70%" alt="Tích lũy sai số của IAPPA1 và IAPPA2">
+</p>
+
+### 2. Bài toán elastic-net / LASSO không có prox đóng (MATLAB + Python)
+
+$F(x)=\tfrac12\lVert Ax-b\rVert^2 + \tfrac{\rho}{2}\lVert x\rVert^2 + \mu\lVert x\rVert_1$ với $n=80$, $m=30$, độ thưa $s=8$. Ở đây $\operatorname{prox}_{\lambda F}$ **thật sự không có công thức đóng**, nên bài toán con được giải bằng FISTA nội — số vòng lặp nội $T_k$ chính là "nút vặn" sinh sai số có kiểm soát.
+
+Điểm đáng chú ý về mặt cài đặt: **chỉ cần một lần giải gần đúng** là thu được đồng thời cả hai chứng nhận, vì $F$ lồi mạnh hệ số $\rho$ cho phép chuyển thẳng
+
+$$\varepsilon^{(1)} = \sqrt{2\lambda\,\delta_{\text{inner}}}, \qquad \varepsilon^{(2)} = \varepsilon^{(1)}\sqrt{\tfrac{\lambda\rho+1}{\lambda\rho}}.$$
+
+Nhờ vậy cùng một quỹ đạo $(x_k)$ đi qua được cả hai bộ sổ sách kế toán sai số và hai chặn lý thuyết được so sánh trên **cùng một dữ liệu**.
+
+<p align="center">
+  <img src="figures/lasso-convergence-comparison.png" width="49%" alt="So sánh tốc độ hội tụ theo lịch trình lặp nội">
+  <img src="figures/lasso-bound-verification.png" width="49%" alt="Kiểm chứng số học hai chặn lý thuyết">
+</p>
+
+Kết quả: lịch trình $T_k \sim \sqrt{k}$ giữ được tốc độ $\mathcal{O}(1/k^2)$ gần như ngang với việc giải chính xác, trong khi $T_k$ cố định ở mức thấp tụt về $\mathcal{O}(1/k)$. Cả hai chặn lý thuyết đều được kiểm chứng: **0/121 bước vi phạm** ở cả loại 1 lẫn loại 2.
+
+---
+
+## Cấu trúc repository
+
 ```
-pdflatex main.tex
-bibtex main
-pdflatex main.tex
-pdflatex main.tex
+├── main.tex              Báo cáo đầy đủ (34 trang) — điều phối chương/mục, \input từ content/
+├── slide.tex             Slide Beamer (45 trang) — dùng lại đúng các file trong content/
+├── transcript.tex        Kịch bản thuyết trình dạng screenplay (20 trang)
+├── metadata.tex          Tên đề tài, nhóm, thành viên, GVHD, ngày — sửa DUY NHẤT ở đây
+├── refs.bib              Thư mục tài liệu tham khảo (BibTeX)
+├── content/              Thân bài dùng chung cho cả ba tài liệu trên
+│
+├── essay/                Tiểu luận rút gọn, độc lập (12 trang, 8 mục, bib riêng)
+├── docs/                 Ghi chú đọc bài báo + bản thảo thô của kịch bản
+│
+├── code/
+│   ├── matlab/           Thực nghiệm LASSO gốc (sinh 3 hình vector cho báo cáo)
+│   └── python/           quartic_iappa.py + lasso_iappa.py (bản port, chạy được trong CI)
+│
+├── figures/              Toàn bộ hình dùng trong tài liệu (.pdf vector + .png)
+├── results/              Bảng số liệu .csv do thực nghiệm sinh ra
+│
+├── Makefile              make all / figures / clean
+└── .github/workflows/    CI: build 5 PDF + chạy lại thực nghiệm mỗi lần push
 ```
-Chạy `pdflatex` 2 lần cuối để mục lục và trích dẫn (`\cite`) cập nhật đúng số trang/số thứ tự.
 
-Với `slide.tex` và `transcript.tex`, chạy `pdflatex` tương tự (không cần `bibtex` với `transcript.tex` vì không có trích dẫn).
+---
+
+## Biên dịch
+
+```bash
+make all        # main.pdf, slide.pdf, transcript.pdf, essay/essay.pdf
+make notes      # docs/ghi-chu-bai-bao.pdf
+make report     # chỉ báo cáo
+make clean      # xoá file trung gian, giữ PDF
+```
+
+Không có `make`? Chạy tay (lặp `pdflatex` để mục lục và `\cite` ổn định):
+
+```bash
+pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
+```
+
+**Yêu cầu:** TeX Live với `texlive-lang-other` (gói `vietnam`/`vntex` cho tiếng Việt), `texlive-latex-extra`, `texlive-science`, `latexmk`. Trên Overleaf: upload cả repo rồi đặt `main.tex` làm main document.
+
+## Tái lập thực nghiệm số
+
+```bash
+pip install -r code/python/requirements.txt
+make figures        # ~13 giây, ghi đè figures/*.png và results/*.csv
+```
+
+Bản MATLAB (sinh 3 hình vector `.pdf` dùng trong báo cáo) chạy riêng:
+
+```matlab
+cd code/matlab
+main_experiment      % ghi thẳng vào ../../figures/
+```
+
+Hai bản cho ra cùng một kết luận định tính; con số tuyệt đối lệch nhau vì bộ sinh số ngẫu nhiên của NumPy và MATLAB khác nhau. Bản Python là bản chạy trong CI, nên **người đọc không có MATLAB vẫn tái lập được toàn bộ kết quả**.
+
+---
+
+## Quy ước biên soạn
+
+### Một nội dung, ba đầu ra
+
+`main.tex`, `slide.tex`, `transcript.tex` cùng `\input` các file trong `content/`; mỗi bản chỉ hiện phần dành cho mình nhờ package `comment`:
+
+| Environment | Báo cáo | Slide | Kịch bản |
+|---|:---:|:---:|:---:|
+| `essayonly` | ✅ | ❌ | ❌ |
+| `slidesonly` | ❌ | ✅ | ❌ |
+| `scriptonly` | ❌ | ❌ | ✅ |
+
+Chứng minh chi tiết và lập luận dài nằm trong `essayonly` (chỉ vào báo cáo); slide chỉ giữ phát biểu định lý và công thức chính. **Muốn biết chính xác nội dung nào đang hiện trên slide** thì đọc phần *không* nằm trong `\begin{essayonly}...\end{essayonly}`.
+
+### Thêm một mục mới
+
+1. Tạo file trong `content/` theo quy ước `chap{chương}_{thứ tự}_{tên gợi nhớ}.tex`, chỉ viết thân bài (**không** viết `\chapter`/`\section` trong đó).
+2. Thêm `\section{...}` rồi `\input{content/ten_file.tex}` — làm ở **cả `main.tex` lẫn `slide.tex`**.
+3. Cần `\ref{}` từ nơi khác thì gắn `\label{...}` ngay sau `\section`.
+
+### Quy tắc chung
+
+- Overleaf chỉ cho 2 người sửa cùng lúc nên nhóm dùng repo này thay thế — **commit + push thường xuyên**.
+- Không commit file build (`.aux`, `.log`, `.bbl`, PDF sinh ra…) — đã có trong `.gitignore`. Hình trong `figures/` là dữ liệu đầu vào nên vẫn được commit.
+- Đánh nhãn công thức bằng tên gợi nhớ (`\autotag{eq:ten-nhan}`), **không** dựa vào số thứ tự — bộ đếm equation khác nhau giữa báo cáo và slide.
+
+---
+
+## Trạng thái
+
+| Tài liệu | Số trang | Trạng thái |
+|---|---:|---|
+| `main.pdf` — Báo cáo | 34 | ✅ Biên dịch sạch, không còn tham chiếu/trích dẫn treo |
+| `slide.pdf` — Slide | 45 | ✅ Biên dịch sạch |
+| `transcript.pdf` — Kịch bản | 20 | ✅ Biên dịch sạch |
+| `essay/essay.pdf` — Tiểu luận | 12 | ✅ Biên dịch sạch, số liệu khớp `results/` |
+| `docs/ghi-chu-bai-bao.pdf` | 9 | ✅ Biên dịch sạch |
+
+CI kiểm tra lại toàn bộ điều trên ở mỗi lần push, đồng thời chạy lại hai thực nghiệm số.
+
+---
+
+## Nhóm thực hiện
+
+**Nhóm 10** — Học phần Phương pháp số trong Tối ưu, Khoa Toán – Tin học, Trường Đại học Khoa học Tự nhiên, ĐHQG-HCM.
+
+| Thành viên | MSSV |
+|---|---|
+| Nguyễn Hoàng Tú | 23110220 |
+| Bùi Công Hoàng Vũ | 23110223 |
+| Huỳnh Trung Kiên | 22110091 |
+| Nguyễn Ngọc Diễm Quỳnh | 21110167 |
+
+Giảng viên hướng dẫn: **TS. Nguyễn Đăng Khoa**
+
+## Tài liệu gốc
+
+> Saverio Salzo, Silvia Villa. *Inexact and Accelerated Proximal Point Algorithms.*
+> Journal of Convex Analysis **19** (2012), no. 4, 1167–1192.
+
+Các tài liệu nền tảng khác (Güler 1992, Nesterov 2004, Beck–Teboulle 2009, Rockafellar 1976…) có đầy đủ trong [`refs.bib`](refs.bib).
+
+## Giấy phép
+
+Mã nguồn và phần văn bản do nhóm biên soạn: [MIT](LICENSE). Nội dung toán học được trình bày lại từ bài báo gốc — bản quyền thuộc về các tác giả và nhà xuất bản.

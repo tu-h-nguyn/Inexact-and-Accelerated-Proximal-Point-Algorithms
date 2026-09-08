@@ -1,0 +1,48 @@
+# ── Sản phẩm biên dịch LaTeX ────────────────────────────────────────────────
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+*.xdv
+comment.cut
+
+# PDF sinh ra từ nguồn ở gốc repo (báo cáo/slide/kịch bản/tiểu luận).
+# Hình vector trong figures/ là dữ liệu đầu vào nên KHÔNG bị bỏ qua.
+/main.pdf
+/slide.pdf
+/transcript.pdf
+/essay/essay.pdf
+/docs/*.pdf
+/build/
+
+# ── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# ── MATLAB ──────────────────────────────────────────────────────────────────
+*.asv
+*.m~
+slprj/
+
+# ── Hệ điều hành / trình soạn thảo ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/

@@ -39,7 +39,7 @@
 \newcommand{\order}{\mathcal{O}}
 \renewcommand{\max}[1]{\operatorname*{max}\left\{#1\right\}}
 \newcommand{\Set}[1]{\left\{#1\right\}}
-\newcommand{\autotag}{\stepcounter{equation}\label{eq:\theequation}\tag{\theequation}}
+\newcommand{\autotag}[1]{\stepcounter{equation}\tag{\theequation}\label{#1}}
 \newcommand{\paragraph}[1]{\par\noindent\textbf{#1}\par}
 
 \let\theorem\relax

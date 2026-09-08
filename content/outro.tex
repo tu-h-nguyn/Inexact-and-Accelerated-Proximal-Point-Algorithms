@@ -74,28 +74,28 @@ x = sign(v) .* max(abs(v) - tau, 0);
 end
 \end{lstlisting}
 
-\lstinputlisting[language=Matlab, firstline=15, lastline=41,
-  caption={Bộ giải FISTA nội, trả về toàn bộ vết lặp (tệp \texttt{inner\_fista\_trace.m}).}]
-  {matlab/inner_fista_trace.m}
+\lstinputlisting[language=Matlab, firstline=4,
+  caption={Bộ giải FISTA nội, trả về toàn bộ vết lặp (tệp \texttt{code/matlab/inner\_fista\_trace.m}).}]
+  {code/matlab/inner_fista_trace.m}
 
-\lstinputlisting[language=Matlab, firstline=46, lastline=68,
-  caption={Vòng lặp ngoài chính (trích từ \texttt{run\_outer.m}).}]
-  {matlab/run_outer.m}
+\lstinputlisting[language=Matlab, firstline=18, lastline=47,
+  caption={Vòng lặp ngoài chính (trích từ \texttt{code/matlab/run\_outer.m}).}]
+  {code/matlab/run_outer.m}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{matlab/So sanh toc do hoi tu.pdf}
+    \includegraphics[width=0.8\linewidth]{figures/convergence-comparison.pdf}
     \caption{So sánh tốc độ hội tụ của thuật toán PPA cổ điển và các biến thể ứng với các lịch trình \(T_k\) khác nhau. Kết quả thực nghiệm cho thấy lịch trình \(T_k \sim \sqrt{k}\) duy trì tốc độ hội tụ \(O(1/k^2)\), gần như tương đương với trường hợp giải chính xác (\(T_k = T_{\mathrm{ref}}\)), đồng thời giúp giảm đáng kể chi phí tính toán.}
     \label{fig:conv-comparison}
 \end{figure}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{matlab/Kiem chung so hoc chan hoi tu cua Dinh ly 3-2.pdf}
+    \includegraphics[width=0.8\linewidth]{figures/bound-verification.pdf}
     \caption{Kiểm chứng số học các chặn hội tụ của Định lý 3.2. Đồ thị log-log biểu diễn khoảng cách của hàm mục tiêu $F(x_k) - F^*$ (đường liền nét màu xanh lá) theo các bước lặp ngoài $k$, được so sánh với chặn lý thuyết Loại 1 (đường đứt nét màu cam) và chặn lý thuyết Loại 2 (đường gạch chấm màu xanh dương). Kết quả thực nghiệm cho thấy với lịch trình vòng lặp nội $T_k \approx \sqrt{k}$, thuật toán hội tụ nhanh hơn và chặt chẽ hơn nhiều so với dự đoán của các giới hạn lý thuyết, và đi ngang ở ngưỡng $10^{-11}$ do giới hạn độ chính xác của máy tính (sàn nhiễu).}
     \label{fig:bound-verification}
 \end{figure}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{matlab/Do chinh xac loai 1 thuc te dat duoc theo tung lich trinh lap noi.pdf}
+    \includegraphics[width=0.8\linewidth]{figures/type1-accuracy.pdf}
     \caption{Sự suy giảm của sai số Loại 1 ($\epsilon_k$) theo số bước lặp ngoài $k$ dưới các kịch bản chọn số vòng lặp nội $T_k$ khác nhau. Biểu đồ log-log cho thấy các chiến lược tăng dần $T_k$ theo bước lặp, cụ thể là $T_k \sim \log k$ (đường màu vàng) và $T_k \sim \sqrt{k}$ (đường màu xanh lá), giúp sai số hội tụ nhanh chóng và đạt hiệu quả cao. Ngược lại, việc cố định $T_k$ ở mức thấp ($T_k=1$ hoặc $T_k=4$) khiến sai số giảm rất chậm. Lịch trình tính toán gần đúng chính xác ($T_k = T_{ref}$, đường màu xanh dương) nhanh chóng dao động quanh mức giới hạn sàn nhiễu số học của máy tính ($10^{-11}$).}
     \label{fig:eps-decay}
 \end{figure}
@@ -103,7 +103,7 @@ end
 \begin{slidesonly}
     \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth, height=0.9\textheight, keepaspectratio]{matlab/So sanh toc do hoi tu.pdf}
+    \includegraphics[width=0.9\textwidth, height=0.9\textheight, keepaspectratio]{figures/convergence-comparison.pdf}
     \label{fig:conv-comparison-slide}
 \end{figure}
 \end{slidesonly}

@@ -1,0 +1,39 @@
+MIT License
+
+Copyright (c) 2026 Nhóm 10 — Nguyễn Hoàng Tú, Bùi Công Hoàng Vũ,
+Huỳnh Trung Kiên, Nguyễn Ngọc Diễm Quỳnh
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+Lưu ý về phạm vi bản quyền
+
+Giấy phép trên áp dụng cho MÃ NGUỒN trong repository này (thư mục `code/`,
+`Makefile`, cấu hình CI) và cho phần văn bản do nhóm biên soạn.
+
+Nội dung toán học được trình bày lại dựa trên bài báo:
+
+    Saverio Salzo, Silvia Villa,
+    "Inexact and Accelerated Proximal Point Algorithms",
+    Journal of Convex Analysis 19 (2012), no. 4, 1167-1192.
+
+Bản quyền của bài báo gốc thuộc về các tác giả và nhà xuất bản. Đây là một
+báo cáo học thuật mang tính trình bày lại và minh họa, không phải công bố
+khoa học độc lập.

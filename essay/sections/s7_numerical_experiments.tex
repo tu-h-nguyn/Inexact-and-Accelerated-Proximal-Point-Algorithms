@@ -30,7 +30,7 @@ Cả ba phương pháp dùng cùng quy tắc
 \[
 z^3+z-y=0.
 \]
-Nghiệm này được tính bằng phương pháp Brent với sai số tuyệt đối $10^{-15}$ và sai số tương đối $10^{-14}$. Vì vẫn sử dụng một bộ giải số, đường tương ứng được gọi là \emph{thuật toán tham chiếu}, không gọi là thuật toán chính xác.
+Nghiệm này được tính bằng phương pháp Newton, dừng khi bước hiệu chỉnh nhỏ hơn $10^{-14}(1+|z|)$. Vì vẫn sử dụng một bộ giải số, đường tương ứng được gọi là \emph{thuật toán tham chiếu}, không gọi là thuật toán chính xác.
 
 \subsection{Cách dựng các điểm gần đúng}
 
@@ -53,13 +53,13 @@ F(x_{k+1})+F^{*}(v_k)-v_kx_{k+1}
 F^{*}(v)=\frac{3}{4}|v|^{4/3}.
 \label{eq:type2-boundary}
 \end{equation}
-Các phương trình \eqref{eq:type1-boundary} và \eqref{eq:type2-boundary} đều được giải bằng phương pháp Brent. Mỗi phương trình có hai nghiệm nằm ở hai phía của điểm cận kề; nghiệm có giá trị $F$ lớn hơn được chọn để tránh chủ động tạo một nhiễu có lợi. Tỉ số giữa vế trái và vế phải của phương trình biên được lưu lại như một chứng chỉ kiểm tra.
+Các phương trình \eqref{eq:type1-boundary} và \eqref{eq:type2-boundary} đều được giải bằng phương pháp chia đôi trên một khoảng được khoanh trước bằng cách nhân đôi bán kính tìm kiếm, với $90$ lần chia. Mỗi phương trình có hai nghiệm nằm ở hai phía của điểm cận kề; nghiệm có giá trị $F$ lớn hơn được chọn để tránh chủ động tạo một nhiễu có lợi. Tỉ số giữa vế trái và vế phải của phương trình biên được lưu lại như một chứng chỉ kiểm tra.
 
 \subsection{Kết quả}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.90\textwidth]{figures/objective_convergence.png}
+\includegraphics[width=0.90\textwidth]{figures/quartic-objective-convergence.png}
 \caption{Sai số giá trị hàm trên hệ trục log--log.}
 \label{fig:objective}
 \end{figure}
@@ -69,7 +69,7 @@ Hình \ref{fig:objective} cho thấy cả ba dãy giá trị hàm đều tiến 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.90\textwidth]{figures/error_accumulation.png}
+\includegraphics[width=0.90\textwidth]{figures/quartic-error-accumulation.png}
 \caption{Hai thành phần sai số tích lũy $\delta_k$ trên hệ trục log--log.}
 \label{fig:error}
 \end{figure}
@@ -90,9 +90,9 @@ Với $q=7/4$, Định lý 5.1 cho bậc $k^{-1/2}$ đối với chặn của IA
 \hline
 Thuật toán tham chiếu & $5.266\times10^{-13}$ & -- & -- \\
 \hline
-IAPPA1, $q=7/4$ & $6.067\times10^{-10}$ & $-0.521$ & $1.4\times10^{-9}$ \\
+IAPPA1, $q=7/4$ & $6.067\times10^{-10}$ & $-0.521$ & $8.0\times10^{-12}$ \\
 \hline
-IAPPA2, $q=7/4$ & $7.440\times10^{-16}$ & $-1.989$ & $2.3\times10^{-6}$ \\
+IAPPA2, $q=7/4$ & $7.440\times10^{-16}$ & $-1.989$ & $7.8\times10^{-10}$ \\
 \hline
 \end{tabular}
 \end{table}

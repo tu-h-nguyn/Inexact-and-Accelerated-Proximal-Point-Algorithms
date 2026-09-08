@@ -7,9 +7,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-OUT = Path(__file__).resolve().parent
-FIG = OUT.parent / "figures"
+ROOT = Path(__file__).resolve().parents[2]
+FIG = ROOT / "figures"
+OUT = ROOT / "results"
 FIG.mkdir(parents=True, exist_ok=True)
+OUT.mkdir(parents=True, exist_ok=True)
 
 N = 2000
 LAM = 1.0
@@ -174,7 +176,7 @@ def main() -> None:
             "delta1_bound_component": delta1,
             "delta2_bound_component": delta2,
         }
-    ).to_csv(OUT / "results.csv", index=False)
+    ).to_csv(OUT / "quartic-results.csv", index=False)
 
     slope1 = log_slope(delta1)
     slope2 = log_slope(delta2)
@@ -189,7 +191,7 @@ def main() -> None:
             "max_abs_certificate_minus_1": [np.nan, dev1, dev2],
         }
     )
-    summary.to_csv(OUT / "summary.csv", index=False)
+    summary.to_csv(OUT / "quartic-summary.csv", index=False)
 
     plt.figure(figsize=(8, 5))
     plt.loglog(k[1:], exact[1:], label="Thuật toán tham chiếu")
@@ -200,7 +202,7 @@ def main() -> None:
     plt.grid(True, which="both", alpha=0.3)
     plt.legend()
     plt.tight_layout()
-    plt.savefig(FIG / "objective_convergence.png", dpi=200)
+    plt.savefig(FIG / "quartic-objective-convergence.png", dpi=200)
     plt.close()
 
     plt.figure(figsize=(8, 5))
@@ -213,7 +215,7 @@ def main() -> None:
     plt.grid(True, which="both", alpha=0.3)
     plt.legend()
     plt.tight_layout()
-    plt.savefig(FIG / "error_accumulation.png", dpi=200)
+    plt.savefig(FIG / "quartic-error-accumulation.png", dpi=200)
     plt.close()
 
     print(summary.to_string(index=False))

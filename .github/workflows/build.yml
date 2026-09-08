@@ -1,0 +1,79 @@
+name: build
+
+# Biên dịch toàn bộ tài liệu LaTeX và chạy lại thực nghiệm số.
+# PDF + hình + bảng số liệu được tải lên dưới dạng artifact của mỗi lần chạy.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  latex:
+    name: Biên dịch tài liệu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cài TeX Live
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-lang-other texlive-lang-european \
+            texlive-science latexmk lmodern
+
+      - name: Build báo cáo, slide, kịch bản, tiểu luận
+        run: make all
+
+      - name: Build ghi chú đọc bài báo
+        run: make notes
+
+      - name: Kiểm tra không còn tham chiếu / trích dẫn treo
+        run: |
+          status=0
+          for log in main.log slide.log transcript.log essay/essay.log docs/ghi-chu-bai-bao.log; do
+            if grep -qE "Warning: (Citation|Reference).*undefined" "$log"; then
+              echo "::error file=$log::Còn tham chiếu hoặc trích dẫn chưa được giải quyết"
+              grep -E "Warning: (Citation|Reference).*undefined" "$log" | sort -u
+              status=1
+            fi
+          done
+          exit $status
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pdf
+          path: |
+            main.pdf
+            slide.pdf
+            transcript.pdf
+            essay/essay.pdf
+            docs/ghi-chu-bai-bao.pdf
+
+  numerics:
+    name: Thực nghiệm số (Python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cài phụ thuộc
+        run: pip install -r code/python/requirements.txt
+
+      - name: Chạy lại hai thực nghiệm
+        run: make figures
+
+      - name: Báo cáo sai lệch so với kết quả đã commit
+        run: git --no-pager diff --stat -- results figures || true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: numerics
+          path: |
+            figures/*.png
+            results/*.csv
