@@ -27,10 +27,12 @@ hiếm khi có công thức đóng: trong thực tế mỗi bước lặp phải
 
 Salzo & Villa chỉ ra rằng chứng minh đó có một lỗ hổng tinh tế: lập luận **ngầm sử dụng dưới gradient tại điểm gần kề chính xác** — một đại lượng không thể tính được khi ta chỉ có xấp xỉ. Bài báo xây dựng lại toàn bộ phân tích trên khung *dãy ước lượng* và trả lời: **tốc độ hội tụ còn giữ được hay không phụ thuộc vào việc bộ giải bài toán con cấp cho ta loại chứng nhận sai số nào.**
 
-| Loại sai số | Điều kiện | Tốc độ thu được | Ý nghĩa thực tế |
+Với $\varepsilon_k=\mathcal{O}(1/k^q)$, hai thuật toán cho hai bức tranh hoàn toàn khác nhau:
+
+| Loại sai số | Điều kiện | Tốc độ tốt nhất đạt được | Ý nghĩa thực tế |
 |---|---|---|---|
-| **Loại 1** (AT1) | $0 \in \partial_{\varepsilon^2/2\lambda}\Phi_\lambda(z)$ | $\mathcal{O}(1/k)$, kể cả khi $\sum_k\varepsilon_k = \infty$ | Tiêu chí dừng tự nhiên nhất, nhưng **mất hết lợi thế tăng tốc** |
-| **Loại 2** (AT2) | $\frac{y-z}{\lambda} \in \partial_{\varepsilon^2/2\lambda}F(z)$ | $\mathcal{O}(1/k^2)$ nếu $\varepsilon_k = \mathcal{O}(1/k^q)$, $q>1/2$ | Khắt khe hơn, nhưng **khôi phục đầy đủ tốc độ bậc hai** |
+| **Loại 1** (AT1) → IAPPA1 | $0 \in \partial_{\varepsilon^2/2\lambda}\Phi_\lambda(z)$ | $\mathcal{O}(1/k)$ — và chỉ khi $q>2$; $q<2$ cho $\mathcal{O}(1/k^{2q-3})$ | Tiêu chí dừng tự nhiên nhất, nhưng **mất sạch lợi thế tăng tốc**: dù $\varepsilon_k$ giảm nhanh đến đâu cũng không vượt được $\mathcal{O}(1/k)$ |
+| **Loại 2** (AT2) → IAPPA2 | $\frac{y-z}{\lambda} \in \partial_{\varepsilon^2/2\lambda}F(z)$ | $\mathcal{O}(1/k^2)$ khi $q>3/2$; $(x_k)$ vẫn tối tiểu hóa với mọi $q>1/2$ | Khắt khe hơn, nhưng **khôi phục đầy đủ tốc độ bậc hai** |
 | **Loại 3** (AT3) | $d(0,\partial\Phi_\lambda(z)) \le \varepsilon/\lambda$ | — | Tương đương prox chính xác của một đầu vào bị nhiễu |
 
 Kết luận đắt giá nhất: **tăng tốc không miễn phí.** Nếu chỉ đo được sai số theo loại 1, thuật toán tăng tốc chạy không nhanh hơn PPA thường; muốn giữ $\mathcal{O}(1/k^2)$ thì bộ giải bài toán con phải cấp được chứng nhận loại 2.
@@ -82,10 +84,10 @@ Kết quả: lịch trình $T_k \sim \sqrt{k}$ giữ được tốc độ $\math
 ├── transcript.tex        Kịch bản thuyết trình dạng screenplay (20 trang)
 ├── metadata.tex          Tên đề tài, nhóm, thành viên, GVHD, ngày — sửa DUY NHẤT ở đây
 ├── refs.bib              Thư mục tài liệu tham khảo (BibTeX)
-├── content/              Thân bài dùng chung cho cả ba tài liệu trên
+├── content/              Thân bài dùng chung cho cả ba tài liệu trên (mọi file ở đây đều được biên dịch)
 │
 ├── essay/                Tiểu luận rút gọn, độc lập (12 trang, 8 mục, bib riêng)
-├── docs/                 Ghi chú đọc bài báo + bản thảo thô của kịch bản
+├── docs/                 Tài liệu phụ trợ, KHÔNG thuộc bản nộp (xem docs/README.md)
 │
 ├── code/
 │   ├── matlab/           Thực nghiệm LASSO gốc (sinh 3 hình vector cho báo cáo)

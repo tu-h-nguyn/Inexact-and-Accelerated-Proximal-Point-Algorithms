@@ -1,20 +1,20 @@
 Chứng minh việc sử dụng sai số loại 2 giúp khôi phục tốc độ hội tụ của phiên bản thuật toán điểm gần kề tăng tốc chính xác tuy tương tự phần trước, điểm khác biệt nằm ở công thức cập nhật của đại lượng $\delta_k$.
 \begin{theorem}
-    Cố định $\lambda>0$ và $\eps\ge0$. Cho $x,\nu\in X$ và $\varphi=\varphi^*+\tfrac A2\norm{\cdot-\nu}^2$ sao cho $F(x)\le\varphi_*+\delta$ với $\delta\ge0$. Nếu $\tfrac{\alpha^2}{(1-\alpha)A\lambda}\le2$, chọn
+    Cố định $\lambda>0$ và $\eps\ge0$. Cho $x,\nu\in X$ và $\varphi=\varphi_*+\tfrac A2\norm{\cdot-\nu}^2$ sao cho $F(x)\le\varphi_*+\delta$ với $\delta\ge0$. Nếu $\tfrac{\alpha^2}{(1-\alpha)A\lambda}\le2$, chọn
     \begin{align*}
         y&=(1-\alpha)x+\alpha\nu\\
-        \hat x&\approx_2\prox{\lambda F}(y)\quad\text{với $\eps$-chính xác}\\
-        \hat \varphi&=U(\hat x,0,\xi,\alpha)\,\varphi\quad\text{với}\;\;\xi\dfrac{y-\hat x}{\lambda}\in\partial_{\eps^2/(2\lambda)}F(\hat x)\\
+        \hat x&\approx_2\prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}\\
+        \hat \varphi&=U(\hat x,0,\xi,\alpha)\,\varphi\quad\text{với}\;\;\xi=\dfrac{y-\hat x}{\lambda}\in\partial_{\eps^2/(2\lambda)}F(\hat x)\\
         \hat A&=(1-\alpha)A\\
         \hat\nu&=\nu-\frac{\alpha}{\hat A}\xi\\
         \hat\delta&=(1-\alpha)\delta+\frac{\eps^2}{2\lambda}
     \end{align*}
-    thu được $\hat\delta+\hat\varphi_*\ge F(\hat x)+\dfrac{c}{2\lambda}\norm{y-\hat x}^2\ge F(\hat x)$ với $c=\left(\dfrac{2-\alpha^2}{\hat A\lambda}\right)\ge0$.
+    thu được $\hat\delta+\hat\varphi_*\ge F(\hat x)+\dfrac{c}{2\lambda}\norm{y-\hat x}^2\ge F(\hat x)$ với $c=2-\dfrac{\alpha^2}{\hat A\lambda}\ge0$.
 \end{theorem}
 \begin{essayonly}
 \begin{proof}
-    Từ Bổ đề \ref{lem:core}, nếu chọn $\hat x\in\Hil$ sao cho $\dfrac{y-\hat x}{\lambda}\in\partial_{\eps^2/(2\lambda)F(\hat x)}$ và đặt $\xi=\frac{y-\hat x}{\lambda}$, thu được $\xi\in\partial_{\eps^2/(2\lambda)}F(\hat x)$ và $y-(\lambda\xi-\hat x)=0$ và
-    $$(1-\alpha)\delta+\frac{\eps^2}{2\lambda}\hat\varphi_*\ge F(\hat x)+\frac{\lambda}{2}\left(2-\frac{\alpha^2}{(1-\alpha)A\lambda}\right)\norm{\xi}^2$$
+    Từ Bổ đề \ref{lem:core}, nếu chọn $\hat x\in\Hil$ sao cho $\dfrac{y-\hat x}{\lambda}\in\partial_{\eps^2/(2\lambda)}F(\hat x)$ và đặt $\xi=\frac{y-\hat x}{\lambda}$, thu được $\xi\in\partial_{\eps^2/(2\lambda)}F(\hat x)$ và $y-(\lambda\xi+\hat x)=0$ và
+    $$(1-\alpha)\delta+\frac{\eps^2}{2\lambda}+\hat\varphi_*\ge F(\hat x)+\frac{\lambda}{2}\left(2-\frac{\alpha^2}{(1-\alpha)A\lambda}\right)\norm{\xi}^2$$
     thay $\xi=\dfrac{y-\hat x}{\lambda}$, thu được kết quả cần tìm.
 \end{proof}
 Định lý trên đã cho phép định nghĩa được quá trình của thuật toán. Cho chuỗi cố định $(\lambda_k)_{k\in\N}$ với $\lambda_k>0$, $\eps\ge0$, $A>0$, $a\in(0,2]$, gán $A_0=A$, $\delta_0=0$, $x_0=\nu_0\in\dom(F)$ và với mỗi $k\in\N$, đặt
@@ -26,7 +26,7 @@ Chứng minh việc sử dụng sai số loại 2 giúp khôi phục tốc độ
     x_{k+1}&\approx_2\prox_{\lambda_kF}(y_k)\text{ với }\eps_k\text{-chính xác}\\
     A_{k+1}&=(1-\alpha_k)A_k\\
     \nu_{k+1}&=\nu_k-\frac{\alpha_k}{(1-\alpha_k)A_k\lambda_k}(y_k-x_{k+1})\\
-    \delta_{k+1}&=(1-\alpha_k)\delta+\frac{\eps_k^2}{2\lambda_k}
+    \delta_{k+1}&=(1-\alpha_k)\delta_k+\frac{\eps_k^2}{2\lambda_k}
 \end{aligned}\right.\label{IAPPA2}\tag{IAPPA2}
 \end{equation*}
 \begin{remark}

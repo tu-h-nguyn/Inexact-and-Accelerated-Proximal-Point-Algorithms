@@ -117,7 +117,7 @@ hold off; grid on;
 xlabel('buoc ngoai k'); ylabel('gia tri (F(x_k)-F^* va cac chan)');
 legend('F(x_k)-F^* thuc te (lich T_k~sqrt(k))', 'chan tu phan tich loai 1', ...
        'chan tu phan tich loai 2', 'Location','southwest', 'FontSize',8);
-title('Kiem chung so hoc chan hoi tu cua Dinh ly 3.2');
+title('Kiem chung so hoc cac chan hoi tu');
 
 filename2 = fullfile(figdir, 'bound-verification.pdf');
 exportgraphics(fig2, filename2, 'ContentType', 'vector');

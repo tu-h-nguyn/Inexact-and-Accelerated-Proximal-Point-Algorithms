@@ -1,10 +1,13 @@
+% Luu y: cac nhan thm:4.1 / thm:4.3 dat theo so hieu trong BAI BAO GOC
+% (Salzo-Villa 2012, Dinh ly 4.1 va 4.3). So hieu in ra trong bao cao nay
+% khac (3.1 va 3.3) vi bo dem theorem duoc danh theo chuong.
 Từ bổ đề~\ref{lem:core}, S. Salzo và S. Villa chứng minh được rằng:
 \begin{theorem}\label{thm:4.1}
-    Cố định $\lambda>0$ và $\eps\ge0$. Cho $x,\nu\in X$ và $\varphi=\varphi^*+\tfrac A2\norm{\cdot-\nu}^2$ sao cho $F(x)\le\varphi_*+\delta$ với $\delta\ge0$. Nếu $\tfrac{\alpha^2}{(1-\alpha)A\lambda}=1$, chọn
+    Cố định $\lambda>0$ và $\eps\ge0$. Cho $x,\nu\in X$ và $\varphi=\varphi_*+\tfrac A2\norm{\cdot-\nu}^2$ sao cho $F(x)\le\varphi_*+\delta$ với $\delta\ge0$. Nếu $\tfrac{\alpha^2}{(1-\alpha)A\lambda}=1$, chọn
     \begin{align*}
         t&=(1-\alpha)x+\alpha\nu\\
-        \hat x&\approx_1\prox{\lambda F}(t)\quad\text{với $\eps$-chính xác}\\
-        \hat \varphi&=U(z,0,\xi,\alpha)\quad\text{với }z=\prox{\lambda F}(t),\xi\dfrac{t-z}{\lambda}\in\partial F(\hat x)\\
+        \hat x&\approx_1\prox_{\lambda F}(t)\quad\text{với $\eps$-chính xác}\\
+        \hat \varphi&=U(z,0,\xi,\alpha)\quad\text{với }z=\prox_{\lambda F}(t),\ \xi=\dfrac{t-z}{\lambda}\in\partial F(\hat x)\\
         \hat A&=(1-\alpha)A\\
         \hat\nu&=\nu-\frac{\lambda}{\alpha}\xi\\
         \hat\delta&=(1-\alpha)\delta+\frac{\eps^2}{2\lambda}
@@ -38,33 +41,33 @@ thì thu được $y=t+\alpha\Delta$ và từ Bổ đề \ref{lem:equiv-AT1} t�
 \begin{essayonly}
 nhằm hiểu rằng $\hat x\approx_1\prox_{\lambda F}(t)\;\text{với $(\eps+\alpha\eta)$-chính xác}$. Điều nay cho phép xây dụng phiên bản mới hơn của định lý trên để sử dụng vào thuật toán.
 \end{essayonly}
-\begin{theorem}
+\begin{theorem}\label{thm:4.3}
     Cố định $\lambda>0$, $\eps>0$, $x, u \in \Hil$, $A>0$, và $\delta, \eta \ge 0$. Giả sử tồn tại $\varphi_* \in \R$ và $\nu \in \Hil$ với $\norm{\nu - u} \le \eta$ sao cho nếu đặt $\varphi = \varphi_* + \tfrac A2\norm{\cdot-\nu}^2$, được $\delta + \varphi_* \ge F (x)$. Cho $\alpha \in [0, 1]$ sao cho $\alpha^2 = (1 - \alpha)A\lambda$ và đặt
     \begin{align*}
         y&=(1-\alpha)x+\alpha u\\
-        \hat x&\approx_1\prox{\lambda F}(y)\quad\text{với $\eps$-chính xác}\\
+        \hat x&\approx_1\prox_{\lambda F}(y)\quad\text{với $\eps$-chính xác}\\
         \hat u&=u-\tfrac{1}{\alpha}(y-\hat x)\\
         \hat A&=(1-\alpha)A\\
         \hat\eta&=\eta+\frac{\eps}{\alpha}\\
         \hat\delta&=(1-\alpha)\delta+\frac{(\alpha\hat\eta)^2}{2\lambda}
     \end{align*}
-    Thì tồn tại $\hat\nu\in\Hil$, $\norm{\hat\nu-\hat u}\le\hat\eta$ và $\varphi_*\in\R$ sao cho nếu $\varphi=\varphi^*+\tfrac A2\norm{\cdot-\nu}^2$, được
+    Thì tồn tại $\hat\nu\in\Hil$, $\norm{\hat\nu-\hat u}\le\hat\eta$ và $\hat\varphi_*\in\R$ sao cho nếu $\hat\varphi=\hat\varphi_*+\tfrac{\hat A}2\norm{\cdot-\hat\nu}^2$, được
     \[
     \hat\varphi-F\le(1-\alpha)(\varphi-F)
     \]\[
-    \hat\delta+\varphi_*\ge F(\hat x)
+    \hat\delta+\hat\varphi_*\ge F(\hat x)
     \]
-    Cụ thể hơn, hàm $\hat\varphi$ thu được bởi $\hat\varphi=U(t,0,\xi,\alpha)\varphi$ với $t=(1-\alpha)x+\alpha\nu$ và $\xi=\dfrac{t-\prox{\lambda F}(t)}{\lambda}$
+    Cụ thể hơn, hàm $\hat\varphi$ thu được bởi $\hat\varphi=U(t,0,\xi,\alpha)\varphi$ với $t=(1-\alpha)x+\alpha\nu$ và $\xi=\dfrac{t-\prox_{\lambda F}(t)}{\lambda}$
 \end{theorem}
 \begin{essayonly}
-\begin{proof}\label{thm:4.3}
+\begin{proof}
     Áp dụng Định lý \ref{thm:4.1} vào $\hat x\approx_1\prox_{\lambda F}(t)$ với $(\eps+\alpha\eta)$-chính xác, đặt $\eps+\alpha\eta=\eps$. Chọn $t,\xi,\hat\nu,\hat\varphi$ giống Định lý \ref{thm:4.1}, thu được:
     $$\hat\delta+\hat\varphi_*\ge F(\hat x),\quad\text{với}\;\hat\delta=(1-\alpha)\delta+\frac{1}{2\lambda}(\alpha\eta+\eps)^2$$
     Từ $\hat x$ là xấp xỉ loại 1 của $\prox_{\lambda F}(t)$ với $(\eps+\alpha\eta)$-chính xác, được $\norm{\hat x-z}\le\eps+\alpha\eta$ và
     \begin{align*}
         \hat u&=u-\frac{1}{\alpha}(y-\hat x)\\
         &=\nu+\Delta-\frac{1}{\alpha}(y-z)-\frac{1}{\alpha}(z-\hat x)\\
-        &=\nu+\Delta=\frac{1}{\alpha}(t+\alpha\Delta-z)-\frac{1}{\alpha}(z-\hat x)\\
+        &=\nu+\Delta-\frac{1}{\alpha}(t+\alpha\Delta-z)-\frac{1}{\alpha}(z-\hat x)\\
         &=\hat\nu-\frac{1}{\alpha}(z-\hat x)\\
         \Rightarrow\norm{\hat u-\hat\nu}&\le\alpha^{-1}\norm{z-\hat x}\le\eta+\frac{\eps}{\alpha}
     \end{align*}
@@ -79,7 +82,7 @@ Trái ngược với Định lý \ref{thm:4.1}, mọi quy tắc cập nhật tro
     A_{k+1}&=(1-\alpha_k)A_k\\
     u_{k+1}&=u_k-\frac{1}{\alpha_k}(y_k-x_{k+1})\\
     \eta_{k+1}&=\eta_k+\frac{\eps_k}{\alpha_k}\\
-    \delta_{k+1}&=(1-\alpha_k)\delta+\frac{(\alpha_k\eta_{k+1})^2}{2\lambda_k}
+    \delta_{k+1}&=(1-\alpha_k)\delta_k+\frac{(\alpha_k\eta_{k+1})^2}{2\lambda_k}
 \end{aligned}\right.\label{IAPPA1}\tag{IAPPA1}
 \end{equation*}
 \begin{remark}
