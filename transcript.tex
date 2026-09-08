@@ -1,0 +1,871 @@
+﻿\documentclass[12pt]{article}
+
+% ─────────────────────────── Packages ─────────────────────────────
+\usepackage[left=1.05in, right=1.05in, top=1.0in, bottom=1.0in]{geometry} % Tiêu chuẩn kịch bản (lề trái rộng để đóng tập)
+\usepackage[utf8]{vietnam}
+\usepackage[vietnamese]{babel}
+\usepackage{courier} % Font chữ Courier đơn cách cổ điển của kịch bản phim
+\usepackage{setspace, amsmath,amsxtra,amsfonts,amssymb,latexsym,amscd,amsthm,nccmath,listings,mathtools,matlab-prettifier, url,float,braket,hyperref,graphicx,placeins}
+\usepackage{enumitem}
+
+% ──────────────────── Comment Filter Settings ──────────────────────
+\usepackage{comment}
+\excludecomment{essayonly}
+\excludecomment{slidesonly}
+\includecomment{scriptonly}
+\input{metadata.tex}
+% Thiết lập font mặc định là Courier
+\renewcommand{\familydefault}{\ttdefault}
+\setlist[itemize]{
+    label=$\triangleright$,
+    leftmargin=3mm,
+    rightmargin=3mm,
+    itemindent=8mm,
+    listparindent=0mm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setstretch{1.15} % Khoảng cách dòng vừa phải cho tiếng Việt dễ đọc
+
+% ─────────────────────────── Screenplay Formatting Commands ─────────────────────────────
+
+% Tiêu đề phân cảnh (Scene Heading / Slugline)
+\newcommand{\scene}[1]{
+    \vspace{18pt}
+    \normalsize
+    \noindent\textbf{\MakeUppercase{#1}}
+    \vspace{12pt}
+}
+
+% Hành động/Mô tả diễn biến (Action)
+\newcommand{\action}[1]{
+    \vspace{6pt}
+    \small
+    \noindent(\textit{#1})
+    \vspace{6pt}
+}
+
+% Nhân vật nói thoại (Character)
+\newcommand{\character}[1]{
+    \vspace{8pt}
+    \noindent\hspace{2.2in}\textbf{\MakeUppercase{#1}}
+    \vspace{2pt}
+}
+
+% Hướng dẫn diễn xuất/thái độ (Parenthetical)
+\newcommand{\parenthetical}[1]{
+    \noindent\hspace{1.5in}\textit{(#1)}
+    \vspace{2pt}
+}
+
+% Hộp thoại thoại (Dialogue block)
+\newenvironment{speech}{
+    \normalsize
+    \begin{list}{}{
+        \leftmargin=1.25in
+        \rightmargin=1.25in
+        \parsep=0pt
+        \topsep=0pt
+        \partopsep=0pt
+    }
+    \item[]
+}{
+    \end{list}
+    \vspace{6pt}
+}
+
+% Ghi chú cho người thuyết trình (không đọc thành lời)
+\newcommand{\note}[1]{
+    \vspace{6pt}
+    \noindent\textit{[GHI CHÚ: #1]}
+    \vspace{6pt}
+}
+
+% Nhãn số từ cho mỗi khối đọc (~25 từ/khối, để canh nhịp đọc)
+\newcommand{\block}[1]{
+    \vspace{4pt}
+    \noindent\hspace{1.5in}\textit{(\textasciitilde #1 từ)}
+}
+
+% ─────────────────────────── Document ─────────────────────────────
+\begin{document}
+
+\begin{titlepage}
+    \vspace*{144.54pt}
+    \begin{center}
+        \Huge\textbf{KỊCH BẢN THUYẾT TRÌNH}\\
+        \vspace{12pt}
+        \large\textit{\mytitle}\\
+        \vspace*{144.54pt}
+        Kịch bản bởi\\
+        \textbf{\mygroup}\\
+        \vspace*{108.41pt}
+        \mylongschool\\
+        \mylongdate
+    \end{center}
+\end{titlepage}
+
+\scene{SLIDE 1}
+
+\action{
+    Màn hình máy chiếu hiển thị slide tiêu đề của Đề tài 10.
+    Các thành viên trong nhóm đứng nghiêm túc cạnh bục thuyết trình.
+    Khán giả im lặng lắng nghe.
+}
+
+\block{21}
+\begin{speech}
+    Dạ kính chào thầy. Hôm nay nhóm chúng em xin phép trình bày về bài báo cáo với chủ đề về
+\end{speech}
+
+\block{20}
+\begin{speech}
+    Toán tử gần kề xấp xỉ và sự ảnh hưởng của sai số đến bậc hội tụ của thuật toán.
+\end{speech}
+
+\scene{SLIDE 2--3}
+
+\action{
+    Slide hiện mục lục Chương 1, rồi mục lục con của phần "Toán tử gần kề". Thành viên A chỉ tay lên máy chiếu.
+}
+
+\block{27}
+\begin{speech}
+    Bài trình bày của em sẽ gồm ba nội dung chính: Cơ sở toán học về các xấp xỉ, Dãy ước lượng Nesterov, và cuối cùng là
+\end{speech}
+
+\block{19}
+\begin{speech}
+    Phân tích bậc hội tụ. Đến với phần đầu tiên là cơ sở toán học về các xấp xỉ.
+\end{speech}
+
+\scene{SLIDE 4}
+
+\action{
+    Slide hiện định nghĩa toán tử gần kề.
+}
+
+\block{24}
+\begin{speech}
+    Dựa trên tài liệu nghiên cứu, toán tử gần kề là một trong những công cụ trung tâm của tối ưu lồi hiện đại,
+\end{speech}
+
+\block{34}
+\begin{speech}
+    giúp xử lý hiệu quả các thành phần không khả vi. Tuy nhiên, ngoại trừ một số trường hợp đặc biệt, việc tính chính xác toán tử này thường không có công thức đóng.
+\end{speech}
+
+\block{20}
+\begin{speech}
+    Trên thực tế, ta lại phải giải một bài toán tối ưu phụ để tìm xấp xỉ điểm gần kề.
+\end{speech}
+
+\block{33}
+\begin{speech}
+    Về định nghĩa: với lam-đa lớn hơn không và y thuộc không gian Hilbert H, điểm gần kề của y theo hàm F được định nghĩa bởi prox của lambda F tại y
+\end{speech}
+
+\block{21}
+\begin{speech}
+    bằng arg-min của x thuộc H của F(x) cộng một trên hai lambda nhân chuẩn của x trừ y bình phương.
+\end{speech}
+
+\block{32}
+\begin{speech}
+    Ngoài ra, vào năm 1992, Güler đã kết hợp PPA với ngoại suy Nesterov để đạt tốc độ hội tụ tối ưu bậc một là big-O của một phần k bình phương.
+\end{speech}
+
+\block{20}
+\begin{speech}
+    Tuy nhiên, trên thực tế, toán tử gần kề thường không có công thức đóng mà phải giải xấp xỉ.
+\end{speech}
+
+\block{30}
+\begin{speech}
+    Điều đó làm rất nhiều người nghi hoặc liệu tốc độ big-O của một phần k bình phương này có được bảo toàn khi ta tính xấp xỉ hay không.
+\end{speech}
+
+\block{21}
+\begin{speech}
+    Không lâu sau, nghiên cứu của Salzo và Villa đã chỉ ra một lỗ hổng trong chứng minh gốc của Güler:
+\end{speech}
+
+\block{33}
+\begin{speech}
+    lập luận của ông đã ngầm sử dụng dưới-gradient tại một "điểm gần kề chính xác" — một đại lượng vô hình mà ta hoàn toàn không thể tính được khi xấp xỉ.
+\end{speech}
+
+\block{20}
+\begin{speech}
+    Điều này khiến thuật toán của Güler trên lý thuyết rất đẹp nhưng thực tế lại không thể thực hiện.
+\end{speech}
+
+\scene{SLIDE 5}
+
+\block{22}
+\begin{speech}
+    Để định lượng mức độ xấp xỉ, nhóm tác giả sử dụng công cụ êp-xi-lon-dưới vi phân và chia làm 3 loại.
+\end{speech}
+
+\scene{SLIDE 6}
+
+\action{
+    Slide hiện định nghĩa Xấp xỉ loại 1.
+}
+
+\block{18}
+\begin{speech}
+    Loại 1: không thuộc êp-xi-lon bình phương trên hai lam-đa dưới vi phân của Phi lam-đa tại z.
+\end{speech}
+
+\block{27}
+\begin{speech}
+    Đòi hỏi điểm xấp xỉ phải cực tiểu hóa bài toán con với sai số hàm mục tiêu không vượt quá epsilon bình phương chia hai lam-đa.
+\end{speech}
+
+\scene{SLIDE 7}
+
+\action{
+    Slide hiện định nghĩa Xấp xỉ loại 2.
+}
+
+\block{21}
+\begin{speech}
+    Loại 2: y trừ z chia lam-đa thuộc êp-xi-lon bình phương trên hai lam-đa dưới vi phân của F tại z.
+\end{speech}
+
+\block{25}
+\begin{speech}
+    Sử dụng khái niệm làm phồng dưới vi phân. Điều kiện này khắt khe hơn nhưng mang lại đặc tính lý thuyết cực kỳ mạnh.
+\end{speech}
+
+\scene{SLIDE 8}
+
+\action{
+    Slide hiện định nghĩa Xấp xỉ loại 3 và dạng tương đương của nó.
+}
+
+\block{22}
+\begin{speech}
+    Loại 3: khoảng cách từ không đến dưới vi phân của Phi lam-đa tại z nhỏ hơn hoặc bằng êp-xi-lon chia lam-đa.
+\end{speech}
+
+\block{15}
+\begin{speech}
+    Tương đương với việc điểm gần kề chịu một nhiễu trực tiếp lên đầu vào.
+\end{speech}
+
+\scene{SLIDE 9--10}
+
+\action{
+    Slide hiện mục lục con "Mối quan hệ giữa các xấp xỉ", rồi Bổ đề về các điều kiện tương đương, rồi Mệnh đề về các suy diễn giữa ba loại.
+}
+
+\block{25}
+\begin{speech}
+    Về mối quan hệ giữa các xấp xỉ: Loại 1 là khái niệm nới lỏng nhất và bao hàm cả loại 2 lẫn loại 3.
+\end{speech}
+
+\block{28}
+\begin{speech}
+    Tuy nhiên, nếu hàm mục tiêu có tính lồi mạnh, từ độ chính xác của Loại 1 ta có thể tự động thu được xấp xỉ Loại 2.
+\end{speech}
+
+\block{32}
+\begin{speech}
+    Về mặt hình học khi chiếu lên tập lồi, xấp xỉ Loại 2 ép buộc tập lồi phải nằm hoàn toàn về một phía của siêu phẳng tiếp xúc bị dịch chuyển,
+\end{speech}
+
+\block{31}
+\begin{speech}
+    giúp kiểm soát sai số chặt chẽ hơn. Từ đó ta cũng thấy được loại 2 có thể suy ra loại 1, loại 3 cũng có thể suy ra loại 1,
+\end{speech}
+
+\block{29}
+\begin{speech}
+    và nếu thêm giả thiết F lồi mạnh với hệ số muy lớn hơn không thì loại 1 với độ chính xác epsilon có thể suy ra loại 2.
+\end{speech}
+
+\scene{SLIDE 11--18}
+
+\action{
+    Slide hiện mục lục con "Ví dụ: Phép chiếu lên một tập lồi", rồi các định nghĩa và hình minh họa cho ba loại xấp xỉ trong trường hợp riêng $F=\iota_C$.
+}
+
+\block{28}
+\begin{speech}
+    Một ví dụ minh họa trực quan là khi F chính là hàm chỉ báo của một tập lồi đóng C. Lúc đó bài toán điểm gần kề
+\end{speech}
+
+\block{14}
+\begin{speech}
+    trở thành phép chiếu trực giao P-C lên C, không phụ thuộc vào lam-đa.
+\end{speech}
+
+\block{28}
+\begin{speech}
+    Với xấp xỉ loại 1: z xấp xỉ P-C của y khi z thuộc C và khoảng cách từ z đến y bình phương nhỏ hơn hoặc bằng
+\end{speech}
+
+\block{28}
+\begin{speech}
+    khoảng cách tối ưu bình phương cộng êp-xi-lon bình phương. Hình minh họa cho thấy z chỉ cần nằm trong giao của C với hình cầu tâm y.
+\end{speech}
+
+\block{34}
+\begin{speech}
+    Với xấp xỉ loại 2: z thuộc C và tích vô hướng giữa x trừ z với y trừ z nhỏ hơn hoặc bằng êp-xi-lon bình phương chia hai, với mọi x thuộc C.
+\end{speech}
+
+\block{28}
+\begin{speech}
+    Về hình học, đây là một siêu phẳng song song với siêu phẳng tiếp xúc chính xác, được tịnh tiến về phía y một khoảng phụ thuộc êp-xi-lon.
+\end{speech}
+
+\block{23}
+\begin{speech}
+    Với xấp xỉ loại 3: z chính là ảnh chiếu của điểm y cộng một nhiễu e có chuẩn không vượt quá êp-xi-lon.
+\end{speech}
+
+\block{24}
+\begin{speech}
+    Nói cách khác, mọi xấp xỉ loại 3 đều là ảnh chiếu của một điểm nằm trong hình cầu tâm y bán kính êp-xi-lon.
+\end{speech}
+
+\block{27}
+\begin{speech}
+    Nhận xét cuối cùng: đối với các tập lồi bị chặn, xấp xỉ loại 3 luôn kéo theo xấp xỉ loại 2, với độ chính xác mới
+\end{speech}
+
+\block{13}
+\begin{speech}
+    bằng căn bậc hai của hai lần đường kính tập C nhân êp-xi-lon.
+\end{speech}
+
+\scene{SLIDE 19--20}
+
+\action{
+    Slide chuyển sang mục lục Chương 2 "Dãy ước lượng Nesterov", rồi mục lục con "Khung tổng quát".
+}
+
+\block{21}
+\begin{speech}
+    Tiếp theo, em xin phép chuyển sang công cụ cốt lõi để phân tích thuật toán: Dãy ước lượng Nét-tê-rốp (Nesterov).
+\end{speech}
+
+\block{40}
+\begin{speech}
+    Dãy ước lượng là một khái niệm nền tảng trong các thuật toán tối ưu tăng tốc, được thiết lập thông qua một dãy các hàm phi-ca đóng vai trò ước lượng ngày càng chặt cho hàm mục tiêu ép.
+\end{speech}
+
+\block{20}
+\begin{speech}
+    Sai số của các hàm ước lượng này được kiểm soát bởi một dãy hệ số bê-ta-ca tiến về không.
+\end{speech}
+
+\scene{SLIDE 21}
+
+\action{
+    Slide hiện định nghĩa dãy ước lượng.
+}
+
+\block{28}
+\begin{speech}
+    Về định nghĩa: với mọi x thuộc không gian H, và với mọi k thuộc tập số tự nhiên, ta có phi-k của x trừ F của x
+\end{speech}
+
+\block{25}
+\begin{speech}
+    nhỏ hơn hoặc bằng bê-ta-k nhân với phi-không của x trừ F của x; và bê-ta-k tiến về không khi k tiến ra vô cùng.
+\end{speech}
+
+\scene{SLIDE 22--23}
+
+\action{
+    Slide hiện Định lý chính về sự hội tụ của chuỗi ước lượng, rồi Mệnh đề về việc xây dựng dãy ước lượng bằng quan hệ truy hồi.
+}
+
+\block{36}
+\begin{speech}
+    Ngoài ra chúng ta còn có 1 định lý: giả sử tồn tại các dãy x-k thuộc không gian H và đen-ta-k không âm, sao cho F của x-k nhỏ hơn hoặc bằng phi-k-sao cộng đen-ta-k.
+\end{speech}
+
+\block{40}
+\begin{speech}
+    Bởi toàn bộ việc phân tích hội tụ được quy về một nguyên lý đơn giản: nếu các điểm lặp sinh ra từ thuật toán có giá trị hàm mục tiêu đủ gần với giá trị cực tiểu của phi-ca,
+\end{speech}
+
+\block{17}
+\begin{speech}
+    thì thuật toán chắc chắn sẽ hội tụ về giá trị tối ưu của bài toán gốc.
+\end{speech}
+
+\block{33}
+\begin{speech}
+    Để quá trình tính toán khả thi, ta thường khởi tạo dãy ước lượng bằng một hàm toàn phương. Phép cập nhật hàm sau đó sẽ bảo toàn cấu trúc toàn phương này.
+\end{speech}
+
+\block{40}
+\begin{speech}
+    Nhờ đó, thay vì phải lưu trữ cả một hàm số phức tạp qua từng bước, thuật toán chỉ cần cập nhật ba tham số vô hướng đơn giản, làm giảm đáng kể áp lực bộ nhớ và tính toán.
+\end{speech}
+
+\scene{SLIDE 24}
+
+\action{
+    Slide chuyển sang mục lục con "Xây dựng dãy ước lượng dạng toàn phương".
+}
+
+\scene{SLIDE 25}
+
+\action{
+    Slide hiện Bổ đề then chốt (lem:core), liên kết dãy ước lượng với phép cập nhật sinh bởi toán tử điểm gần kề xấp xỉ.
+}
+
+\block{29}
+\begin{speech}
+    Bổ đề then chốt: cho x, nu thuộc không gian H, A dương, và hàm phi dạng toàn phương sao cho F(x) nhỏ hơn hoặc bằng phi-sao cộng đen-ta.
+\end{speech}
+
+\block{26}
+\begin{speech}
+    Cho z, xi thuộc H với xi là một êp-xi-lon-dưới-gradient của F tại z, và phi-mũ là hàm thu được sau một bước cập nhật U.
+\end{speech}
+
+\block{15}
+\begin{speech}
+    Đặt y bằng tổ hợp lồi (1 trừ anpha) nhân x cộng anpha nhân nu.
+\end{speech}
+
+\block{23}
+\begin{speech}
+    Khi đó, với mọi lam-đa dương, bổ đề cho một chặn dưới tường minh: tổng của (1 trừ anpha) đen-ta, êp-xi-lon và phi-mũ-sao
+\end{speech}
+
+\block{18}
+\begin{speech}
+    luôn lớn hơn hoặc bằng F(z) cộng một số hạng không âm phụ thuộc vào xi và lam-đa.
+\end{speech}
+
+\block{36}
+\begin{speech}
+    Bổ đề này chính là cầu nối giữa dãy ước lượng trừu tượng và các điểm lặp cụ thể, và sẽ được sử dụng trực tiếp để xây dựng hai thuật toán ở các phần sau.
+\end{speech}
+
+\scene{SLIDE 26}
+
+\action{
+    Slide chuyển sang mục lục con "Tốc độ triệt tiêu của bê-ta-k".
+}
+
+\block{24}
+\begin{speech}
+    Vì tốc độ hội tụ của dãy giá trị $F(x_k)$ được quyết định trực tiếp bởi tốc độ triệt tiêu của hệ số $\beta_k$.
+\end{speech}
+
+\block{27}
+\begin{speech}
+    Do đó, mục này tập trung vào việc đánh giá định lượng dãy $(\beta_k)$ nhằm đưa ra các ước lượng hội tụ tường minh cho thuật toán.
+\end{speech}
+
+\scene{SLIDE 27}
+
+\action{
+    Slide hiện Bổ đề đánh giá tốc độ triệt tiêu của bê-ta-k.
+}
+
+\block{29}
+\begin{speech}
+    Bổ đề này cung cấp một công cụ rất mạnh mẽ để đánh giá tốc độ hội tụ — thường được ứng dụng trong các thuật toán tối ưu.
+\end{speech}
+
+\block{21}
+\begin{speech}
+    Thay vì sa đà vào từng biến số, chúng ta có thể hiểu ý nghĩa cốt lõi của nó như sau:
+\end{speech}
+
+\block{27}
+\begin{speech}
+    giả sử chúng ta có một quá trình lặp, trong đó các tham số $\alpha_k$ được kiểm soát chặt chẽ giữa hai giới hạn $a$ và $b$.
+\end{speech}
+
+\block{33}
+\begin{speech}
+    Khi đó, mức độ suy giảm tích lũy của toàn bộ quá trình — ở đây gọi là bê-ta-k — sẽ luôn được chặn một cách chính xác bởi hai dải an toàn.
+\end{speech}
+
+\block{38}
+\begin{speech}
+    Điểm đắt giá nhất của bổ đề nằm ở phần kết luận: dãy bê-ta-k này chắc chắn sẽ tiến về $0$ khi và chỉ khi tổng căn bậc hai của các tham số lambda-k tiến ra vô cực.
+\end{speech}
+
+\block{42}
+\begin{speech}
+    Đặc biệt, nếu các bước lambda-k không bị thu nhỏ quá mức, quá trình này sẽ đạt được tốc độ hội tụ cực nhanh, tỷ lệ nghịch với bình phương số bước lặp — tức là đạt tốc độ big-O của $1/k^2$.
+\end{speech}
+
+\scene{SLIDE 28--29}
+
+\action{
+    Slide chuyển sang mục lục Chương 3 "Bậc hội tụ của thuật toán", rồi mục lục con "Thuật toán với sai số loại 1".
+}
+
+\block{33}
+\begin{speech}
+    Phần 3: Bậc hội tụ của thuật toán. Ở phần cuối cùng, chúng ta sẽ áp dụng các công cụ trên để xét tốc độ hội tụ khi thuật toán chứa sai số.
+\end{speech}
+
+\block{36}
+\begin{speech}
+    Báo cáo của nhóm có chỉ ra một điểm thú vị về mặt lý thuyết: tác giả San-dô và Vin-la đã tìm ra và khắc phục một lỗ hổng trong chứng minh của Gu-lơ trước đây.
+\end{speech}
+
+\block{24}
+\begin{speech}
+    Gu-lơ từng cố gắng xây dựng chuỗi lặp hội tụ bằng cách dựa vào điểm gần kề chính xác để cập nhật tham số.
+\end{speech}
+
+\block{22}
+\begin{speech}
+    Tuy nhiên, trên thực tế, điểm chính xác này là vô định, khiến chuỗi quy nạp của ông bị đứt gãy logic.
+\end{speech}
+
+\block{38}
+\begin{speech}
+    San-dô và Vin-la đã sửa lỗi này bằng cách phân tích trực tiếp tác động của các yếu tố nhiễu loạn lên các điểm tham chiếu, từ đó thiết lập được các thuật toán hội tụ thực tế.
+\end{speech}
+
+\block{16}
+\begin{speech}
+    Dựa trên kết quả này, ta thấy rõ sự khác biệt giữa các loại sai số.
+\end{speech}
+
+\scene{SLIDE 30}
+
+\action{
+    Slide hiện câu dẫn và Định lý 4.1 (thuật toán với sai số loại 1).
+}
+
+\block{13}
+\begin{speech}
+    Từ Bổ đề trước, S. Salzo và S. Villa chứng minh được rằng...
+\end{speech}
+
+\scene{SLIDE 31--33}
+
+\action{
+    Slide hiện Định lý 4.1 (quy tắc cập nhật lý tưởng dựa trên điểm gần kề chính xác), cách đưa nhiễu $\Delta$ vào biến $\nu$, Định lý 4.3 (quy tắc cập nhật thực tế) và công thức thuật toán IAPPA1.
+}
+
+\block{36}
+\begin{speech}
+    Định lý 4.1 mô tả một bước cập nhật lý tưởng: từ điểm t là tổ hợp lồi của x và nu, ta lấy x-mũ là xấp xỉ loại 1 của prox lambda F tại t,
+\end{speech}
+
+\block{22}
+\begin{speech}
+    rồi cập nhật phi, A và nu theo các công thức tường minh, thu được một chặn dưới cho F tại x-mũ.
+\end{speech}
+
+\block{36}
+\begin{speech}
+    Tuy nhiên, công thức cập nhật của nu trong định lý này lại phụ thuộc vào z, tức điểm gần kề chính xác — một đại lượng ta không thể biết trước khi tính xấp xỉ.
+\end{speech}
+
+\block{25}
+\begin{speech}
+    Để khắc phục, Salzo và Villa đưa nhiễu delta vào biến nu: đặt u bằng nu cộng delta với chuẩn delta không vượt quá êta,
+\end{speech}
+
+\block{16}
+\begin{speech}
+    rồi lấy y là tổ hợp lồi của x và u thay vì x và nu.
+\end{speech}
+
+\block{32}
+\begin{speech}
+    Từ đó, x-mũ là xấp xỉ loại 1 của prox lambda F tại y, và có thể chứng minh x-mũ cũng là xấp xỉ loại 1 của prox lambda F tại t,
+\end{speech}
+
+\block{13}
+\begin{speech}
+    nhưng với độ chính xác lớn hơn, bằng êp-xi-lon cộng anpha nhân êta.
+\end{speech}
+
+\block{31}
+\begin{speech}
+    Kết quả này dẫn tới Định lý 4.3: một quy tắc cập nhật hoàn toàn thực tế, chỉ dùng các đại lượng đã biết là x, u, A, êta, đen-ta —
+\end{speech}
+
+\block{11}
+\begin{speech}
+    không còn phụ thuộc vào điểm gần kề chính xác nữa.
+\end{speech}
+
+\block{27}
+\begin{speech}
+    Từ định lý này, nhóm tác giả xây dựng thuật toán IAPPA1: tại mỗi bước, tính anpha-k, rồi y-k là tổ hợp lồi của x-k và u-k,
+\end{speech}
+
+\block{29}
+\begin{speech}
+    rồi x cộng 1 là xấp xỉ loại 1 của prox lambda-k F tại y-k với sai số êp-xi-lon-k, sau đó cập nhật A, u và êta tích lũy.
+\end{speech}
+
+\scene{SLIDE 34}
+
+\action{
+    Slide hiện Nhận xét sau Định lý (sự tồn tại của chuỗi và chuỗi ước lượng).
+}
+
+\scene{SLIDE 35}
+
+\action{
+    Slide hiện Định lý về tốc độ hội tụ của thuật toán IAPPA1.
+}
+
+\block{37}
+\begin{speech}
+    Đối với thuật toán sử dụng sai số loại 1: tốc độ hội tụ — giả sử sai số epsilon-k giảm theo tốc độ big-O của $1/k^q$ với $q > 3/2$, thuật toán IAPPA1 sẽ hội tụ.
+\end{speech}
+
+\block{35}
+\begin{speech}
+    Cụ thể: đạt mức big-O của $1/k^{2q-3}$ nếu $q < 2$; đạt mức big-O của $\log^2 k / k$ nếu $q = 2$; đạt mức tối đa là big-O của $1/k$ nếu $q > 2$.
+\end{speech}
+
+\block{21}
+\begin{speech}
+    Việc áp dụng thuật toán tăng tốc với sai số loại 1 thực chất không mang lại ưu thế rõ rệt.
+\end{speech}
+
+\block{25}
+\begin{speech}
+    Bất kể sai số giảm nhanh hay chậm, hiệu năng của nó chỉ tương đương với phiên bản thuật toán không tăng tốc thông thường.
+\end{speech}
+
+\scene{SLIDE 36}
+
+\action{
+    Slide chuyển sang mục lục con "Thuật toán với sai số loại 2".
+}
+
+\block{10}
+\begin{speech}
+    Đối với thuật toán sử dụng sai số loại 2:
+\end{speech}
+
+\scene{SLIDE 37--38}
+
+\action{
+    Slide hiện câu dẫn, Định lý 4.2 (quy tắc cập nhật với sai số loại 2) và công thức thuật toán IAPPA2.
+}
+
+\block{31}
+\begin{speech}
+    Đối với sai số loại 2, Định lý 4.2 phát biểu: cho x, nu thuộc H và phi dạng toàn phương sao cho F(x) nhỏ hơn hoặc bằng phi-sao cộng đen-ta.
+\end{speech}
+
+\block{28}
+\begin{speech}
+    Nếu tỉ số anpha bình phương trên (1 trừ anpha) A lam-đa nhỏ hơn hoặc bằng 2, ta lấy y là tổ hợp lồi của x và nu,
+\end{speech}
+
+\block{18}
+\begin{speech}
+    rồi x-mũ là xấp xỉ loại 2 của prox lambda F tại y với độ chính xác êp-xi-lon.
+\end{speech}
+
+\block{25}
+\begin{speech}
+    Cập nhật phi, A, nu và đen-ta theo các công thức tường minh, ta thu được không chỉ một chặn dưới cho F tại x-mũ,
+\end{speech}
+
+\block{17}
+\begin{speech}
+    mà còn một số hạng dư không âm tỷ lệ với khoảng cách giữa y và x-mũ.
+\end{speech}
+
+\block{26}
+\begin{speech}
+    Từ định lý này, thuật toán IAPPA2 được xây dựng: tại mỗi bước, chọn anpha-k sao cho tỉ số nằm giữa a và 2, tính y-k,
+\end{speech}
+
+\block{22}
+\begin{speech}
+    rồi x cộng 1 là xấp xỉ loại 2 của prox lambda-k F tại y-k, sau đó cập nhật A và nu.
+\end{speech}
+
+\scene{SLIDE 39}
+
+\action{
+    Slide hiện Nhận xét sau Định lý (đánh giá dựa trên tham số $c_k$ và sai số tích lũy $\delta_k$).
+}
+
+\block{24}
+\begin{speech}
+    Nhận xét sau định lý chỉ ra rằng nếu hằng số c-k lớn hơn hoặc bằng 2 trừ a, và lam-đa-k bị chặn trên,
+\end{speech}
+
+\block{16}
+\begin{speech}
+    thì khoảng cách giữa y và x tại các bước liên tiếp sẽ tiến về không.
+\end{speech}
+
+\block{20}
+\begin{speech}
+    Sai số tích lũy đen-ta-k được biểu diễn qua tổng các êp-xi-lon-i bình phương chia lam-đa-i và bê-ta cộng 1.
+\end{speech}
+
+\block{21}
+\begin{speech}
+    Kết hợp với chặn của bê-ta-k, để đen-ta-k cùng bậc hội tụ big-O của $1/k^2$, cần chọn êp-xi-lon-k giảm đủ nhanh
+\end{speech}
+
+\block{9}
+\begin{speech}
+    theo lam-đa-k và tham số p lớn hơn 1/2.
+\end{speech}
+
+\scene{SLIDE 40}
+
+\action{
+    Slide hiện Định lý về tốc độ hội tụ của thuật toán IAPPA2.
+}
+
+\block{23}
+\begin{speech}
+    Vẫn với giả thiết sai số epsilon-k bằng big-O của $1/k^q$, nhưng chỉ cần $q > 1/2$ là thuật toán đã hội tụ.
+\end{speech}
+
+\block{29}
+\begin{speech}
+    Khôi phục tốc độ tối ưu big-O của $1/k^2$ nếu $q > 3/2$. Đạt mức big-O của $1/k^2$ cộng big-O của $\log k / k^2$ nếu $q = 3/2$.
+\end{speech}
+
+\block{13}
+\begin{speech}
+    Đạt mức big-O của $1/k^2$ cộng big-O của $1/k^{2q-1}$ nếu $q < 3/2$.
+\end{speech}
+
+\block{45}
+\begin{speech}
+    Khác với loại 1, việc sử dụng sai số loại 2 giúp chúng ta khôi phục thành công tốc độ hội tụ bậc 2 đặc trưng của thuật toán tăng tốc, miễn là sai số triệt tiêu đủ nhanh với tham số $q > 3/2$.
+\end{speech}
+
+\block{24}
+\begin{speech}
+    Thậm chí, ngay cả khi sai số giảm chậm hơn tiêu chuẩn, thuật toán vẫn duy trì được tốc độ hội tụ vượt trội.
+\end{speech}
+
+\scene{Slide ảnh minh họa}
+\begin{speech}
+    So sánh tốc độ hội tụ của thuật toán PPA cổ điển và các biến thể ứng với các lịch trình \(T_k\) khác nhau. Kết quả thực nghiệm cho thấy lịch trình \(T_k \sim \sqrt{k}\) duy trì tốc độ hội tụ \(O(1/k^2)\), gần như tương đương với trường hợp giải chính xác (\(T_k = T_{\mathrm{ref}}\)), đồng thời giúp giảm đáng kể chi phí tính toán.
+\end{speech}
+
+\scene{SLIDE 41}
+
+\action{
+    Slide hiện Tài liệu tham khảo.
+}
+
+\block{27}
+\begin{speech}
+    Tổng kết: để tổng kết lại, việc giải gần đúng các bài toán con là xu hướng bắt buộc trong tối ưu quy mô lớn hiện nay.
+\end{speech}
+
+\block{25}
+\begin{speech}
+    Dãy ước lượng Nesterov cung cấp cho ta một bộ khung lý thuyết vững chắc để lượng hóa ảnh hưởng của các sai số này.
+\end{speech}
+
+\block{39}
+\begin{speech}
+    Và thông qua phân tích, ta thấy rằng để khai thác được sức mạnh thực sự của các thuật toán tăng tốc, ta cần kiểm soát độ chính xác của nghiệm theo tiêu chuẩn của xấp xỉ loại 2.
+\end{speech}
+
+\block{39}
+\begin{speech}
+    Dạ, phần trình bày báo cáo của em đến đây là kết thúc. Em xin cảm ơn thầy đã chú ý lắng nghe, và nhóm em rất mong nhận được những nhận xét và câu hỏi từ thầy ạ.
+\end{speech}
+
+\section*{Nếu thầy hỏi...}
+% --- BẢNG TỔNG HỢP CÂU HỎI VÀ TRẢ LỜI CHO BÁO CÁO ---
+% MỤC 1: ĐÓNG GÓP CHÍNH
+\textbf{1. Đóng góp chính của bài báo là gì?}
+\begin{itemize}
+    \item Phát hiện và sửa chữa thành công lỗ hổng trong chứng minh của Güler (1991) cho thuật toán PPA tăng tốc khi áp dụng cho trường hợp không chính xác.
+    \item Đạt hội tụ bậc 2 (\(O(1/k^2)\)) nếu kiểm soát chặt chẽ \textbf{sai số loại 2}.
+    \item Với \textbf{sai số loại 1}, vẫn đảm bảo hội tụ bậc 1 (\(O(1/k)\)) ngay cả khi chuỗi sai số không có tính khả tổng (điểm mạnh nhất so với các công trình trước).
+\end{itemize}
+
+% MỤC 2: ĐỊNH NGHĨA SAI SỐ
+\textbf{2. Sự khác biệt cốt lõi giữa các loại sai số (Type 1, 2, 3) là gì?}
+\begin{itemize}
+    \item \textbf{Sai số loại 1:} Sai số về giá trị hàm/chuẩn. Cho hội tụ chậm \(O(1/k)\). Ưu điểm: chuỗi sai số không cần khả tổng (không yêu cầu \(\sum \varepsilon_i < \infty\)).
+    \item \textbf{Sai số loại 2:} Đo lường khoảng cách (theo chuẩn) tới toán tử gần kề chính xác. Nếu siết chặt sai số này, ta có thể khôi phục tốc độ \(O(1/k^2)\) thông qua điều kiện (21).
+    \item \textbf{Sai số loại 3:} Sai số dạng khoảng cách tới dưới vi phân của hàm lồi (ít được dùng trong phân tích này).
+\end{itemize}
+
+% MỤC 3: TỐC ĐỘ BẬC 2
+\textbf{3. Để giữ tốc độ \(O(1/k^2)\), tác giả yêu cầu điều kiện gì cho \(\varepsilon_k\)?}
+Cần khống chế sai số loại 2 tại mỗi bước lặp \(k\) thỏa mãn điều kiện (21) như sau:
+\begin{equation*}
+    \varepsilon_k \le \frac{c\sqrt{\lambda_k}}{(k+1)^p\left(1 + \sqrt{2A} \sum_{j=0}^{k} \sqrt{\lambda_j}\right)}, \quad \text{với } p > 1/2. \tag{21}
+\end{equation*}
+
+% MỤC 4: NGƯỠNG q=3/2
+\textbf{4. Giải thích ý nghĩa ngưỡng \(q = 3/2\) trong định lý hội tụ?}
+Giả sử sai số suy giảm theo cấp số mũ \(\varepsilon_k = \mathcal{O}(1/(k+1)^q)\). Dựa vào công thức tính sai số tích lũy (15), các tác giả rút ra chặn:
+\begin{equation*}
+    \delta_k \le \frac{\tilde{c}}{(k+1)^2} \sum_{i=0}^{k-1} \frac{1}{(i+1)^{2(q-1)}}.
+\end{equation*}
+Chính chuỗi tổng \(\sum_{i=0}^{k-1} (i+1)^{-2(q-1)}\) quyết định tốc độ cuối cùng:
+\begin{itemize}
+    \item \(q > 3/2\): Chuỗi hội tụ \(\to\) tốc độ cực nhanh \(O(1/k^2)\).
+    \item \(q = 3/2\): Chuỗi phân kỳ dạng \(\log k\) \(\to\) tốc độ rơi xuống \(O(\log k / k^2)\).
+    \item \(q < 3/2\): Chuỗi phân kỳ theo lũy thừa \(\to\) tốc độ chậm hơn \(O(1/k^{2q-1})\).
+\end{itemize}
+
+% MỤC 5: VAI TRÒ THAM SỐ VÀ CHUYỂN ĐỔI BIẾN
+\textbf{5. Vai trò của \(\alpha_k, \lambda_k, a_k\) và lý do chuyển sang dùng \(t_k\)?}
+\begin{itemize}
+    \item \(a_k = \frac{\alpha_k^2}{(1-\alpha_k)A_k\lambda_k} \in [a, 2]\) là tham số điều khiển tính gia tốc.
+    \item \(t_k = 1/\alpha_k\) được giới thiệu ở Mục 5 để \textbf{đơn giản hóa công thức đệ quy} bằng cách thay thế hai chuỗi số \((\alpha_k)\) và \((A_k)\) chỉ bằng một chuỗi \(t_k\). Việc này giúp công thức tính \(y_{k+1}\) trở nên gọn hơn và dễ dàng so sánh với các thuật toán nổi tiếng.
+\end{itemize}
+
+% MỤC 6: LIÊN HỆ FISTA VÀ GÜLER
+\textbf{6. Thuật toán IAPPA1/2 liên hệ thế nào với FISTA và Güler?}
+\begin{itemize}
+    \item Sử dụng dạng rút gọn (với \(a_k, t_k\)), khi \(\lambda_k\) không đổi:
+    \begin{itemize}
+        \item Chọn \(a_k = 2\) \(\implies\) khôi phục thuật toán của \textbf{Güler}.
+        \item Chọn \(a_k = 1\) \(\implies\) khôi phục chính xác thuật toán \textbf{FISTA} (Beck \& Teboulle) - phương pháp Forward-Backward Splitting tăng tốc rất phổ biến.
+    \end{itemize}
+    \item \textit{Ý nghĩa thực hành:} Điều này chứng tỏ phương pháp phân tích của Salzo \& Villa bao trùm và thống nhất được các thuật toán tối ưu tăng tốc hiện đại.
+\end{itemize}
+
+% MỤC 7: LỖ HỔNG CỦA GÜLER
+\textbf{7. Lỗ hổng tinh tế trong chứng minh của Güler là gì?}
+Trong công trình năm 1991, Güler chứng minh thành công cho trường hợp chính xác. Khi mở rộng sang trường hợp không chính xác, ông thất bại ở bước \textbf{đánh giá sai số truyền ngược}. Lỗi nằm ở chỗ sai số xấp xỉ tại bước hiện tại không thể được "khóa chặt" với sai số của chuỗi ước tính dùng để phân tích.
+Salzo và Villa đã giải quyết bằng kỹ thuật chuỗi ước tính của Nesterov, tách biệt nguồn gốc ảnh hưởng của sai số để đưa ra các điều kiện chặn chặt chẽ (21) và (22).
+
+% MỤC 8: VAI TRÒ CỦA CHUỖI ƯỚC TÍNH \(\varphi_k\)
+\textbf{8. Vai trò của chuỗi ước tính \(\varphi_k\) là gì?}
+\(\varphi_k\) tồn tại nhờ Định lý 4.3, được xây dựng đệ quy nhằm đảm bảo quan hệ bao quanh giá trị hàm mục tiêu: \(F(x_k) \le (\varphi_k)_* + \delta_k\).
+Điểm mấu chốt: Dù \(\varphi_k\) phụ thuộc vào các tham số chưa biết \(\nu_k, \xi_k\), ta \textbf{không cần biểu thức tường minh} của nó. Trong Mục 5, chỉ cần các biến trung gian \(y_k\) và \(t_k = 1/\alpha_k\) là đủ để lập trình thuật toán.
+
+% MỤC 9: CÁC CÔNG THỨC CỐT LÕI (CHEAT SHEET)
+\textbf{9. Các công thức và dạng thuật toán rút gọn (Phần học thuộc lòng)}
+\begin{enumerate}
+    \item Công thức liên hệ sai số \(\delta_k\) và \(\beta_k\) (dùng để suy ra tốc độ hội tụ):
+    \begin{align*}
+        \eta_k &= \sum_{i=0}^{k-1} \frac{\varepsilon_i}{\alpha_i},\\
+        \delta_k &= \frac{A\beta_k}{2} \sum_{i=0}^{k-1} \eta_{i+1}^2, \quad \text{với } \eta_{i+1} = \sum_{j=0}^{i} \frac{\varepsilon_j}{\alpha_j}. \tag{15}
+    \end{align*}
+
+    \item Dạng rút gọn của IAPPA2 với biến \(t_k = 1/\alpha_k\):
+    \begin{equation*}
+        y_{k+1} = x_{k+1} + \frac{t_k - 1}{t_{k+1}}(x_{k+1} - x_k) + (1-a_k)\frac{t_k}{t_{k+1}}(y_k - x_{k+1}).
+    \end{equation*}
+\end{enumerate}
+\end{document}

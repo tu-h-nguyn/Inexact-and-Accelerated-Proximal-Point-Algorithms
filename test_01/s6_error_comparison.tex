@@ -1,0 +1,47 @@
+\section{So sánh hai mô hình sai số}
+
+\begin{table}[H]
+\centering
+\caption{So sánh định lượng IAPPA1 và IAPPA2.}
+\label{tab:comparison}
+\renewcommand{\arraystretch}{1.35}
+\setlength{\tabcolsep}{4pt}
+\footnotesize
+\begin{tabular}{|>{\raggedright\arraybackslash}m{2.8cm}|>{\centering\arraybackslash}m{5.65cm}|>{\centering\arraybackslash}m{5.65cm}|}
+\hline
+\textbf{Tiêu chí} & \textbf{IAPPA1} & \textbf{IAPPA2} \\
+\hline
+\textbf{Tiêu chuẩn sai số tại bước $k$}
+& $\displaystyle 0\in\partial_{\varepsilon_k^2/(2\lambda_k)}\Phi_{\lambda_k}(x_{k+1};y_k)$
+& $\displaystyle \frac{y_k-x_{k+1}}{\lambda_k}\in\partial_{\varepsilon_k^2/(2\lambda_k)}F(x_{k+1})$ \\
+\hline
+\textbf{Đại lượng sai số tích lũy}
+& \begin{minipage}[c]{0.96\linewidth}\centering
+$\displaystyle \delta_k=\frac{A\beta_k}{2}\sum_{i=0}^{k-1}\eta_{i+1}^2$\\[6pt]
+$\displaystyle \eta_{i+1}=\sum_{j=0}^{i}\frac{\varepsilon_j}{\alpha_j}$
+\end{minipage}
+& \begin{minipage}[c]{0.96\linewidth}\centering
+$\displaystyle \delta_k=\frac{\beta_k}{2}\sum_{i=0}^{k-1}\frac{\varepsilon_i^2}{\lambda_i\beta_{i+1}}$
+\end{minipage} \\
+\hline
+\textbf{Điều kiện để $(x_k)$ là dãy cực tiểu hóa}
+& $\displaystyle q>\frac{3}{2}$
+& $\displaystyle q>\frac{1}{2}$ \\
+\hline
+\textbf{Tốc độ của $F(x_k)-F_{\star}$}
+& \begin{minipage}[c]{0.96\linewidth}\centering
+$\displaystyle O\bigl(k^{-(2q-3)}\bigr),\ \frac{3}{2}<q<2$\\[4pt]
+$\displaystyle O\!\left(\frac{\log^2 k}{k}\right),\ q=2$\\[4pt]
+$\displaystyle O(k^{-1}),\ q>2$
+\end{minipage}
+& \begin{minipage}[c]{0.96\linewidth}\centering
+$\displaystyle O\bigl(k^{-(2q-1)}\bigr),\ \frac{1}{2}<q<\frac{3}{2}$\\[4pt]
+$\displaystyle O\!\left(\frac{\log k}{k^2}\right),\ q=\frac{3}{2}$\\[4pt]
+$\displaystyle O(k^{-2}),\ q>\frac{3}{2}$
+\end{minipage} \\
+\hline
+\end{tabular}
+\end{table}
+
+Các công thức trên cho thấy IAPPA1 tích lũy bình phương của các tổng riêng $\eta_{i+1}$, còn IAPPA2 tích lũy trực tiếp bình phương của từng sai số với trọng số $(\lambda_i\beta_{i+1})^{-1}$. Vì vậy, IAPPA2 có điều kiện hội tụ yếu hơn và bảo toàn tốc độ bậc hai khi $q>3/2$; chặn tổng quát của IAPPA1 chỉ đạt bậc $O(k^{-1})$ khi $q>2$.
+

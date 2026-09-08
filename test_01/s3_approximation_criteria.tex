@@ -1,0 +1,56 @@
+\section{Hai tiêu chuẩn xấp xỉ}
+
+Cho $\lambda>0$, $y\in\mathcal{H}$ và đặt
+\[
+\Phi_{\lambda}(x;y)
+=F(x)+\frac{1}{2\lambda}\|x-y\|^2.
+\]
+Điểm cực tiểu của $\Phi_{\lambda}(\cdot;y)$ chính là $\prox{\lambda F}(y)$.
+
+\subsection{Xấp xỉ loại 1}
+
+\noindent\textbf{Định nghĩa 3.1 -- Xấp xỉ loại 1.}
+Điểm $z$ là xấp xỉ loại 1 của $\prox{\lambda F}(y)$ với độ chính xác $\varepsilon$ nếu
+\begin{equation}
+0\in\partial_{\varepsilon^2/(2\lambda)}\Phi_{\lambda}(z;y).
+\label{eq:type1}
+\end{equation}
+Điều kiện \eqref{eq:type1} tương đương với
+\begin{equation}
+\Phi_{\lambda}(z;y)
+\leq
+\min_{x\in\mathcal{H}}\Phi_{\lambda}(x;y)
++\frac{\varepsilon^2}{2\lambda}.
+\label{eq:type1-gap}
+\end{equation}
+Tính lồi mạnh của hàm phụ trợ cho chặn
+\[
+\|z-\prox{\lambda F}(y)\|\leq\varepsilon.
+\]
+Tiêu chuẩn loại 1 kiểm soát trực tiếp độ gần tối ưu của bài toán con, nhưng không xác định trực tiếp một phần tử thuộc dưới vi phân gần đúng của $F$ tại điểm được tính.
+
+\subsection{Xấp xỉ loại 2}
+
+\noindent\textbf{Định nghĩa 3.2 -- Xấp xỉ loại 2.}
+Điểm $z$ là xấp xỉ loại 2 của $\prox{\lambda F}(y)$ với độ chính xác $\varepsilon$ nếu
+\begin{equation}
+\frac{y-z}{\lambda}
+\in\partial_{\varepsilon^2/(2\lambda)}F(z).
+\label{eq:type2}
+\end{equation}
+Đặt $v=(y-z)/\lambda$. Theo \eqref{eq:fenchel-young}, điều kiện \eqref{eq:type2} tương đương với chứng chỉ
+\begin{equation}
+F(z)+F^{*}(v)-\langle v,z\rangle
+\leq\frac{\varepsilon^2}{2\lambda}.
+\label{eq:type2-cert}
+\end{equation}
+Khác với loại 1, vectơ $v$ trong \eqref{eq:type2} được xác định trực tiếp từ hai điểm đã biết. Vì vậy, vectơ này có thể được đưa thẳng vào phép cập nhật dãy ước lượng.
+
+\subsection{Quan hệ giữa hai tiêu chuẩn}
+
+Theo Proposition 2.5 của Salzo và Villa, mọi xấp xỉ loại 2 với độ chính xác $\varepsilon$ đều là xấp xỉ loại 1 với cùng độ chính xác \cite{salzo2012}. Chiều ngược lại không đúng nếu không có thêm giả thiết. Khi $F$ lồi mạnh với môđun $\mu>0$, xấp xỉ loại 1 với độ chính xác $\varepsilon$ kéo theo xấp xỉ loại 2 với độ chính xác
+\[
+\varepsilon\sqrt{\frac{1+\lambda\mu}{\lambda\mu}}.
+\]
+Do đó, loại 2 là tiêu chuẩn chặt hơn trong mô hình tổng quát, nhưng đổi lại nó cung cấp đúng thông tin dưới vi phân mà thuật toán gia tốc cần sử dụng.
+

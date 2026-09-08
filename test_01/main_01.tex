@@ -1,0 +1,72 @@
+\documentclass[12pt,twoside,a4paper,openany]{report}
+\input{preamble_01}
+
+\begin{document}
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{center}
+{\large\bfseries TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN\par}
+\vspace{4pt}
+{\large\bfseries KHOA TOÁN -- TIN HỌC\par}
+\vspace{4pt}
+{\normalsize HỌC PHẦN: PHƯƠNG PHÁP SỐ TRONG TỐI ƯU\par}
+
+\vspace{1.5cm}
+\rule{0.82\textwidth}{0.8pt}
+\vspace{0.65cm}
+
+{\fontsize{22}{28}\selectfont\bfseries
+CÁC THUẬT TOÁN ĐIỂM CẬN KỀ\par
+GIA TỐC VỚI PHÉP TÍNH GẦN ĐÚNG\par}
+
+\vspace{0.65cm}
+\rule{0.82\textwidth}{0.8pt}
+\vspace{0.55cm}
+
+{\large\itshape Tiểu luận dựa trên công trình của\par}
+\vspace{3pt}
+{\large Saverio Salzo và Silvia Villa (2012)\par}
+\end{center}
+
+\vfill
+
+\begin{center}
+\begin{minipage}{0.82\textwidth}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{@{}L{4.8cm}X@{}}
+\textbf{Nhóm thực hiện:} & Nguyễn Hoàng Tú -- 23110220 \\
+& Bùi Công Hoàng Vũ -- 23110223 \\
+& Huỳnh Trung Kiên -- 22110091 \\
+& Nguyễn Ngọc Diễm Quỳnh -- 21110167 \\[4pt]
+\textbf{Giảng viên hướng dẫn:} & Nguyễn Đăng Khoa
+\end{tabularx}
+\end{minipage}
+\end{center}
+
+\vfill
+\begin{center}
+{\normalsize Thành phố Hồ Chí Minh, tháng 7 năm 2026}
+\end{center}
+\end{titlepage}
+\newpage
+\tableofcontents
+\newpage
+\setcounter{chapter}{0}
+\setcounter{section}{0}
+
+% Thu tu tai lieu tham khao duoc giu nhu ban goc.
+\nocite{salzo2012,rockafellar1976,guler1992,nesterov2004,beck2017,ryuyin2023,mordukhovich2014}
+
+\input{sections/s1_introduction}
+\input{sections/s2_mathematical_background}
+\input{sections/s3_approximation_criteria}
+\input{sections/s4_accelerated_algorithms}
+\input{sections/s5_convergence_results}
+\input{sections/s6_error_comparison}
+\input{sections/s7_numerical_experiments}
+\input{sections/s8_conclusion}
+
+\bibliographystyle{unsrt}
+\bibliography{refs}
+
+\end{document}

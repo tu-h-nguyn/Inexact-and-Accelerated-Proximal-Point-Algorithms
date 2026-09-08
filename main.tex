@@ -1,0 +1,158 @@
+\documentclass[12pt,twoside, a4paper, openany]{report}
+% ─────────────────────────── Packages ─────────────────────────────
+\usepackage[right=2.2cm,left=2.2cm,top=2cm,bottom=2.2cm]{geometry} % căn lề
+\usepackage[utf8]{vietnam}
+\usepackage[vietnamese]{babel}
+\usepackage{amsmath,amsxtra,amsfonts,amssymb,latexsym,amscd,amsthm,nccmath,listings,mathtools,matlab-prettifier, url,float,braket,hyperref,graphicx,placeins}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[T1]{fontenc}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{xfrac}
+% ---------- Code MATLAB ----------
+\definecolor{codebg}{RGB}{247,247,247}
+\definecolor{codekw}{RGB}{0,0,180}
+\definecolor{codecm}{RGB}{80,120,80}
+\definecolor{codestr}{RGB}{150,40,120}
+\lstdefinestyle{matlabstyle}{
+  language=Matlab,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{codekw}\bfseries,
+  commentstyle=\color{codecm}\itshape,
+  stringstyle=\color{codestr},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=8pt,
+  backgroundcolor=\color{codebg},
+  showspaces=false,
+  showstringspaces=false,
+  breaklines=true,
+  breakatwhitespace=false,
+  frame=single,
+  rulecolor=\color{gray!50},
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=matlabstyle}
+% ──────────────────── Comment Filter Settings ──────────────────────
+\usepackage{comment}
+\includecomment{essayonly}
+\excludecomment{slidesonly}
+\excludecomment{scriptonly}
+\input{metadata.tex}
+% ──────────────────── Custom Preamble ─────────────────────────────
+\renewcommand{\baselinestretch}{1.15} % giãn dòng
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,      
+    urlcolor=blue,
+    citecolor=blue,
+    pdftitle={Tên tài liệu của bạn},
+    bookmarks=true,
+}
+\setlist[enumerate]{
+    label=(\roman*)}
+\setlist[itemize]{
+    label=$\triangleright$,
+    leftmargin=3mm,
+    rightmargin=3mm,
+    itemindent=8mm,
+    listparindent=0mm}
+\newcommand{\prox}{\operatorname{prox}}
+\newcommand{\argmin}{\operatorname*{argmin}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\order}{\mathcal{O}}
+\renewcommand{\max}[1]{\operatorname*{max}\left\{#1\right\}}
+\renewcommand{\Set}[1]{\left\{#1\right\}}
+\newcommand{\autotag}{\stepcounter{equation}\label{eq:\theequation}\tag{\theequation}}
+\newcommand{\Hil}{\mathcal{H}}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\diam}{diam}
+\newcommand{\eps}{\varepsilon}
+\DeclarePairedDelimiter{\iprod}{\langle}{\rangle}
+\DeclarePairedDelimiter{\norm}{\|}{\|}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Định lý}[chapter]
+\newtheorem{proposition}[theorem]{Mệnh đề}
+\newtheorem{lemma}[theorem]{Bổ đề}
+\newtheorem{corollary}[theorem]{Hệ quả}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Định nghĩa}
+\newtheorem{example}[theorem]{Ví dụ}
+\newtheorem{algorithmenv}[theorem]{Thuật toán}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Nhận xét}
+
+% ─────────────────────────── Metadata ─────────────────────────────
+\title{\begin{huge}
+\textbf{\mytitle}
+\end{huge}}
+\author{\textbf{\mygroup}\\
+\vspace{3pt}
+\mymembers\\
+\textbf{Giảng Viên Hướng Dẫn}\\
+\vspace{3pt}
+\mysupervisor}
+\date{\mylongdate}
+
+% ─────────────────────────── Document ─────────────────────────────
+\begin{document}
+\nocite{salzovilla2012}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\setcounter{chapter}{0}
+\setcounter{section}{0}
+\addcontentsline{toc}{chapter}{Lời nói đầu}
+\begin{center}\Large
+    \section*{Lời nói đầu}
+\end{center}
+\input{content/chap2_1_gia_thiet.tex}
+\newpage
+%\chapter{Giới thiệu}
+%\section{Tổng quan}
+%\input{content/chap1_intro.tex}
+%\section{}
+%\input{}
+
+%-------------------------------------------------------
+\chapter{Cơ sở toán học}
+\section{Toán tử gần kề}\label{sec:setting}
+\input{content/chap2_2_toan_tu_gan_ke.tex}
+\section{Xấp xỉ điểm gần kề}
+\input{content/chap2_3_xap_xi.tex}
+\section{Mối quan hệ giữa các xấp xỉ}
+\input{content/chap2_4_moi_quan_he.tex}
+\section{Ví dụ: Phép chiếu lên một tập lồi}\label{sec:example-projection}
+\input{content/chap2_5_vi_du_chieu.tex}
+%-------------------------------------------------------
+\chapter{Dãy ước lượng Nesterov}\label{sec:estimate}
+\input{content/chap3_0_estimate_sequences.tex}
+\section{Khung tổng quát}
+\input{content/chap3_1_khung_tq.tex}
+\section{Xây dựng dãy ước lượng dạng toàn phương}
+\input{content/chap3_2_xay_dung.tex}
+\section{Tốc độ triệt tiêu của $\beta_k$}
+\input{content/chap3_3_toc_do.tex}
+%-------------------------------------------------------
+\chapter{Bậc hội tụ của thuật toán}
+\input{content/chap4_0_phan_tich_bac_hoi_tu.tex}
+\section{Thuật toán với sai số loại 1}\label{sec:type1}
+\input{content/chap4_error_type1.tex}
+\section{Thuật toán với sai số loại 2}\label{sec:type2}
+\input{content/chap4_error_type2.tex}
+\newpage
+\begin{center}
+    \section*{Tổng kết}
+\end{center}
+\input{content/outro.tex}
+\addcontentsline{toc}{chapter}{Tổng kết}
+\newpage
+\bibliographystyle{unsrtnat}
+\bibliography{refs}
+\end{document}

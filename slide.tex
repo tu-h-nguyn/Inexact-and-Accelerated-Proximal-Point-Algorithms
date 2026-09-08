@@ -1,0 +1,163 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{AnnArbor}
+\usecolortheme{seahorse}
+\useinnertheme{rounded}
+\usefonttheme{structurebold}
+% ──── Packages ────
+\usepackage[utf8]{vietnam}
+\usepackage[vietnamese]{babel}
+\usepackage{amsmath,amsxtra,amsfonts,amssymb,latexsym,amscd,amsthm,nccmath,listings,mathtools,inputenc, hyperref, geometry, graphicx}
+\usepackage[most]{tcolorbox}
+\usepackage[T1]{fontenc}
+\usefonttheme{serif}
+\setbeamertemplate{blocks}[rounded]
+\setcounter{section}{-1}
+\setlength{\columnseprule}{0.05pt}
+\def\columnseprulecolor{\color{black}}
+
+% ──── Comment Filter Settings ────
+\usepackage{comment}
+\excludecomment{essayonly}
+\includecomment{slidesonly}
+\excludecomment{scriptonly}
+\input{metadata.tex}
+% ──── Custom Preamble ────
+\renewcommand{\baselinestretch}{0.8} % giãn dòng
+
+\newcommand{\Hil}{\mathcal{H}}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\diam}{diam}
+\newcommand{\eps}{\varepsilon}
+\DeclarePairedDelimiter{\iprod}{\langle}{\rangle}
+\DeclarePairedDelimiter{\norm}{\|}{\|}
+\providecommand{\citep}[1]{\cite{#1}}
+\providecommand{\citealp}[1]{\cite{#1}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\prox}{\operatorname{prox}}
+\newcommand{\argmin}{\operatorname*{argmin}}
+\newcommand{\order}{\mathcal{O}}
+\renewcommand{\max}[1]{\operatorname*{max}\left\{#1\right\}}
+\newcommand{\Set}[1]{\left\{#1\right\}}
+\newcommand{\autotag}{\stepcounter{equation}\label{eq:\theequation}\tag{\theequation}}
+\newcommand{\paragraph}[1]{\par\noindent\textbf{#1}\par}
+
+\let\theorem\relax
+\let\endtheorem\relax
+\let\lemma\relax
+\let\endlemma\relax
+\let\corollary\relax
+\let\endcorollary\relax
+\let\definition\relax
+\let\enddefinition\relax
+\let\example\relax
+\let\endexample\relax
+
+\newenvironment{theorem}{\par\medskip\noindent\textbf{Định lý.}\ }{\par\medskip}
+\newenvironment{lemma}{\par\medskip\noindent\textbf{Bổ đề.}\ }{\par\medskip}
+\newenvironment{corollary}{\par\medskip\noindent\textbf{Hệ quả.}\ }{\par\medskip}
+\newenvironment{definition}{\par\medskip\noindent\textbf{Định nghĩa.}\ }{\par\medskip}
+\newenvironment{example}{\par\medskip\noindent\textbf{Ví dụ.}\ }{\par\medskip}
+\newenvironment{proposition}{\par\medskip\noindent\textbf{Mệnh đề.}\ }{\par\medskip}
+\newenvironment{algorithmenv}{\par\medskip\noindent\textbf{Thuật toán.}\ }{\par\medskip}
+\newenvironment{remark}{\par\medskip\noindent\textbf{Nhận xét.}\ }{\par\medskip}
+
+\AtBeginEnvironment{figure}{\framebreak}
+\AtEndEnvironment{figure}{\framebreak}
+
+\let\realsection\section
+\let\realsubsection\subsection
+\let\realsubsubsection\subsubsection
+\renewcommand{\subsection}{\realsubsubsection}
+\renewcommand{\section}{\realsubsection}
+\newcommand{\chapter}{\realsection}
+
+\AtBeginSection[]
+{
+	\begin{frame}[plain]\large
+		\textbf{\tableofcontents[
+            currentsection,
+            hideothersubsections]}
+	\end{frame}
+}
+\AtBeginSubsection[]
+{
+	\begin{frame}[plain]\large
+		\textbf{\tableofcontents[
+            currentsection,
+            hideothersubsections,
+            subsectionstyle=show/shaded/hide,
+            subsubsectionstyle=show/show/hide/hide]}
+	\end{frame}
+}
+
+% ──── Metadata ────
+\title[\myshorttitle]{\textbf{\mytitle}}
+\subtitle{\small Dựa trên bài báo: \textit{Inexact and Accelerated Proximal Point Algorithms} (S. Salzo \& S. Villa, 2012)\normalsize}
+\author[\mygroup]{
+    \textbf{\mygroup} \\
+    \vspace{9pt} % Tạo khoảng cách giữa tên nhóm và thành viên
+    \mymembers
+}
+\institute[\myshortschool]{
+    \textbf{Giảng viên hướng dẫn: }\mysupervisor\\
+    \vspace{14.17pt}
+    \mylongschool
+}
+\date[\myshortdate]{\mylongdate}
+
+% ──── Document ────
+\begin{document}
+	\nocite{salzovilla2012}
+	\frame{\titlepage}
+    \chapter{Cơ sở toán học}
+    \section{Toán tử gần kề}\label{sec:setting}
+    \begin{frame}[allowframebreaks]
+    \input{content/chap2_2_toan_tu_gan_ke.tex}
+    \end{frame}
+    \section{Xấp xỉ điểm gần kề}
+    \begin{frame}[allowframebreaks]
+    \input{content/chap2_3_xap_xi.tex}
+    \end{frame}
+    \section{Mối quan hệ giữa các xấp xỉ}
+    \begin{frame}[allowframebreaks]
+    \input{content/chap2_4_moi_quan_he.tex}
+    \end{frame}
+    \section{Ví dụ: Phép chiếu lên một tập lồi}\label{sec:example-projection}
+    \begin{frame}[allowframebreaks]
+    \input{content/chap2_5_vi_du_chieu.tex}
+    \end{frame}
+    %-------------------------------------------------------
+    \chapter{Dãy ước lượng Nesterov}\label{sec:estimate}
+    \input{content/chap3_0_estimate_sequences.tex}
+    \section{Khung tổng quát}
+    \begin{frame}[allowframebreaks]
+    \input{content/chap3_1_khung_tq.tex}
+    \end{frame}
+    \section{Xây dựng dãy ước lượng dạng toàn phương}
+    \begin{frame}[allowframebreaks]
+    \input{content/chap3_2_xay_dung.tex}
+    \end{frame}
+    \section{Tốc độ triệt tiêu của $\beta_k$}
+    \begin{frame}[allowframebreaks]
+    \input{content/chap3_3_toc_do.tex}
+    \end{frame}
+    %-------------------------------------------------------
+    \chapter{Bậc hội tụ của thuật toán}
+    \input{content/chap4_0_phan_tich_bac_hoi_tu.tex}
+    \section{Thuật toán với sai số loại 1}\label{sec:type1}
+    \begin{frame}[allowframebreaks]
+    \input{content/chap4_error_type1.tex}
+    \end{frame}
+    \section{Thuật toán với sai số loại 2}\label{sec:type2}
+    \begin{frame}[allowframebreaks]
+    \input{content/chap4_error_type2.tex}
+    \end{frame}
+    \begin{frame}[allowframebreaks, plain]{Tổng kết}
+    \input{content/outro.tex}
+    \end{frame}
+    \begin{frame}[plain]{Tài liệu tham khảo}
+        \bibliographystyle{unsrtnat}
+        \bibliography{refs}
+    \end{frame}
+\end{document}

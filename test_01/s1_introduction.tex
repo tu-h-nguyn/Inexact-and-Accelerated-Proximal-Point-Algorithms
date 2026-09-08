@@ -1,0 +1,8 @@
+\section{Giới thiệu}
+
+Phương pháp điểm cận kề là một công cụ nền tảng của tối ưu lồi không trơn. Ở mỗi vòng lặp, bài toán ban đầu được thay bằng một bài toán con có thêm số hạng chính quy hóa bậc hai. Cấu trúc này vừa tạo tính ổn định, vừa liên hệ trực tiếp với giải thức của toán tử dưới vi phân \cite{salzo2012,rockafellar1976,ryuyin2023}. Phiên bản gia tốc của Güler đạt chặn sai số giá trị hàm bậc hai khi các bài toán con được giải chính xác \cite{guler1992}.
+
+Trong thực tế, toán tử điểm cận kề thường phải được tính bằng một thuật toán lặp. Khi đó, tốc độ của vòng ngoài phụ thuộc không chỉ vào độ lớn của sai số mà còn vào loại chứng chỉ mà bộ giải bài toán con cung cấp. Salzo và Villa phân biệt hai tiêu chuẩn xấp xỉ: loại 1 kiểm soát độ gần tối ưu của bài toán con, còn loại 2 kiểm soát một quan hệ dưới vi phân gần đúng của hàm mục tiêu \cite{salzo2012}. Hai tiêu chuẩn dẫn đến hai cơ chế tích lũy sai số khác nhau trong dãy ước lượng.
+
+Tiểu luận trình bày cơ sở toán học, hai thuật toán IAPPA1 và IAPPA2, các chặn hội tụ tương ứng và một thực nghiệm số có thể tái lập. Phạm vi của các kết quả là hội tụ của giá trị hàm. Hội tụ mạnh của toàn bộ dãy điểm, sai số tương đối, sai số ngẫu nhiên và metric biến đổi không được suy ra từ các định lý được sử dụng.
+

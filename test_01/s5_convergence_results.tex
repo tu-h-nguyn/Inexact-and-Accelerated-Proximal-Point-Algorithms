@@ -1,0 +1,51 @@
+\section{Kết quả hội tụ}
+
+Giả sử tồn tại $M>0$ sao cho
+\begin{equation}
+\lambda_j\leq M\lambda_i,
+\qquad 0\leq j\leq i.
+\label{eq:lambda-condition}
+\end{equation}
+Dãy hằng $\lambda_k=\lambda>0$ thỏa mãn \eqref{eq:lambda-condition}. Các quy tắc tham số khi đó cho
+\[
+\alpha_k^{-1}=O(k),
+\qquad
+\beta_k=O(k^{-2}).
+\]
+
+\subsection{Tốc độ của IAPPA1}
+
+\noindent\textbf{Định lý 5.1 -- Salzo--Villa, Theorem 4.5.}
+Giả sử \eqref{eq:lambda-condition} đúng và $\varepsilon_k=O(k^{-q})$ với $q>3/2$. Khi đó $(x_k)$ là một dãy cực tiểu hóa. Nếu bài toán có nghiệm, ta có
+\begin{equation}
+F(x_k)-F_{\star}=
+\begin{cases}
+O\bigl(k^{-(2q-3)}\bigr), & \dfrac{3}{2}<q<2,\\[4pt]
+O\left(\dfrac{\log^2 k}{k}\right), & q=2,\\[8pt]
+O\left(\dfrac{1}{k}\right), & q>2.
+\end{cases}
+\label{eq:iappa1-rate}
+\end{equation}
+Nguồn gốc của các ngưỡng trên được nhìn thấy trực tiếp từ \eqref{eq:iappa1-error}. Vì $\alpha_i^{-1}=O(i)$, dãy $\varepsilon_i=O(i^{-q})$ tạo ra
+\[
+\eta_{i+1}=\sum_{j=0}^{i}O(j^{1-q}).
+\]
+Khi kết hợp bình phương của các tổng riêng này với $\beta_k=O(k^{-2})$, ba trường hợp trong Định lý 5.1 xuất hiện. Chặn tổng quát tốt nhất thu được khi $q>2$ là bậc $O(k^{-1})$. Đây là một bảo đảm trong trường hợp xấu nhất; nó không khẳng định mọi bài toán cụ thể đều biểu hiện chính xác tốc độ đó.
+
+\subsection{Tốc độ của IAPPA2}
+
+\noindent\textbf{Định lý 5.2 -- Salzo--Villa, Theorem 4.8.}
+Giả sử \eqref{eq:lambda-condition} đúng và $\varepsilon_k=O(k^{-q})$ với $q>1/2$. Khi đó $(x_k)$ là một dãy cực tiểu hóa. Nếu bài toán có nghiệm, ta có
+\begin{equation}
+F(x_k)-F_{\star}=
+\begin{cases}
+O(k^{-2}), & q>\dfrac{3}{2},\\[4pt]
+O\left(\dfrac{\log k}{k^2}\right), & q=\dfrac{3}{2},\\[8pt]
+O\bigl(k^{-(2q-1)}\bigr), & \dfrac{1}{2}<q<\dfrac{3}{2}.
+\end{cases}
+\label{eq:iappa2-rate}
+\end{equation}
+Trong \eqref{eq:iappa2-error}, thừa số $\beta_{i+1}^{-1}$ có bậc $O(i^2)$. Do đó, tổng quyết định tốc độ có số hạng bậc $O(i^{2-2q})$. Tổng này hội tụ khi $q>3/2$, tăng theo $\log k$ khi $q=3/2$, và tăng theo $k^{3-2q}$ khi $1/2<q<3/2$. Nhân với $\beta_k=O(k^{-2})$ cho đúng ba chặn trong Định lý 5.2.
+
+Với $1/2<q\leq1$, chuỗi $\sum_k\varepsilon_k$ có thể phân kỳ nhưng dãy giá trị hàm vẫn hội tụ. Đây là điểm khác biệt đáng chú ý so với điều kiện sai số khả tổng thường dùng cho phương pháp điểm cận kề cổ điển \cite{rockafellar1976,salzo2012}.
+

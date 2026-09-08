@@ -1,0 +1,81 @@
+Dạ kính chào thầy. Hôm nay nhóm chúng em xin phép trình bày về bài báo cáo với chủ đề về Toán tử gần kề xấp xỉ và sự ảnh hưởng của sai số đến bậc hội tụ của thuật toán. Bài trình bày của em sẽ gồm ba nội dung chính: Cơ sở toán học về các xấp xỉ, Dãy ước lượng Nesterov, và cuối cùng là Phân tích bậc hội tụ.
+I..
+Đến với phần đầu tiên là cơ sở toán học về các xấp xỉ
+
+
+&&1.Toán tử gần kề
+ Dựa trên tài liệu nghiện cứu
+Toán tử gần kề  là một trong những công cụ trung tâm của tối ưu lồi hiện đại, giúp xử lý hiệu quả các thành phần không khả vi. Tuy nhiên, ngoại trừ một số trường hợp đặc biệt, việc tính chính xác toán tử này thường không có công thức đóng. Trên thực tế, ta lại phải giải một bài toán tối ưu phụ để tìm xấp xỉ điểm gần kề.
+Về định nghĩa
+Với lamda > 0 và y ∈ H(hilbert), điểm gần kề của y theo hàm F được định nghĩa bởi
+Prox của lambda F tại y bằng arg(ạc ru men) của min với x thuộc H của biểu thức F của x cộng một trên hai lambda nhân chuẩn của x trừ y bình phương
+
+ 
+
+Ngoài ra Vào năm 1992, Güler đã kết hợp PPA với ngoại suy Nesterov để đạt tốc độ hội tụ tối ưu bậc một là big notation của một phần k bình phương . Tuy nhiên, trên thực tế, toán tử gần kề thường không có công thức đóng mà phải giải xấp xỉ.Điều đó làm rất nhiều người nghi hoặc Liệu Tốc độ big notation của một phần k bình phương này liệu có được bảo toàn khi ta tính xấp xỉ hay không?
+
+
+Khong lau sau Nghiên cứu của Salzo & Villa đã chỉ ra một lỗ hổng trong chứng minh gốc của Güler: Lập luận của ông đã ngầm sử dụng dưới-gradient tại một 'điểm gần kề chính xác' – một đại lượng vô hình mà ta hoàn toàn không thể tính được khi xấp xỉ. Điều này khiến thuật toán của Güler trên lý thuyết rất đẹp nhưng thực tế lại không thể thực hiện.
+
+
+Để định lượng mức độ xấp xỉ, nhóm tác giả sử dụng công cụ $\epsilon$-dưới vi phân và chia làm 3 loại:
+
+Loại 1: 0 thuộc êp-xi-lon bình phương trên hai lam-đa dưới vi phân của Phi lam-đa tại z
+Đòi hỏi điểm xấp xỉ phải cực tiểu hóa bài toán con với sai số hàm mục tiêu không vượt quá epsilon bình phương / 2 lamda.
+
+Loại 2:Y trừ z chia lam-đa thuộc êp-xi-lon bình phương trên hai lam-đa dưới vi phân của F tại z.
+ Sử dụng khái niệm làm phồng  dưới vi phân. Điều kiện này khắt khe hơn nhưng mang lại đặc tính lý thuyết cực kỳ mạnh.
+
+Loại 3:Khoảng cách từ không đến dưới vi phân của Phi lam-đa tại z nhỏ hơn hoặc bằng êp-xi-lon chia lam-đa
+ Tương đương với việc điểm gần kề chịu một nhiễu trực tiếp lên đầu vào
+
+về mối quan hệ giữa các xấp xỉ:Loại 1 là khái niệm nới lỏng nhất và bao hàm cả loại 2 lẫn loại 3. Tuy nhiên, nếu hàm mục tiêu có tính lồi mạnh, từ độ chính xác của Loại 1 ta có thể tự động thu được xấp xỉ Loại 2. Về mặt hình học khi chiếu lên tập lồi, xấp xỉ Loại 2 ép buộc tập lồi phải nằm hoàn toàn về một phía của siêu phẳng tiếp xúc bị dịch chuyển, giúp kiểm soát sai số chặt chẽ hơn.
+Từ đó ta cũng thấy được loại 2 có thể suy ra loại 1, loại 3 cũng có thể suy ra loại 1  và nếu thêm giả thiết F lồi mạnh với hệ số µ(miu)> 0 thì loại 1 với độ chính xác epsilon có thể suy la loại 2
+
+Tiếp theo, em xin phép chuyển sang công cụ cốt lõi để phân tích thuật toán: Dãy ước lượng Nét-tê-rốp (Nesterov).
+
+Dãy ước lượng là một khái niệm nền tảng trong các thuật toán tối ưu tăng tốc, được thiết lập thông qua một dãy các hàm phi ca đóng vai trò ước lượng ngày càng chặt cho hàm mục tiêu ép. Sai số của các hàm ước lượng này được kiểm soát bởi một dãy hệ số bê-ta ca tiến về không.
+
+Về định nghĩa:
+ới mọi x thuộc không gian H, và với mọi k thuộc tập số tự nhiên, ta có:
+
+phi k  x trừ F  x nhỏ hơn hoặc bằng bê-ta k nhân với  phi không x trừ F  x ;
+
+và βk → 0. khi k tiến ra vô cùng
+
+ngoài ra chúng ra còn có 1 định lý:
+
+ Giả sử tồn tại các dãy x k thuộc không gian H và đen-ta k không âm, sao cho:
+
+Ép của x k nhỏ hơn hoặc bằng phi k sao cộng đen-ta k.
+
+bởi toàn bộ việc phân tích hội tụ được quy về một nguyên lý đơn giản: nếu các điểm lặp sinh ra từ thuật toán có giá trị hàm mục tiêu đủ gần với giá trị cực tiểu của phi ca, thì thuật toán chắc chắn sẽ hội tụ về giá trị tối ưu của bài toán gốc.
+
+Để quá trình tính toán khả thi, ta thường khởi tạo dãy ước lượng bằng một hàm toàn phương. Phép cập nhật hàm sau đó sẽ bảo toàn cấu trúc toàn phương này. Nhờ đó, thay vì phải lưu trữ cả một hàm số phức tạp qua từng bước, thuật toán chỉ cần cập nhật ba tham số vô hướng đơn giản, làm giảm đáng kể áp lực bộ nhớ và tính toán
+
+Để quá trình tính toán khả thi, ta thường khởi tạo dãy ước lượng bằng một hàm toàn phương. Phép cập nhật hàm sau đó sẽ bảo toàn cấu trúc toàn phương này. Nhờ đó, thay vì phải lưu trữ cả một hàm số phức tạp qua từng bước, thuật toán chỉ cần cập nhật ba tham số vô hướng đơn giản, làm giảm đáng kể áp lực bộ nhớ và tính toán.
+
+Vì tốc độ hội tụ của dãy giá trị $F(x_k)$ được quyết định trực tiếp bởi tốc độ triệt tiêu của hệ số $\beta_k$. Do đó, mục này tập trung vào việc đánh giá định lượng dãy $(\beta_k)$ nhằm đưa ra các ước lượng hội tụ tường minh cho thuật toán.
+
+Bổ đề này cung cấp một công cụ rất mạnh mẽ để đánh giá tốc độ hội tụ — thường được ứng dụng trong các thuật toán tối ưu. Thay vì sa đà vào từng biến số, chúng ta có thể hiểu ý nghĩa cốt lõi của nó như sau:Giả sử chúng ta có một quá trình lặp, trong đó các tham số $\alpha_k$ được kiểm soát chặt chẽ giữa hai giới hạn$a và b. Khi đó, mức độ suy giảm tích lũy của toàn bộ quá trình — ở đây gọi là beta_k — sẽ luôn được chặn một cách chính xác bởi hai dải an toàn.Điểm đắt giá nhất của bổ đề nằm ở phần kết luận: Dãy beta_k này chắc chắn sẽ tiến về $0$ khi và chỉ khi tổng căn bậc hai của các tham số lambda_k tiến ra vô cực. Đặc biệt, nếu các bước lambda_k không bị thu nhỏ quá mức, quá trình này sẽ đạt được tốc độ hội tụ cực nhanh, tỷ lệ nghịch với bình phương số bước lặp — tức là đạt tốc độ của big notation của 1/k^2
+
+$$Phần 3: Bậc hội tụ của thuật toán
+
+Ở phần cuối cùng, chúng ta sẽ áp dụng các công cụ trên để xét tốc độ hội tụ khi thuật toán chứa sai số. Báo cáo của nhóm có chỉ ra một điểm thú vị về mặt lý thuyết: tác giả San-dô và Vin-la đã tìm ra và khắc phục một lỗ hổng trong chứng minh của Gu-lơ  trước đây. Gu-lơ từng cố gắng xây dựng chuỗi lặp hội tụ bằng cách dựa vào điểm gần kề chính xác để cập nhật tham số. Tuy nhiên, trên thực tế, điểm chính xác này là vô định, khiến chuỗi quy nạp của ông bị đứt gãy logic.
+San-dô và Vin-la đã sửa lỗi này bằng cách phân tích trực tiếp tác động của các yếu tố nhiễu loạn lên các điểm tham chiếu, từ đó thiết lập được các thuật toán hội tụ thực tế. Dựa trên kết quả này, ta thấy rõ sự khác biệt giữa các loại sai số.
+
+ 
+Đối với thuật toán sử dụng sai số loại 1:
+
+Tốc độ hội tụ: Giả sử sai số epsilon_k giảm theo tốc độ big notation của (1/k^q)$ với $q > 3/2, thuật toán IAPPA1 sẽ hội tụ. Cụ thể:Đạt mức big notation của 1/k^{2q-3} nếu q < 2.Đạt mức big notation(\log^2 k / k) nếu q = 2.Đạt mức tối đa là big notation của 1/k nếu q > 2.
+Việc áp dụng thuật toán tăng tốc với sai số loại 1 thực chất không mang lại ưu thế rõ rệt. Bất kể sai số giảm nhanh hay chậm, hiệu năng của nó chỉ tương đương với phiên bản thuật toán không tăng tốc thông thường.
+Đối với thuật toán sử dụng sai số loại 2: 
+
+Vẫn với giả thiết sai số epsilon_k = big notation của (1/k^q), nhưng chỉ cần q > 1/2 là thuật toán đã hội tụ.Khôi phục tốc độ tối ưu big notation của 1/k^2 nếu q > 3/2.Đạt mức big notation của (1/k^2) + big notation của log (k / k^2) nếu q = 3/2.Đạt mức big notation của(1/k^2) + big notation của  (1/k^{2q-1}) nếu q < 3/2.
+
+Khác với loại 1, việc sử dụng sai số loại 2 giúp chúng ta khôi phục thành công tốc độ hội tụ bậc 2 đặc trưng của thuật toán tăng tốc (đạt mức big notation của 1/k^2), miễn là sai số triệt tiêu đủ nhanh với tham số $q > 3/2$. Thậm chí, ngay cả khi sai số giảm chậm hơn tiêu chuẩn, thuật toán vẫn duy trì được tốc độ hội tụ vượt trội.
+
+
+Tổng kết
+Để tổng kết lại, việc giải gần đúng các bài toán con là xu hướng bắt buộc trong tối ưu quy mô lớn hiện nay. Dãy ước lượng Nesterov cung cấp cho ta một bộ khung lý thuyết vững chắc để lượng hóa ảnh hưởng của các sai số này. Và thông qua phân tích, ta thấy rằng để khai thác được sức mạnh thực sự của các thuật toán tăng tốc, ta cần kiểm soát độ chính xác của nghiệm theo tiêu chuẩn của xấp xỉ loại 2.
+Dạ, phần trình bày báo cáo của em đến đây là kết thúc. Em xin cảm ơn thầy đã chú ý lắng nghe, và nhóm em rất mong nhận được những nhận xét và câu hỏi từ thầy ạ.

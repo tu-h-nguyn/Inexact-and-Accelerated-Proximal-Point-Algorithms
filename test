@@ -1,0 +1,584 @@
+\documentclass[12pt, a4paper]{article}
+
+% ============================================================
+%  PACKAGES  (minimal set — compiles fast on Overleaf free)
+% ============================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[vietnamese]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath, amsthm, amssymb, mathtools}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[colorlinks=true, linkcolor=blue!70!black,
+            citecolor=teal, urlcolor=blue]{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{microtype}
+
+% ============================================================
+%  COLOURS
+% ============================================================
+\definecolor{deepblue} {RGB}{10,  60, 120}
+\definecolor{midblue}  {RGB}{30, 100, 180}
+\definecolor{softred}  {RGB}{180, 40,  40}
+\definecolor{softgreen}{RGB}{30, 120,  60}
+\definecolor{amber}    {RGB}{180, 110,  10}
+\definecolor{lightgray}{RGB}{245, 245, 248}
+
+% ============================================================
+%  TCOLORBOX THEOREM STYLES
+% ============================================================
+\tcbset{mybase/.style={
+  breakable, enhanced jigsaw,
+  fonttitle=\bfseries\small,
+  left=4pt, right=4pt, top=3pt, bottom=3pt,
+  before skip=8pt, after skip=8pt,
+}}
+
+\newtcbtheorem[number within=section]{theorem}{Định lý}{
+  mybase, colback=deepblue!5, colframe=deepblue!60,
+  attach boxed title to top left={xshift=4mm,yshift=-2mm},
+  boxed title style={colback=deepblue!75, colframe=deepblue!75,
+                     fontupper=\color{white}\bfseries\small}
+}{thm}
+
+\newtcbtheorem[number within=section]{lemma}{Bổ đề}{
+  mybase, colback=midblue!5, colframe=midblue!50,
+  attach boxed title to top left={xshift=4mm,yshift=-2mm},
+  boxed title style={colback=midblue!65, colframe=midblue!65,
+                     fontupper=\color{white}\bfseries\small}
+}{lem}
+
+\newtcbtheorem[number within=section]{definition}{Định nghĩa}{
+  mybase, colback=softgreen!5, colframe=softgreen!55,
+  attach boxed title to top left={xshift=4mm,yshift=-2mm},
+  boxed title style={colback=softgreen!65, colframe=softgreen!65,
+                     fontupper=\color{white}\bfseries\small}
+}{def}
+
+\newtcbtheorem[number within=section]{proposition}{Mệnh đề}{
+  mybase, colback=amber!5, colframe=amber!55,
+  attach boxed title to top left={xshift=4mm,yshift=-2mm},
+  boxed title style={colback=amber!65, colframe=amber!65,
+                     fontupper=\color{white}\bfseries\small}
+}{prop}
+
+\newtcbtheorem[number within=section]{remark}{Nhận xét}{
+  mybase, colback=lightgray, colframe=gray!40,
+  attach boxed title to top left={xshift=4mm,yshift=-2mm},
+  boxed title style={colback=gray!35, colframe=gray!35,
+                     fontupper=\bfseries\small}
+}{rem}
+
+\newtcolorbox{keyidea}{
+  mybase, colback=softred!5, colframe=softred!65,
+  title={\color{white}\bfseries Bài Học Cốt Lõi},
+  attach boxed title to top left={xshift=4mm,yshift=-2mm},
+  boxed title style={colback=softred!75, colframe=softred!75}
+}
+
+% ============================================================
+%  MATH MACROS
+% ============================================================
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\prox}{\operatorname{prox}}
+\newcommand{\dom}{\operatorname{dom}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\inner}[2]{\langle #1,\,#2\rangle}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+% ============================================================
+%  TITLE
+% ============================================================
+\title{%
+  \textcolor{deepblue}{\LARGE\bfseries
+    Các Thuật Toán Điểm Kề Không Chính Xác Và Được Gia Tốc}\\[6pt]
+  \large Một Bài Trình Bày Có Cấu Trúc Dành Cho Học Viên Cao Học\\[4pt]
+  \normalsize
+  Dựa trên: Salzo \& Villa (2012),
+  \textit{J.\ Convex Anal.}\ \textbf{19}(4):1167--1192
+}
+\author{Ghi chú bài giảng của [Tên Của Bạn]}
+\date{\today}
+
+% ============================================================
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\huge\bfseries Inexact and Accelerated
+Proximal Point Algorithms\par}
+\vspace{2cm}
+{\Large\bfseries Đề tài 10\par}
+\vspace{0.5cm}
+\begin{tabular}{ll}
+Nguyễn Hoàng Tú & -- 23110220 \\
+Bùi Công Hoàng Vũ & -- 23110223 \\
+Huỳnh Trung Kiên & -- 22110091 \\
+Nguyễn Ngọc Diễm Quỳnh & -- 21110167 \\
+\end{tabular}\par
+\vspace{2cm}
+{\large\bfseries Giảng Viên Hướng Dẫn\par}
+\vspace{0.2cm}
+{\large Nguyễn Đăng Khoa\par}
+\vfill
+{\large Ngày 21 tháng 7 năm 2026\par}
+\end{titlepage}
+
+\maketitle\thispagestyle{empty}
+\tableofcontents
+\bigskip\hrule\bigskip
+
+% ============================================================
+\section*{Lời nói đầu: Tại sao bài báo này quan trọng}
+\addcontentsline{toc}{section}{Lời nói đầu}
+% ============================================================
+
+Thuật toán điểm kề (Proximal Point Algorithms - PPA) là nền tảng của tối ưu hóa lồi hiện đại trong phục hồi ảnh, học máy và các bài toán ngược.
+PPA \emph{gia tốc} của G\"{u}ler (1992) đạt được tốc độ hội tụ bậc nhất tối ưu
+$F(x_k)-F^*=O(1/k^2)$ --- nhưng trong thực tế bài toán con điểm kề chỉ được giải một cách \emph{xấp xỉ}.
+Salzo \& Villa (2012) mang đến ba đóng góp mang tính quyết định:
+
+\begin{enumerate}[label=\textbf{C\arabic*.}, leftmargin=2.5em]
+  \item \textbf{Sửa lại một lỗi nhỏ} trong phân tích không chính xác của G\"{u}ler, lỗi đã làm mất đi tính đúng đắn của khẳng định đạt tốc độ $O(1/k^2)$ dưới các tính toán không chính xác.
+  \item Chỉ ra rằng \textbf{sai số loại 1} giới hạn tốc độ ở mức $O(1/k)$,
+        bất kể chuỗi sai số tiến về $0$ nhanh đến mức nào.
+  \item Giới thiệu \textbf{sai số loại 2}, nhờ đó khôi phục hoàn toàn tốc độ
+        $O(1/k^2)$, ngay cả với một dãy sai số không khả tổng.
+\end{enumerate}
+
+\begin{keyidea}
+\textbf{Bài học cốt lõi:}
+\emph{Loại sai số cũng quan trọng không kém độ lớn của nó.}
+Việc chuyển từ sai số loại 1 sang loại 2 giúp mở khóa tốc độ hội tụ $O(1/k^2)$.
+Dưới sai số loại 1, việc gia tốc không mang lại lợi ích nào so với thuật toán PPA cổ điển.
+\end{keyidea}
+
+% ============================================================
+\section{Thiết lập bài toán}
+% ============================================================
+
+\subsection{Bài toán Tối ưu hóa}
+
+Xuyên suốt bài, $\HH$ là một không gian Hilbert thực với tích vô hướng $\inner{\cdot}{\cdot}$
+và chuẩn $\norm{\cdot}$.
+Chúng ta xét bài toán
+\begin{equation}\label{eq:P}
+  \min_{x\in\HH} F(x),
+\end{equation}
+trong đó $F:\HH\to\R\cup\{+\infty\}$ là hàm \emph{thực sự (proper), lồi,
+và nửa liên tục dưới}.
+Ta ký hiệu $F^*=\inf_x F(x)$ (có thể không đạt được cực trị).
+
+\subsection{Toán tử Kề (Proximal Operator)}
+
+\begin{definition}{Toán tử Kề}{prox}
+Với $\lambda>0$ và $y\in\HH$, \emph{điểm kề} của $y$ đối với $\lambda F$ là
+\[
+  \prox_{\lambda F}(y)
+  := \argmin_{x\in\HH}\!\left\{F(x)+\tfrac{1}{2\lambda}\norm{x-y}^2\right\}.
+\]
+\end{definition}
+
+Đặt $\Phi_\lambda(x):=F(x)+\frac{1}{2\lambda}\norm{x-y}^2$,
+điều kiện tối ưu bậc nhất cho ta:
+\begin{equation}\label{eq:prox-equiv}
+  z=\prox_{\lambda F}(y)
+  \;\Longleftrightarrow\;
+  \frac{y-z}{\lambda}\in\partial F(z)
+  \;\Longleftrightarrow\;
+  z=(I+\lambda\partial F)^{-1}(y).
+\end{equation}
+
+\paragraph{Tại sao lại có sự không chính xác?}
+Trong các ứng dụng (khử mờ bằng tổng biến thiên, tính thưa có cấu trúc),
+$\prox_{\lambda F}$ không có dạng biểu thức đóng (closed form) và phải được tính toán lặp,
+do đó chỉ có thể tính \emph{xấp xỉ}. Việc hiểu rõ tiêu chí sai số nào bảo toàn được tốc độ hội tụ là rất quan trọng.
+
+% ============================================================
+\section{Ba Khái Niệm Về Sự Không Chính Xác}
+% ============================================================
+
+Cả ba tiêu chí đều được xây dựng dựa trên \emph{$\varepsilon$-dưới vi phân}.
+
+\begin{definition}{$\varepsilon$-Dưới vi phân}{epsub}
+Với $\varepsilon\ge 0$ và $z\in\dom F$:
+\[
+  \partial_\varepsilon F(z)
+  :=\bigl\{\xi\in\HH : F(x)\ge F(z)+\inner{x-z}{\xi}-\varepsilon,
+  \;\forall x\in\HH\bigr\}.
+\]
+Đặc biệt, $0\in\partial_\varepsilon F(z)\;\Leftrightarrow\;
+F(z)\le F^*+\varepsilon$.
+\end{definition}
+
+
+
+\subsection{Xấp xỉ Loại 1}
+
+\begin{definition}{Xấp xỉ Loại 1 (Rockafellar / G\"{u}ler)}{type1}
+$z\approx_1\prox_{\lambda F}(y)$ với độ chính xác $\varepsilon$ khi và chỉ khi
+\[
+  0\in\partial_{\varepsilon^2/(2\lambda)}\Phi_\lambda(z).
+  \tag{AT1}
+\]
+Tương đương với việc, $z$ đạt được giá trị gần cực tiểu của hàm lồi mạnh $\Phi_\lambda$
+với độ gần tối ưu (suboptimality) $\le\varepsilon^2/(2\lambda)$, và $\norm{z-\prox_{\lambda F}(y)}\le\varepsilon$.
+\end{definition}
+
+
+\subsection{Xấp xỉ Loại 2}
+
+\begin{definition}{Xấp xỉ Loại 2 (Burachik--Iusem--Svaiter)}{type2}
+$z\approx_2\prox_{\lambda F}(y)$ với độ chính xác $\varepsilon$ khi và chỉ khi
+\[
+  \frac{y-z}{\lambda}\in\partial_{\varepsilon^2/(2\lambda)}F(z).
+  \tag{AT2}
+\]
+Điều này nới lỏng trực tiếp quan hệ bao hàm trong \eqref{eq:prox-equiv};
+tương đương với việc $z\in(I+\lambda\partial_{\varepsilon^2/(2\lambda)}F)^{-1}(y)$,
+một sự mở rộng $\varepsilon$ của ánh xạ kề.
+\end{definition}
+
+
+\subsection{Xấp xỉ Loại 3}
+
+\begin{definition}{Xấp xỉ Loại 3 (Rockafellar 1976)}{type3}
+$z\approx_3\prox_{\lambda F}(y)$ với độ chính xác $\varepsilon$ khi và chỉ khi
+\[
+  \dist(0,\partial\Phi_\lambda(z))\le\varepsilon/\lambda,
+  \tag{AT3}
+\]
+tương đương với việc, tồn tại $\exists\,e\in\HH$, $\norm{e}\le\varepsilon$, sao cho
+$z=\prox_{\lambda F}(y+e)$.
+Do đó, xấp xỉ loại 3 chính là điểm kề \emph{chính xác} của một đầu vào bị nhiễu.
+\end{definition}
+
+
+
+\subsection{Phân Cấp Giữa Các Loại Sai Số}
+
+\begin{proposition}{Sơ đồ Quan hệ}{hier}
+\begin{enumerate}[label=(\roman*)]
+  \item $z\approx_2\prox_{\lambda F}(y)$ với độ chính xác $\varepsilon$
+        $\Rightarrow z\approx_1\prox_{\lambda F}(y)$ với độ chính xác $\varepsilon$.
+  \item $z\approx_3\prox_{\lambda F}(y)$ với độ chính xác $\varepsilon$
+        $\Rightarrow z\approx_1\prox_{\lambda F}(y)$ với độ chính xác $\varepsilon$.
+  \item Nếu $F$ lồi mạnh (với mô-đun $\mu>0$):
+        loại 1 với độ chính xác $\varepsilon$
+        $\Rightarrow$ loại 2 với độ chính xác $\varepsilon\sqrt{(1+\lambda\mu)/(\lambda\mu)}$.
+\end{enumerate}
+Do đó, loại 2 và loại 3 là các trường hợp đặc biệt khắt khe hơn của loại 1.
+\end{proposition}
+
+\begin{center}
+\begin{tikzpicture}[
+  node distance=1.6cm and 2.8cm,
+  box/.style={draw, rounded corners=4pt, minimum width=3cm,
+              minimum height=0.9cm, align=center, font=\small},
+  arr/.style={-{Stealth[length=5pt]}, thick, shorten >=2pt, shorten <=2pt}
+]
+  \node[box, fill=softred!12,   draw=softred!70]  (t1)
+        {Loại 1\\[-2pt]\tiny(ít khắt khe nhất)};
+  \node[box, fill=midblue!10,   draw=midblue!60,
+        right=of t1]             (t2) {Loại 2};
+  \node[box, fill=softgreen!10, draw=softgreen!60,
+        below=1.2cm of t1]       (t3) {Loại 3};
+  \draw[arr, softred!60]   (t2) -- node[above,font=\tiny]{suy ra} (t1);
+  \draw[arr, softred!60]   (t3) -- node[right,font=\tiny]{suy ra} (t1);
+  \draw[arr, dashed, gray] (t1)
+        to[bend left=15] node[above,font=\tiny,sloped]{lồi mạnh} (t2);
+\end{tikzpicture}
+\end{center}
+
+% ============================================================
+\section{Dãy Ước Lượng của Nesterov}
+% ============================================================
+
+\begin{definition}{Dãy Ước lượng}{estseq}
+$\bigl((\varphi_k),(\beta_k)\bigr)$ là một \emph{dãy ước lượng} của $F$ khi và chỉ khi
+\[
+  \varphi_k(x)-F(x)\le\beta_k(\varphi_0(x)-F(x)),\quad
+  \forall x\in\HH,\;\forall k,\quad
+  \text{và}\quad\beta_k\to 0.
+\]
+\end{definition}
+
+
+\begin{theorem}{Sự hội tụ thông qua Dãy ước lượng}{estconv}
+Giả sử $\bigl((\varphi_k),(\beta_k)\bigr)$ là một dãy ước lượng của $F$.
+Nếu $(x_k)$ và $(\delta_k\ge 0)$ thỏa mãn
+$F(x_k)\le(\varphi_k)^*+\delta_k$,
+thì với mọi $x\in\dom F$:
+\[
+  F(x_k)\le\beta_k(\varphi_0(x)-F(x))+\delta_k+F(x).
+\]
+Nếu $\delta_k\to 0$, thì $(x_k)$ là một dãy cực tiểu hóa.
+Hơn nữa, nếu $F^*=F(x^*)$ tại một $x^*$ nào đó:
+\[
+  \boxed{F(x_k)-F^*\le\beta_k(\varphi_0(x^*)-F^*)+\delta_k.}
+\]
+\end{theorem}
+
+\subsection{Toán Tử Cập Nhật Và Tính Đóng Bậc Hai}
+
+Định nghĩa với $\xi\in\partial_\varepsilon F(z)$ và $\alpha\in[0,1)$:
+\[
+  \mathcal{U}(z,\varepsilon,\xi,\alpha)(\varphi)(x)
+  :=(1-\alpha)\varphi(x)+\alpha\bigl(F(z)+\inner{x-z}{\xi}-\varepsilon\bigr).
+\]
+Toán tử này thỏa mãn $\widehat\varphi(x)-F(x)\le(1-\alpha)(\varphi(x)-F(x))$,
+đây chính xác là bất đẳng thức đệ quy của dãy ước lượng.
+
+\textbf{Tính đóng bậc hai.}
+Nếu $\varphi(x)=\varphi^*+\frac{A}{2}\norm{x-\nu}^2$, thì
+$\mathcal{U}(z,\varepsilon,\xi,\alpha)(\varphi)$ lại là một hàm bậc hai với:
+\begin{equation}\label{eq:quadupdate}
+  \hat\varphi^*=(1-\alpha)\varphi^*+\alpha F(z)+\alpha\inner{\nu-z}{\xi}
+               -\tfrac{\alpha^2}{2(1-\alpha)A}\norm{\xi}^2-\alpha\varepsilon,
+  \quad
+  \hat A=(1-\alpha)A,\quad
+  \hat\nu=\nu-\tfrac{\alpha}{(1-\alpha)A}\xi.
+\end{equation}
+
+\begin{lemma}{Tốc độ Giảm của $\beta_k$}{betarate}
+Cho $\lambda_k>0$, $A>0$, $0<a\le b$.
+Định nghĩa $A_{k+1}=(1-\alpha_k)A_k$ và
+$\alpha_k^2/\bigl((1-\alpha_k)A_k\lambda_k\bigr)\in[a,b]$.
+Khi đó $\beta_k:=\prod_{i=0}^{k-1}(1-\alpha_i)$ thỏa mãn:
+\[
+  \frac{1}{\!\left(1+\sqrt{bA}\sum_{j=0}^{k-1}\sqrt{\lambda_j}\right)^{\!2}}
+  \le\beta_k\le
+  \frac{1}{\!\left(1+\frac{\sqrt{aA}}{2}\sum_{j=0}^{k-1}\sqrt{\lambda_j}\right)^{\!2}}.
+\]
+Đặc biệt, $\lambda_k\ge\lambda>0$ với mọi $k$ suy ra $\beta_k=O(1/k^2)$.
+\end{lemma}
+
+% ============================================================
+\section{Phân Tích Hội Tụ}
+% ============================================================
+
+\subsection{Thuật toán IAPPA1: Sai số Loại 1}
+
+Khó khăn cốt lõi: bước cập nhật của G\"{u}ler
+$\hat\nu=\nu-(t-z)/\alpha$ sử dụng $z=\prox_{\lambda F}(t)$,
+giá trị này là \emph{không xác định được}.
+Cách khắc phục là theo dõi một biến phụ $u_k\approx\nu_k$ với
+nhiễu được định lượng $\eta_k=\norm{u_k-\nu_k}$.
+
+\begin{algorithm}[H]
+\caption{IAPPA1 --- Thuật toán PPA Gia tốc Không chính xác với Sai số Loại 1}
+\label{alg:iappa1}
+\begin{algorithmic}[1]
+\Require $x_0\in\dom F$, $u_0=x_0$, $A_0=A>0$,
+         $\eta_0=\delta_0=0$, các dãy $(\lambda_k),(\varepsilon_k)>0$.
+\For{$k=0,1,2,\ldots$}
+  \State $\alpha_k\leftarrow$ nghiệm dương của $\alpha^2=(1-\alpha)A_k\lambda_k$
+  \State $y_k\leftarrow(1-\alpha_k)x_k+\alpha_k u_k$
+  \State $x_{k+1}\approx_1\prox_{\lambda_k F}(y_k)$
+         với độ chính xác $\varepsilon_k$
+  \State $A_{k+1}\leftarrow(1-\alpha_k)A_k$
+  \State $u_{k+1}\leftarrow u_k-\tfrac{1}{\alpha_k}(y_k-x_{k+1})$
+  \State $\eta_{k+1}\leftarrow\eta_k+\varepsilon_k/\alpha_k$
+  \State $\delta_{k+1}\leftarrow(1-\alpha_k)\delta_k
+         +\tfrac{(\alpha_k\eta_{k+1})^2}{2\lambda_k}$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\begin{theorem}{Sự Hội tụ của IAPPA1}{iappa1}
+Giả sử $\lambda_j\le M\lambda_i$ với mọi $j\le i$.
+Nếu $\varepsilon_k=O(1/k^q)$ với $q>3/2$, thì $(x_k)$ là một dãy cực tiểu hóa.
+Nếu đạt được giá trị $F^*$:
+\[
+  F(x_k)-F^* =
+  \begin{cases}
+    O(1/k^{2q-3}) & 3/2<q<2,\\
+    O(\log^2\!k/k) & q=2,\\
+    O(1/k)         & q>2.
+  \end{cases}
+\]
+\end{theorem}
+
+\begin{remark}{Tại sao gia tốc thất bại dưới sai số loại 1}{fail}
+Từ $\eta_k=\sum_{i<k}\varepsilon_i/\alpha_i$ và $1/\alpha_i=O(i)$,
+ngay cả khi $\varepsilon_i=O(1/i^2)$ ta cũng có $\eta_k=O(\log k)$,
+và $\delta_k=O(\log^2\!k/k)$.
+Tốc độ $O(1/k^2)$ là không thể đạt được dưới sai số loại 1,
+bất kể $\varepsilon_k\to 0$ nhanh như thế nào.
+Việc gia tốc \emph{không mang lại lợi thế nào} so với PPA cơ bản trong trường hợp này.
+\end{remark}
+
+\subsection{Thuật toán IAPPA2: Sai số Loại 2}
+
+Với sai số loại 2, $\xi_{k+1}=(y_k-x_{k+1})/\lambda_k$ có thể được tính toán trực tiếp
+và $\xi_{k+1}\in\partial_{\varepsilon_k^2/(2\lambda_k)}F(x_{k+1})$.
+Bước cập nhật cho $\delta_k$ được đơn giản hóa đi rất nhiều.
+
+\begin{algorithm}[H]
+\caption{IAPPA2 --- Thuật toán PPA Gia tốc Không chính xác với Sai số Loại 2}
+\label{alg:iappa2}
+\begin{algorithmic}[1]
+\Require $x_0=\nu_0\in\dom F$, $A_0=A>0$, $\delta_0=0$, $a\in(0,2]$,
+         các dãy $(\lambda_k),(\varepsilon_k)>0$.
+\For{$k=0,1,2,\ldots$}
+  \State Chọn $\alpha_k\in[0,1)$ sao cho
+         $a\le\tfrac{\alpha_k^2}{(1-\alpha_k)A_k\lambda_k}\le 2$
+  \State $y_k\leftarrow(1-\alpha_k)x_k+\alpha_k\nu_k$
+  \State $x_{k+1}\approx_2\prox_{\lambda_k F}(y_k)$
+         với độ chính xác $\varepsilon_k$
+  \State $A_{k+1}\leftarrow(1-\alpha_k)A_k$
+  \State $\nu_{k+1}\leftarrow\nu_k
+         -\tfrac{\alpha_k}{(1-\alpha_k)A_k\lambda_k}(y_k-x_{k+1})$
+  \State $\delta_{k+1}\leftarrow(1-\alpha_k)\delta_k
+         +\tfrac{\varepsilon_k^2}{2\lambda_k}$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+Dạng biểu thức đóng của sự tích lũy sai số là:
+\begin{equation}\label{eq:delta2}
+  \delta_k = \frac{\beta_k}{2}
+             \sum_{i=0}^{k-1}\frac{\varepsilon_i^2}{\lambda_i\beta_{i+1}}.
+\end{equation}
+
+\begin{theorem}{Sự Hội tụ của IAPPA2}{iappa2}
+Giả sử $\lambda_j\le M\lambda_i$ với mọi $j\le i$.
+Nếu $\varepsilon_k=O(1/k^q)$ với $q>1/2$, thì $(x_k)$ là một dãy cực tiểu hóa.
+Nếu đạt được giá trị $F^*$:
+\[
+  F(x_k)-F^* =
+  \begin{cases}
+    O(1/k^2)                       & q>3/2,\\
+    O(1/k^2)+O(\log k/k^2)         & q=3/2,\\
+    O(1/k^2)+O(1/k^{2q-1})         & 1/2<q<3/2.
+  \end{cases}
+\]
+Cụ thể, $q>3/2$ khôi phục hoàn toàn tốc độ tối ưu $O(1/k^2)$.
+\end{theorem}
+
+\begin{remark}{Sai số không khả tổng}{nonsumm}
+Với $1/2<q\le 1$, ta có $\sum_k\varepsilon_k=+\infty$,
+nhưng sự hội tụ vẫn được đảm bảo.
+Điều này hoàn toàn trái ngược với PPA không gia tốc (Rockafellar 1976),
+vốn yêu cầu $\sum_k\varepsilon_k<+\infty$.
+\end{remark}
+
+\subsection{Tóm tắt: So sánh Tốc độ Hội tụ}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Thuật toán} & \textbf{Loại Sai số} & \textbf{Mức độ giảm} & \textbf{Tốc độ} \\
+\midrule
+PPA gia tốc chính xác & ---     & ---              & $O(1/k^2)$      \\
+\midrule
+IAPPA1              & Loại 1  & $O(k^{-q})$, $q>2$         & $O(1/k)$        \\
+IAPPA1              & Loại 1  & $O(k^{-q})$, $3/2<q\le 2$ & $O(1/k^{2q-3})$ \\
+\midrule
+IAPPA2              & Loại 2  & $O(k^{-q})$, $q>3/2$          & $O(1/k^2)$      \\
+IAPPA2              & Loại 2  & $O(k^{-q})$, $1/2<q\le 3/2$  & $O(1/k^{2q-1})$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================
+\section{Các Dạng Đơn Giản Tương Đương}
+% ============================================================
+
+Thay thế $t_k:=1/\alpha_k$, IAPPA2 trở thành:
+\begin{equation}\label{eq:simple}
+\left\{\;
+\begin{aligned}
+  t_{k+1} &= \tfrac{1+\sqrt{1+4a_k\lambda_k t_k^2/(a_{k+1}\lambda_{k+1})}}{2},\\[4pt]
+  x_{k+1} &\approx_2\prox_{\lambda_k F}(y_k),\\[4pt]
+  y_{k+1} &= x_{k+1}+\tfrac{t_k-1}{t_{k+1}}(x_{k+1}-x_k)
+             +(1-a_k)\tfrac{t_k}{t_{k+1}}(y_k-x_{k+1}),
+\end{aligned}
+\right.
+\end{equation}
+trong đó $(a_k)\subset(0,2]$ được chọn tự do.
+Đặt $a_k=2$, $\lambda_k=\lambda$ (hằng số), và sử dụng các bước kề chính xác sẽ khôi phục lại thuật toán \textbf{FISTA} của Beck \& Teboulle (2009).
+
+% ============================================================
+\section{Lỗi Trong Chứng Minh Của G\"{u}ler}
+% ============================================================
+
+\begin{remark}{Chứng minh của G\"{u}ler sai ở đâu}{guler}
+Định lý 3.1 của G\"{u}ler (1992) khẳng định đạt được tốc độ $O(1/k^2)$ dưới sai số loại 1.
+Lỗ hổng: bước cập nhật
+$\hat\nu=\nu-(t-z)/\alpha$
+sử dụng $z=\prox_{\lambda F}(t)$, giá trị này là \emph{không xác định được}.
+
+Thay vào đó, việc dùng $x\approx_1\prox_{\lambda F}(t)$ đưa vào một lượng sai số
+$\Delta=(x-z)/\alpha$, và lượng này tích lũy lại:
+\[
+  \eta_k=\sum_{i<k}\frac{\varepsilon_i}{\alpha_i}=O(k^{1-q}\text{ hoặc }\log k).
+\]
+Vì $\delta_k=O(\beta_k\sum_i\eta_{i+1}^2)$, điều này không thể là $O(1/k^2)$
+với bất kỳ cách chọn $q$ nào. Salzo \& Villa đã sửa lỗi này bằng cách theo dõi rõ ràng
+$\eta_k$ và thiết lập Định lý~\ref{thm:iappa1}.
+\end{remark}
+
+% ============================================================
+\section{Tổng Kết và Các Câu Hỏi Mở}
+% ============================================================
+
+\paragraph{Những điểm chính rút ra.}
+\begin{enumerate}[label=\textbf{T\arabic*.}, leftmargin=2.5em]
+  \item Sai số loại 1 giới hạn tốc độ hội tụ ở mức $O(1/k)$; việc gia tốc là vô ích.
+  \item Sai số loại 2 với $\varepsilon_k=O(1/k^q)$, $q>3/2$, cho tốc độ $O(1/k^2)$.
+  \item Sai số loại 2 cho phép dãy $(\varepsilon_k)$ không khả tổng mà vẫn hội tụ.
+  \item Đây là bài báo đầu tiên có phân tích hội tụ \emph{chính xác} cho thuật toán PPA gia tốc không chính xác.
+\end{enumerate}
+
+\paragraph{Các câu hỏi mở.}
+\begin{itemize}
+  \item \emph{Sự hội tụ của dãy lặp:} Bản thân dãy $(x_k)$ có hội tụ không (không chỉ $F(x_k)$)?
+  \item \emph{Sai số tương đối:} Có thể mở rộng phân tích cho các tiêu chí xấp xỉ tương đối không?
+  \item \emph{Tính lồi mạnh:} Tốc độ hội tụ tuyến tính $O(\rho^k)$ có được bảo toàn dưới sự không chính xác không?
+  \item \emph{Sai số ngẫu nhiên:} Các mở rộng cho xấp xỉ ngẫu nhiên (MCMC / dưới đạo hàm ngẫu nhiên)?
+\end{itemize}
+
+% ============================================================
+\begin{thebibliography}{9}
+
+\bibitem{sv2012}
+S.~Salzo, S.~Villa,
+\textit{Inexact and Accelerated Proximal Point Algorithms},
+J.\ Convex Anal.\ \textbf{19}(4) (2012) 1167--1192.
+
+\bibitem{guler1992}
+O.~G\"{u}ler,
+\textit{New proximal point algorithms for convex minimization},
+SIAM J.\ Optim.\ \textbf{2}(4) (1992) 649--664.
+
+\bibitem{nesterov2004}
+Y.~Nesterov,
+\textit{Introductory Lectures on Convex Optimization},
+Kluwer, Boston (2004).
+
+\bibitem{rockafellar1976}
+R.~T.~Rockafellar,
+\textit{Monotone operators and the proximal point algorithm},
+SIAM J.\ Control Optim.\ \textbf{14}(5) (1976) 877--898.
+
+\bibitem{bt2009}
+A.~Beck, M.~Teboulle,
+\textit{A fast iterative shrinkage-thresholding algorithm},
+SIAM J.\ Imaging Sci.\ \textbf{2}(1) (2009) 183--202.
+
+\end{thebibliography}
+
+\end{document}

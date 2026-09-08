@@ -1,0 +1,84 @@
+\section{Cơ sở toán học}
+
+\subsection{Bài toán tối ưu và toán tử điểm cận kề}
+
+Cho $\mathcal{H}$ là một không gian Hilbert thực với tích vô hướng $\langle\cdot,\cdot\rangle$ và chuẩn $\|\cdot\|$. Xét hàm mục tiêu
+\[
+F:\mathcal{H}\longrightarrow(-\infty,+\infty]
+\]
+là hàm chính thường, lồi và nửa liên tục dưới. Miền xác định và giá trị tối ưu được ký hiệu lần lượt bởi
+\[
+\operatorname{dom}F=\{x\in\mathcal{H}:F(x)<+\infty\},
+\qquad
+F_{\star}=\inf_{x\in\mathcal{H}}F(x).
+\]
+Giả thiết $\operatorname{dom}F\neq\varnothing$ được duy trì trong toàn bộ tiểu luận.
+
+Với $\lambda>0$ và $y\in\mathcal{H}$, toán tử điểm cận kề của $\lambda F$ được xác định bởi
+\begin{equation}
+\prox{\lambda F}(y)
+=\operatorname*{arg\,min}_{x\in\mathcal{H}}
+\left\{F(x)+\frac{1}{2\lambda}\|x-y\|^2\right\}.
+\label{eq:prox}
+\end{equation}
+Hàm trong \eqref{eq:prox} là chính thường, nửa liên tục dưới, cưỡng bức và lồi mạnh. Do đó, bài toán con có đúng một nghiệm. Nếu đặt $z=\prox{\lambda F}(y)$, điều kiện tối ưu được viết dưới dạng
+\begin{equation}
+\frac{y-z}{\lambda}\in\partial F(z),
+\qquad
+z=(I+\lambda\partial F)^{-1}(y).
+\label{eq:prox-opt}
+\end{equation}
+Các tính chất trên là những kết quả chuẩn của giải tích lồi và phương pháp điểm cận kề \cite{rockafellar1976,beck2017,ryuyin2023}.
+
+\subsection{Dưới vi phân gần đúng và liên hợp Fenchel}
+
+Với $\eta\geq0$ và $z\in\operatorname{dom}F$, dưới vi phân $\eta$ của $F$ tại $z$ là tập
+\begin{equation}
+\partial_{\eta}F(z)
+=\left\{\xi\in\mathcal{H}:F(x)\geq F(z)+\langle x-z,\xi\rangle-\eta,
+\ \forall x\in\mathcal{H}\right\}.
+\label{eq:eps-subdiff}
+\end{equation}
+Khi $\eta=0$, định nghĩa này trở thành dưới vi phân thông thường. Đặc biệt,
+\[
+0\in\partial_{\eta}F(z)
+\quad\Longleftrightarrow\quad
+F(z)\leq F_{\star}+\eta.
+\]
+
+Hàm liên hợp Fenchel của $F$ được ký hiệu bởi $F^{*}$, không phải bởi ký hiệu của giá trị tối ưu:
+\[
+F^{*}(v)=\sup_{x\in\mathcal{H}}\{\langle v,x\rangle-F(x)\}.
+\]
+Quan hệ Fenchel--Young cho dạng tương đương sau \cite{mordukhovich2014}:
+\begin{equation}
+v\in\partial_{\eta}F(z)
+\quad\Longleftrightarrow\quad
+F(z)+F^{*}(v)-\langle v,z\rangle\leq\eta.
+\label{eq:fenchel-young}
+\end{equation}
+Vế trái của \eqref{eq:fenchel-young} không âm và đóng vai trò một chứng chỉ số cho quan hệ dưới vi phân gần đúng.
+
+\subsection{Dãy ước lượng}
+
+Dãy ước lượng của Nesterov là một cặp $((\varphi_k),(\beta_k))$, trong đó $\beta_k\to0$ và
+\begin{equation}
+\varphi_k(x)-F(x)
+\leq
+\beta_k\bigl(\varphi_0(x)-F(x)\bigr),
+\qquad \forall x\in\mathcal{H}.
+\label{eq:estimate-sequence}
+\end{equation}
+Giả sử tồn tại các điểm $x_k$ và các số $\delta_k\geq0$ sao cho
+\[
+F(x_k)\leq\inf_{x\in\mathcal{H}}\varphi_k(x)+\delta_k.
+\]
+Nếu bài toán có nghiệm $x_{\star}$, từ \eqref{eq:estimate-sequence} suy ra
+\begin{equation}
+F(x_k)-F_{\star}
+\leq
+\beta_k\bigl(\varphi_0(x_{\star})-F_{\star}\bigr)+\delta_k.
+\label{eq:estimate-bound}
+\end{equation}
+Trong \eqref{eq:estimate-bound}, $\beta_k$ mô tả tốc độ của cơ chế gia tốc chính xác, còn $\delta_k$ ghi nhận ảnh hưởng tích lũy của các phép tính gần đúng. Đây là vai trò cốt lõi của dãy ước lượng trong phân tích của Salzo và Villa \cite{nesterov2004,salzo2012}.
+

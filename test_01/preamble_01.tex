@@ -1,0 +1,49 @@
+% ============================================================
+% PREAMBLE -- Tieu luan IAPPA
+% Tach tu file main_01.tex; giu nguyen dinh dang ban dau.
+% ============================================================
+% ─────────────────────────── Packages ─────────────────────────────
+\usepackage[right=2.2cm,left=2.2cm,top=2cm,bottom=2.2cm]{geometry} % căn lề
+\usepackage[utf8]{vietnam}
+\usepackage[vietnamese]{babel}
+\usepackage{amsmath,amsxtra,amsfonts,amssymb,latexsym,amscd,amsthm,nccmath,listings,mathtools,matlab-prettifier, url,float,braket,hyperref,graphicx,placeins,array,tabularx}
+\usepackage[T1]{fontenc}
+\usepackage[most]{tcolorbox}
+\definecolor{stiro}{RGB}{0, 169, 154}
+\definecolor{nkiro}{RGB}{0, 181, 190}
+\tcbset{enhanced jigsaw,colback=nkiro!5!white,colframe=stiro!75!black,breakable,lowerbox=ignored,listing only,listing only,listing options={basicstyle=\footnotesize\ttfamily,breaklines=true}}
+% ──────────────────── Comment Filter Settings ──────────────────────
+\usepackage{comment}
+\includecomment{essayonly}
+\excludecomment{slidesonly}
+\excludecomment{scriptonly}
+
+% ──────────────────── Custom Preamble ─────────────────────────────
+\renewcommand{\baselinestretch}{1.15} % giãn dòng
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Các thuật toán điểm cận kề gia tốc với phép tính gần đúng},
+    bookmarks=true,
+}
+\newcommand{\prox}[1]{\operatorname{prox}_{#1}}
+\newcommand{\argmin}[1]{\operatorname*{argmin}_{#1}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\DeclarePairedDelimiter{\inner}{\langle}{\rangle}
+\renewcommand{\max}[1]{\operatorname*{max}\left\{#1\right\}}
+\renewcommand{\Set}[1]{\left\{#1\right\}}
+\newcommand{\autotag}{\stepcounter{equation}\tag{\theequation}}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+\renewcommand{\bibname}{Tài liệu tham khảo}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+% ─────────────────────────── Metadata ─────────────────────────────
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}m{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+

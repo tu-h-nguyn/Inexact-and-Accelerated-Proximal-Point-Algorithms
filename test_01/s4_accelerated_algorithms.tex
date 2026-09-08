@@ -1,0 +1,77 @@
+\section{Hai thuật toán gia tốc}
+
+\subsection{Cấu trúc chung}
+
+Dãy ước lượng bậc hai được viết dưới dạng
+\[
+\varphi_k(x)=(\varphi_k)_{\star}
++\frac{A_k}{2}\|x-\nu_k\|^2,
+\qquad
+A_{k+1}=(1-\alpha_k)A_k.
+\]
+Với $\beta_0=1$, đặt
+\[
+\beta_k=\prod_{i=0}^{k-1}(1-\alpha_i).
+\]
+Các quy tắc chọn $\alpha_k$ ở hai thuật toán bảo đảm tốc độ nền $\beta_k=O(k^{-2})$ dưới giả thiết so sánh của dãy tham số $(\lambda_k)$.
+
+\subsection{IAPPA1 với xấp xỉ loại 1}
+
+Tiêu chuẩn loại 1 không cung cấp trực tiếp phần tử dưới vi phân dùng để cập nhật tâm của dãy ước lượng. IAPPA1 thay tâm lý tưởng $\nu_k$ bằng một biến tính được $u_k$, đồng thời dùng $\eta_k$ để chặn sai lệch giữa hai đại lượng.
+
+\medskip
+\noindent\textbf{Thuật toán IAPPA1.}
+Khởi tạo $x_0\in\operatorname{dom}F$, $u_0=x_0$, $A_0=A>0$ và $\eta_0=\delta_0=0$. Với mỗi $k\geq0$:
+\begin{align*}
+\alpha_k^2&=(1-\alpha_k)A_k\lambda_k,\\
+y_k&=(1-\alpha_k)x_k+\alpha_k u_k,\\
+x_{k+1}&\approx_1\prox{\lambda_kF}(y_k)
+\quad\text{với độ chính xác }\varepsilon_k,\\
+A_{k+1}&=(1-\alpha_k)A_k,\\
+u_{k+1}&=u_k-\frac{1}{\alpha_k}(y_k-x_{k+1}),\\
+\eta_{k+1}&=\eta_k+\frac{\varepsilon_k}{\alpha_k},\\
+\delta_{k+1}&=(1-\alpha_k)\delta_k
++\frac{(\alpha_k\eta_{k+1})^2}{2\lambda_k}.
+\end{align*}
+Các đại lượng sai số có dạng tường minh
+\begin{equation}
+\eta_k=\sum_{i=0}^{k-1}\frac{\varepsilon_i}{\alpha_i},
+\qquad
+\delta_k=\frac{A\beta_k}{2}
+\sum_{i=0}^{k-1}\eta_{i+1}^2.
+\label{eq:iappa1-error}
+\end{equation}
+Mỗi sai số $\varepsilon_i$ được khuếch đại bởi $1/\alpha_i$, cộng dồn trong $\eta_k$, rồi các tổng riêng này mới được bình phương trong $\delta_k$.
+
+\subsection{IAPPA2 với xấp xỉ loại 2}
+
+Tiêu chuẩn loại 2 cung cấp trực tiếp phần tử dưới vi phân
+\[
+\frac{y_k-x_{k+1}}{\lambda_k}
+\in\partial_{\varepsilon_k^2/(2\lambda_k)}F(x_{k+1}).
+\]
+Vì vậy, IAPPA2 cập nhật tâm $\nu_k$ mà không cần biến sai lệch $\eta_k$.
+
+\medskip
+\noindent\textbf{Thuật toán IAPPA2.}
+Khởi tạo $x_0=\nu_0\in\operatorname{dom}F$, $A_0=A>0$, $\delta_0=0$ và chọn $a\in(0,2]$. Với mỗi $k\geq0$:
+\begin{align*}
+a&\leq\frac{\alpha_k^2}{(1-\alpha_k)A_k\lambda_k}\leq2,\\
+y_k&=(1-\alpha_k)x_k+\alpha_k\nu_k,\\
+x_{k+1}&\approx_2\prox{\lambda_kF}(y_k)
+\quad\text{với độ chính xác }\varepsilon_k,\\
+A_{k+1}&=(1-\alpha_k)A_k,\\
+\nu_{k+1}&=\nu_k-
+\frac{\alpha_k}{(1-\alpha_k)A_k\lambda_k}(y_k-x_{k+1}),\\
+\delta_{k+1}&=(1-\alpha_k)\delta_k+
+\frac{\varepsilon_k^2}{2\lambda_k}.
+\end{align*}
+Nghiệm của truy hồi sai số là
+\begin{equation}
+\delta_k=\frac{\beta_k}{2}
+\sum_{i=0}^{k-1}
+\frac{\varepsilon_i^2}{\lambda_i\beta_{i+1}}.
+\label{eq:iappa2-error}
+\end{equation}
+Công thức \eqref{eq:iappa2-error} chỉ chứa các bình phương riêng lẻ của sai số. Nó không chứa bình phương của một tổng sai số đã tích lũy như \eqref{eq:iappa1-error}.
+
