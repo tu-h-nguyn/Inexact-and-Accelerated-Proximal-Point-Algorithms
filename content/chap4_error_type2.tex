@@ -30,7 +30,7 @@ Chứng minh việc sử dụng sai số loại 2 giúp khôi phục tốc độ
 \end{aligned}\right.\label{IAPPA2}\tag{IAPPA2}
 \end{equation*}
 \begin{remark}
-Định lý trên đưa ra đánh giá dựa trên tham số \(c_k\), từ đó suy ra nếu \(c_k \ge 2-a>0\) và \(\lambda_k\) bị chặn trên thì \(\|y_{k-1}-x_k\| \to 0\).
+Định lý trên đưa ra đánh giá dựa trên tham số \(c_k = 2-\dfrac{\alpha_k^2}{(1-\alpha_k)A_k\lambda_k}\). Từ đó suy ra: nếu tồn tại \(\bar a>0\) sao cho \(\dfrac{\alpha_k^2}{(1-\alpha_k)A_k\lambda_k}\le 2-\bar a\) với mọi \(k\) (tức \(c_k\ge\bar a>0\), nghĩa là tỉ số bị chặn trên bởi một hằng số thực sự nhỏ hơn \(2\)) và \(\lambda_k\) bị chặn trên, thì \(\|y_{k-1}-x_k\| \to 0\).
 Sai số tích lũy \(\delta_k\) được cho bởi:
 \begin{equation*}
     \delta_k = \frac{\beta_k}{2} \sum_{i=0}^{k-1} \frac{\varepsilon_i^2}{\lambda_i \beta_{i+1}}

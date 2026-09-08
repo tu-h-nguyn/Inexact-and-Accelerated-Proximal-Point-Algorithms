@@ -81,7 +81,7 @@ Kết quả: lịch trình $T_k \sim \sqrt{k}$ giữ được tốc độ $\math
 ```
 ├── main.tex              Báo cáo đầy đủ (34 trang) — điều phối chương/mục, \input từ content/
 ├── slide.tex             Slide Beamer (45 trang) — dùng lại đúng các file trong content/
-├── transcript.tex        Kịch bản thuyết trình dạng screenplay (20 trang)
+├── transcript.tex        Kịch bản thuyết trình dạng screenplay (21 trang)
 ├── metadata.tex          Tên đề tài, nhóm, thành viên, GVHD, ngày — sửa DUY NHẤT ở đây
 ├── refs.bib              Thư mục tài liệu tham khảo (BibTeX)
 ├── content/              Thân bài dùng chung cho cả ba tài liệu trên (mọi file ở đây đều được biên dịch)
@@ -169,13 +169,13 @@ Chứng minh chi tiết và lập luận dài nằm trong `essayonly` (chỉ và
 
 | Tài liệu | Số trang | Trạng thái |
 |---|---:|---|
-| `main.pdf` — Báo cáo | 34 | ✅ Biên dịch sạch, không còn tham chiếu/trích dẫn treo |
+| `main.pdf` — Báo cáo | 34 | ✅ Sạch: 0 tham chiếu treo, 0 chỗ tràn lề |
 | `slide.pdf` — Slide | 45 | ✅ Biên dịch sạch |
-| `transcript.pdf` — Kịch bản | 20 | ✅ Biên dịch sạch |
+| `transcript.pdf` — Kịch bản | 21 | ✅ Biên dịch sạch, canh lề trái theo quy ước kịch bản |
 | `essay/essay.pdf` — Tiểu luận | 12 | ✅ Biên dịch sạch, số liệu khớp `results/` |
 | `docs/ghi-chu-bai-bao.pdf` | 9 | ✅ Biên dịch sạch |
 
-CI kiểm tra lại toàn bộ điều trên ở mỗi lần push, đồng thời chạy lại hai thực nghiệm số.
+Cả năm tài liệu: **0 tham chiếu/trích dẫn treo, 0 chỗ tràn lề quá 20pt**. CI kiểm tra lại toàn bộ điều trên ở mỗi lần push, đồng thời chạy lại hai thực nghiệm số.
 
 ---
 
