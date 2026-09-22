@@ -1,55 +1,76 @@
-PYTHON  ?= python3
-OCTAVE  ?= octave --no-gui --quiet
+# ============================================================================
+#  Inexact and Accelerated Proximal Point Algorithms — Nhóm 10
+#
+#  make            biên dịch toàn bộ 4 tài liệu PDF
+#  make report     chỉ báo cáo chính (main.pdf)
+#  make slides     chỉ slide (slide.pdf)
+#  make transcript chỉ kịch bản thuyết trình (transcript.pdf)
+#  make essay      chỉ tiểu luận rút gọn (essay/essay.pdf)
+#  make notes      ghi chú đọc bài báo (docs/ghi-chu-bai-bao.pdf)
+#  make figures    chạy lại thực nghiệm Python, sinh lại hình + bảng số liệu
+#  make test       kiểm chứng số học (các khẳng định toán học phải còn đúng)
+#  make verify     kiểm chứng chặn hội tụ của báo cáo bằng Octave (không cần MATLAB)
+#  make matfigures chạy lại thực nghiệm MATLAB/Octave, vẽ lại figures/*.pdf
+#  make clean      xoá file trung gian, giữ lại PDF
+#  make distclean  xoá cả PDF
+# ============================================================================
 
-.PHONY: help install test lint format verify experiment figures report slide transcript clean
+LATEXMK   ?= latexmk
+LATEXMKFLAGS ?= -pdf -interaction=nonstopmode -halt-on-error
+PYTHON    ?= python3
+OCTAVE    ?= octave --no-gui --quiet
 
-help:
-	@echo "install     install the Python dependencies for the numerical experiment"
-	@echo "test        run the Python test suite"
-	@echo "lint        run ruff over the Python sources"
-	@echo "format      apply ruff's automatic fixes"
-	@echo "verify      check the theoretical bounds numerically (Octave, headless)"
-	@echo "experiment  re-run the Python experiment (rewrites test_01/*.csv and figures)"
-	@echo "figures     re-run the MATLAB/Octave experiment and redraw matlab/*.pdf"
-	@echo "report      build main.pdf with latexmk (needs a TeX distribution)"
-	@echo "slide       build slide.pdf"
-	@echo "transcript  build transcript.pdf"
-	@echo "clean       remove build artifacts"
+.PHONY: all report slides transcript essay notes figures matfigures test verify clean distclean help
 
-install:
-	$(PYTHON) -m pip install -r test_01/requirements.txt pytest ruff
+all: report slides transcript essay
 
-test:
-	$(PYTHON) -m pytest
+report:     main.pdf
+slides:     slide.pdf
+transcript: transcript.pdf
 
-lint:
-	$(PYTHON) -m ruff check .
+main.pdf slide.pdf transcript.pdf: %.pdf: %.tex metadata.tex refs.bib $(wildcard content/*.tex)
+	$(LATEXMK) $(LATEXMKFLAGS) $<
 
-format:
-	$(PYTHON) -m ruff check --fix .
+essay: essay/essay.pdf
+essay/essay.pdf: essay/essay.tex essay/preamble.tex essay/refs.bib $(wildcard essay/sections/*.tex)
+	cd essay && $(LATEXMK) $(LATEXMKFLAGS) essay.tex
 
-# The central claim of the report is a convergence bound. This runs the
-# algorithm and checks that the bound is never violated, at every outer
-# iteration, for every inner-iteration schedule.
-verify:
-	cd matlab && $(OCTAVE) --eval "exit(~verify_bounds())"
+notes: docs/ghi-chu-bai-bao.pdf
+docs/ghi-chu-bai-bao.pdf: docs/ghi-chu-bai-bao.tex
+	cd docs && $(LATEXMK) $(LATEXMKFLAGS) ghi-chu-bai-bao.tex
 
-experiment:
-	cd test_01 && $(PYTHON) run_experiment.py
-
+# Sinh lại hình + bảng số liệu từ thực nghiệm Python.
 figures:
-	cd matlab && $(OCTAVE) --eval "main_experiment"
+	$(PYTHON) code/python/quartic_iappa.py
+	$(PYTHON) code/python/lasso_iappa.py
 
-report:
-	latexmk -pdf -interaction=nonstopmode main.tex
+# Hình MATLAB. Chạy được bằng GNU Octave, không cần giấy phép MATLAB:
+# export_fig_pdf.m tự chọn exportgraphics (MATLAB) hoặc print (Octave).
+matfigures:
+	cd code/matlab && $(OCTAVE) --eval "main_experiment"
 
-slide:
-	latexmk -pdf -interaction=nonstopmode slide.tex
+# Kiem chung so hoc: khac `make figures` o cho no CO THE THAT BAI.
+# Kiem cac dang thuc dong cua delta_k, hai chan hoi tu, chung chi sai so,
+# va tinh dung dan cua prox / soft-threshold / lien hop Fenchel.
+test:
+	cd code/python && $(PYTHON) -m pytest -q
 
-transcript:
-	latexmk -pdf -interaction=nonstopmode transcript.tex
+# Khang dinh trung tam cua bao cao la mot chan hoi tu. Muc tieu nay chay thuat
+# toan va kiem tra chan do KHONG bi vi pham, tai moi buoc lap ngoai, voi moi
+# lich trinh lap noi -- va kiem ca gia thiet cua chinh dinh ly. Chay khong can
+# giao dien do hoa, nen dung duoc truc tiep trong CI.
+verify:
+	cd code/matlab && $(OCTAVE) --eval "exit(~verify_bounds())"
 
 clean:
-	rm -rf .pytest_cache .ruff_cache
-	find . -name '__pycache__' -type d -prune -exec rm -rf {} +
-	latexmk -C || true
+	$(LATEXMK) -c main.tex slide.tex transcript.tex
+	cd essay && $(LATEXMK) -c essay.tex
+	cd docs  && $(LATEXMK) -c ghi-chu-bai-bao.tex
+
+distclean:
+	$(LATEXMK) -C main.tex slide.tex transcript.tex
+	cd essay && $(LATEXMK) -C essay.tex
+	cd docs  && $(LATEXMK) -C ghi-chu-bai-bao.tex
+
+help:
+	@sed -n '2,17p' $(MAKEFILE_LIST)

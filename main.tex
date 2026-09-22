@@ -49,7 +49,8 @@
     filecolor=blue,      
     urlcolor=blue,
     citecolor=blue,
-    pdftitle={Tên tài liệu của bạn},
+    pdftitle={\mytitle},
+    pdfauthor={\mygroup},
     bookmarks=true,
 }
 \setlist[enumerate]{
@@ -67,7 +68,7 @@
 \newcommand{\order}{\mathcal{O}}
 \renewcommand{\max}[1]{\operatorname*{max}\left\{#1\right\}}
 \renewcommand{\Set}[1]{\left\{#1\right\}}
-\newcommand{\autotag}{\stepcounter{equation}\label{eq:\theequation}\tag{\theequation}}
+\newcommand{\autotag}[1]{\stepcounter{equation}\tag{\theequation}\label{#1}}
 \newcommand{\Hil}{\mathcal{H}}
 \DeclareMathOperator{\dom}{dom}
 \DeclareMathOperator{\diam}{diam}

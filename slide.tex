@@ -39,7 +39,7 @@
 \newcommand{\order}{\mathcal{O}}
 \renewcommand{\max}[1]{\operatorname*{max}\left\{#1\right\}}
 \newcommand{\Set}[1]{\left\{#1\right\}}
-\newcommand{\autotag}{\stepcounter{equation}\label{eq:\theequation}\tag{\theequation}}
+\newcommand{\autotag}[1]{\stepcounter{equation}\tag{\theequation}\label{#1}}
 \newcommand{\paragraph}[1]{\par\noindent\textbf{#1}\par}
 
 \let\theorem\relax
@@ -96,15 +96,15 @@
 \subtitle{\small Dựa trên bài báo: \textit{Inexact and Accelerated Proximal Point Algorithms} (S. Salzo \& S. Villa, 2012)\normalsize}
 \author[\mygroup]{
     \textbf{\mygroup} \\
-    \vspace{9pt} % Tạo khoảng cách giữa tên nhóm và thành viên
-    \mymembers
+    \vspace{4pt} % Tạo khoảng cách giữa tên nhóm và thành viên
+    {\small\mymembers}
 }
 \institute[\myshortschool]{
-    \textbf{Giảng viên hướng dẫn: }\mysupervisor\\
-    \vspace{14.17pt}
-    \mylongschool
+    {\small\textbf{Giảng viên hướng dẫn: }\mysupervisor\\
+    \vspace{2pt}
+    \mylongschool}
 }
-\date[\myshortdate]{\mylongdate}
+\date[\myshortdate]{\small\mylongdate}
 
 % ──── Document ────
 \begin{document}

@@ -11,6 +11,6 @@ Kí hiệu \(F^* := \inf F\) là giá trị tối ưu. Các kết quả được
 Trong công trình nghiên cứu của S. Salzo và S. Villa \cite{salzovilla2012} được nhóm tìm hiểu và báo cáo, thuật toán Proximal Point tăng tốc được phát triển bởi Nesterov/Güler đạt hội tụ bậc \(\order(1/k^2)\). Tuy nhiên, Salzo và Villa đã chỉ ra rằng chứng minh của Güler cho trường hợp không chính xác tồn tại một lỗi tinh tế, dẫn đến việc hội tụ của PPA tăng tốc không chính xác vẫn là một bài toán mở.
 Trong bài báo này, các tác giả đã xây dựng một phương pháp phân tích chuỗi ước tính linh hoạt để giải quyết vấn đề đó. Các đóng góp chính có thể được tóm gọn như sau:
 \begin{itemize}
-    \item Có thể khôi phục được tốc độ hội tụ bậc hai (dạng chính xác) nếu sai số được đánh giá theo loại 2.
-    \item Thuật toán vẫn đảm bảo hội tụ với tốc độ \(\order(1/k)\) nếu sử dụng sai số loại 1; quan trọng hơn, kết quả này vẫn đúng kể cả khi chuỗi sai số không có tính khả tổng (nonsummable).
+    \item Có thể khôi phục được tốc độ hội tụ bậc hai \(\order(1/k^2)\) của dạng chính xác nếu sai số được đánh giá theo loại 2, với \(\eps_k=\order(1/k^q)\) và \(q>3/2\). Quan trọng hơn, chỉ cần \(q>1/2\) là \((x_k)\) đã là dãy cực tiểu hóa, nên kết quả vẫn đúng ngay cả khi chuỗi sai số không khả tổng (trường hợp \(1/2<q\le1\)).
+    \item Ngược lại, với sai số loại 1 thì chận tổng quát tốt nhất chỉ đạt \(\order(1/k)\), và cũng chỉ khi \(q>2\); nghĩa là lợi thế của việc tăng tốc bị mất hoàn toàn dù sai số có giảm nhanh đến đâu.
 \end{itemize}

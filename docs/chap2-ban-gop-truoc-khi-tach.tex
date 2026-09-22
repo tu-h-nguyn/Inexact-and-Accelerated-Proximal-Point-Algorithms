@@ -1,3 +1,19 @@
+% ===========================================================================
+% BAN GOP CU CUA CHUONG 1 "Co so toan hoc" - KHONG CON DUOC BIEN DICH
+%
+% File nay la phien ban monolithic truoc khi chuong duoc tach thanh:
+%   content/chap2_1_gia_thiet.tex        content/chap2_2_toan_tu_gan_ke.tex
+%   content/chap2_3_xap_xi.tex           content/chap2_4_moi_quan_he.tex
+%   content/chap2_5_vi_du_chieu.tex
+%
+% Khong file nao (main.tex / slide.tex / transcript.tex) \input file nay,
+% nen SUA O DAY SE KHONG CO TAC DUNG GI len ban nop. Giu lai chi de doi chieu:
+% ban gop con vai cau dien giai da bi lo trong qua trinh tach (vd. cau noi
+% sieu phang h_eps tien ve sieu phang tiep xuc khi eps -> 0, ghi chu
+% Cauchy-Schwarz o cuoi chung minh loai 3 => loai 2).
+% Muon dung lai cau nao thi chep sang file tuong ung trong content/.
+% ===========================================================================
+
 Toán tử gần kề (proximal operator) là một trong những công cụ trung tâm của tối ưu lồi hiện đại. Nhiều thuật toán nổi tiếng như Proximal Gradient Method, FISTA, ADMM hay các phương pháp splitting khác đều yêu cầu tính toán tử gần kề ở mỗi bước lặp. Nhờ đó, các bài toán có thành phần không khả vi vẫn có thể được xử lý một cách hiệu quả.
 
 Tuy nhiên, trong phần lớn các bài toán thực tế, việc tính chính xác

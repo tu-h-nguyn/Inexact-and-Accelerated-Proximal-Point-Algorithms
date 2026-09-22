@@ -1,0 +1,111 @@
+name: build
+
+# Biên dịch toàn bộ tài liệu LaTeX và chạy lại thực nghiệm số.
+# PDF + hình + bảng số liệu được tải lên dưới dạng artifact của mỗi lần chạy.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  latex:
+    name: Biên dịch tài liệu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cài TeX Live
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-lang-other texlive-lang-european \
+            texlive-science latexmk lmodern
+
+      - name: Build báo cáo, slide, kịch bản, tiểu luận
+        run: make all
+
+      - name: Build ghi chú đọc bài báo
+        run: make notes
+
+      - name: Kiểm tra không còn tham chiếu / trích dẫn treo
+        run: |
+          status=0
+          for log in main.log slide.log transcript.log essay/essay.log docs/ghi-chu-bai-bao.log; do
+            if grep -qE "Warning: (Citation|Reference).*undefined" "$log"; then
+              echo "::error file=$log::Còn tham chiếu hoặc trích dẫn chưa được giải quyết"
+              grep -E "Warning: (Citation|Reference).*undefined" "$log" | sort -u
+              status=1
+            fi
+          done
+          exit $status
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pdf
+          path: |
+            main.pdf
+            slide.pdf
+            transcript.pdf
+            essay/essay.pdf
+            docs/ghi-chu-bai-bao.pdf
+
+  numerics:
+    name: Thực nghiệm số + kiểm chứng (Python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cài phụ thuộc
+        run: pip install -r code/python/requirements.txt
+
+      - name: Kiểm chứng số học (bước này ĐƯỢC PHÉP làm đỏ CI)
+        run: make test
+
+      - name: Chạy lại hai thực nghiệm
+        run: make figures
+
+      - name: Báo cáo sai lệch so với kết quả đã commit
+        run: git --no-pager diff --stat -- results figures || true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: numerics
+          path: |
+            figures/*.png
+            results/*.csv
+
+  bounds:
+    name: Chặn hội tụ vẫn đúng (Octave)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # MATLAB va Octave dung hai bo sinh so ngau nhien khac nhau, nen cung mot
+      # hat giong van cho hai thuc the bai toan khac nhau: so tung chu so se do
+      # ngay khi doi moi truong ma khong bat duoc loi that nao. verify_bounds.m
+      # kiem nhung dieu phai dung tren MOI thuc the -- chan cua Dinh ly 3.2 tai
+      # moi buoc lap ngoai, gia thiet cua chinh dinh ly, va cac dang thuc dong.
+      - name: Cài Octave
+        run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends octave
+      - name: Kiểm chứng chặn hội tụ
+        run: cd code/matlab && octave --no-gui --quiet --eval "exit(~verify_bounds())"
+      # Kiem luon duong VE HINH duoi Octave: export_fig_pdf.m phai chon duoc
+      # print() thay cho exportgraphics va ghi ra 3 tep PDF that su. Neu khong
+      # co buoc nay thi cau "chay duoc bang Octave, khong can MATLAB" trong
+      # README chi la mot loi hua chua ai kiem.
+      - name: Vẽ lại 3 hình bằng Octave
+        run: cd code/matlab && octave --no-gui --quiet --eval "main_experiment"
+      - name: Ba tệp PDF phải thực sự được ghi ra
+        run: |
+          set -e
+          for f in convergence-comparison bound-verification type1-accuracy; do
+            test -s "figures/$f.pdf" || { echo "thieu figures/$f.pdf"; exit 1; }
+            head -c 4 "figures/$f.pdf" | grep -q '%PDF' || { echo "figures/$f.pdf khong phai PDF"; exit 1; }
+          done
+          echo "ca ba tep PDF deu duoc ghi ra hop le"

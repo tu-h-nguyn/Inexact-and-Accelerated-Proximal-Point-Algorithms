@@ -509,7 +509,7 @@ Thay thế $t_k:=1/\alpha_k$, IAPPA2 trở thành:
 \right.
 \end{equation}
 trong đó $(a_k)\subset(0,2]$ được chọn tự do.
-Đặt $a_k=2$, $\lambda_k=\lambda$ (hằng số), và sử dụng các bước kề chính xác sẽ khôi phục lại thuật toán \textbf{FISTA} của Beck \& Teboulle (2009).
+Trong \eqref{eq:simple}, số hạng $(1-a_k)\tfrac{t_k}{t_{k+1}}(y_k-x_{k+1})$ chỉ triệt tiêu khi $a_k=1$. Do đó, đặt $a_k=1$, $\lambda_k=\lambda$ (hằng số) và dùng các bước kề chính xác sẽ khôi phục lại thuật toán \textbf{FISTA} của Beck \& Teboulle (2009); còn $a_k=2$ cho lại thuật toán của \textbf{G\"{u}ler} (1992), trong đó số hạng thứ ba vẫn còn.
 
 % ============================================================
 \section{Lỗi Trong Chứng Minh Của G\"{u}ler}

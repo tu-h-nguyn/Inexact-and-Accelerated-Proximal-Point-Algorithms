@@ -1,16 +1,29 @@
 % MAIN_EXPERIMENT
-% Minh hoa so cho thuat toan diem gan ke khong chinh xac va tang toc.
+% Minh hoa so cho thuat toan diem gan ke khong chinh xac va tang toc (IAPPA).
 %
-% Sinh ba hinh dung trong bao cao. Bai toan va cac lich trinh lap noi lay tu
-% setup_problem.m / schedules.m -- CHUNG voi verify_bounds.m, de hinh ve va
-% cong kiem tra khong the noi ve hai thu khac nhau.
+% Bai toan: elastic-net / LASSO tong hop  F(x) = 1/2||Ax-b||^2 + rho/2||x||^2 + mu||x||_1
+% Bai toan con prox duoc giai xap xi bang FISTA noi; so vong lap noi T_k dong vai tro
+% "nut van" sinh sai so co kiem soat. Script xuat 3 hinh vao thu muc figures/ o goc repo.
 %
-% Chay:  octave --no-gui --quiet --eval "main_experiment"
-%        (hoac go main_experiment trong MATLAB)
+% Cach chay:  >> cd code/matlab; main_experiment          (MATLAB)
+%             $ cd code/matlab && octave --no-gui --quiet --eval "main_experiment"
+%
+% Chay duoc tren ca MATLAB lan GNU Octave: export_fig_pdf.m tu chon
+% exportgraphics hay print tuy moi truong, nen khong can giay phep MATLAB.
 
 clear; close all; clc;
 
+% Thu muc hinh: <goc repo>/figures  (script nam tai <goc repo>/code/matlab)
+here   = fileparts(mfilename('fullpath'));
+if isempty(here), here = pwd; end
+figdir = fullfile(here, '..', '..', 'figures');
+if ~exist(figdir, 'dir'), mkdir(figdir); end
+
 %% 1) Khoi tao va sinh du lieu bai toan
+% Bai toan lay tu setup_problem.m -- CHUNG voi verify_bounds.m, de hinh ve va
+% cong kiem tra khong the noi ve hai bai toan khac nhau. setup_problem cung
+% gieo CA rand lan randn: randperm() dung rand, ma randn('seed',...) khong
+% gieo rand, nen ban truoc day khong tai lap duoc tren Octave.
 [A, b, ~, par] = setup_problem(7);
 n = par.n; m = par.m; s = par.s;
 mu = par.mu; rho = par.rho; lambda = par.lambda;
@@ -22,13 +35,15 @@ x0 = zeros(n, 1);
 fprintf('Kich thuoc bai toan: n=%d, m=%d, do thua s=%d\n', n, m, s);
 
 %% 2) Uoc luong F*, x* (chay moc tham chieu do chinh xac cao)
-res_ref = run_outer(A, b, rho, mu, lambda, x0, K_ref, Tref_ref, @(k) Tref_ref);
+sched_exact_ref = @(k) Tref_ref;
+res_ref = run_outer(A, b, rho, mu, lambda, x0, K_ref, Tref_ref, sched_exact_ref);
 F_star = res_ref.Fvals(end);
 x_star = res_ref.xs(:, end);
 fprintf('F* (tham chieu, %d buoc ngoai x %d lap noi): %.10e\n', K_ref, Tref_ref, F_star);
 
 %% 3) Thu nghiem cac lich trinh lap noi (mo phong sai so)
 sched = schedules(Tref);
+
 names = fieldnames(sched);
 R = struct();
 for i = 1:numel(names)
@@ -75,7 +90,7 @@ legend('PPA Co dien', 'T_k=1 (Cuc tho)', 'T_k=4 (Tho)', 'T_k ~ sqrt(k)', 'T_k = 
     'Tham chieu O(1/k)', 'Tham chieu O(1/k^2)', 'Location','southwest');
 title('So sanh toc do hoi tu');
 
-filename1 = sprintf('So sanh toc do hoi tu.pdf');
+filename1 = fullfile(figdir, 'convergence-comparison.pdf');
 export_fig_pdf(fig1, filename1);
 
 %% ================= HINH B: chan ly thuyet vs sai so thuc =================
@@ -87,9 +102,9 @@ hold off; grid on;
 xlabel('buoc ngoai k'); ylabel('gia tri (F(x_k)-F^* va cac chan)');
 legend('F(x_k)-F^* thuc te (lich T_k~sqrt(k))', 'chan tu phan tich loai 1', ...
        'chan tu phan tich loai 2', 'Location','southwest', 'FontSize',8);
-title('Kiem chung so hoc chan hoi tu cua Dinh ly 3.2');
+title('Kiem chung so hoc cac chan hoi tu');
 
-filename2 = sprintf('Kiem chung so hoc chan hoi tu cua Dinh ly 3-2.pdf');
+filename2 = fullfile(figdir, 'bound-verification.pdf');
 export_fig_pdf(fig2, filename2);
 
 %% ================= HINH C: suy giam cua eps_k theo cac lich trinh =================
@@ -105,5 +120,5 @@ legend('T_k=1','T_k=4','T_k ~ log k','T_k ~ sqrt(k)','T_k = T_{ref}', ...
        'Location','southwest', 'FontSize',8);
 title('Do chinh xac loai 1 thuc te dat duoc theo tung lich trinh lap noi');
 
-filename3 = sprintf('Do chinh xac loai 1 thuc te dat duoc theo tung lich trinh lap noi.pdf');
+filename3 = fullfile(figdir, 'type1-accuracy.pdf');
 export_fig_pdf(fig3, filename3);

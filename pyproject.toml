@@ -1,14 +1,9 @@
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-addopts = "-q --strict-markers"
-markers = [
-    "slow: re-runs an experiment from scratch rather than reading its committed output",
-]
-
+# Cau hinh ruff. Cau hinh pytest nam o code/python/pytest.ini -- de o do vi bo
+# test can chay voi code/python la thu muc lam viec (`import quartic_iappa`).
 [tool.ruff]
 line-length = 100
 target-version = "py310"
-src = ["tests", "test_01"]
+src = ["code/python"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "NPY"]

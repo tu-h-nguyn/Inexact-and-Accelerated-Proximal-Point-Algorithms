@@ -7,12 +7,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-OUT = Path(__file__).resolve().parent
-# The LaTeX sources say \includegraphics{figures/...}, and they resolve that
-# relative to this directory -- not to the repository root. Writing anywhere
-# else leaves the paper unable to find its own figures.
-FIG = OUT / "figures"
+ROOT = Path(__file__).resolve().parents[2]
+FIG = ROOT / "figures"
+OUT = ROOT / "results"
 FIG.mkdir(parents=True, exist_ok=True)
+OUT.mkdir(parents=True, exist_ok=True)
 
 N = 2000
 LAM = 1.0
@@ -61,11 +60,10 @@ def boundary_points(y: float, lam: float, eps: float, kind: int) -> tuple[float,
 
     points: list[float] = []
     for direction in (-1.0, 1.0):
-        # `direction` is bound as a default so the closure captures this
-        # iteration's value rather than the loop variable. The bisection below
-        # consumes `residual` before the next iteration, so behaviour is
-        # unchanged -- this just stops the function from silently depending on
-        # that fact.
+        # `direction` duoc gan lam tham so mac dinh de closure bat gia tri cua
+        # DUNG vong lap nay, thay vi bat bien vong lap. Phep chia doi ben duoi
+        # dung xong `residual` truoc khi sang vong sau, nen hanh vi khong doi --
+        # chi la khong con am tham phu thuoc vao dieu do nua.
         def residual(t: float, direction: float = direction) -> float:
             z = p + direction * t
             value = (
@@ -167,10 +165,10 @@ def log_slope(values: np.ndarray, start: int = 500, end: int = 2000) -> float:
     return float(np.polyfit(np.log(idx[mask]), np.log(values[idx][mask]), 1)[0])
 
 
-# Matplotlib's defaults put the legend over the curves and label the axes in
-# ASCII. The figures the paper actually prints use a wider box, the Okabe-Ito
-# palette and real mathematical notation; keep the code producing those, so
-# regenerating a figure does not quietly downgrade the paper.
+# Mac dinh cua matplotlib dat chu giai de len duong cong va ghi nhan truc bang
+# ASCII. Hinh ma bao cao THUC SU in ra dung khung rong hon, bang mau Okabe-Ito
+# va ky hieu toan that; giu ma nguon sinh ra dung nhung hinh do, de viec ve lai
+# mot hinh khong am tham lam bao cao xau di.
 PALETTE = {"exact": "#117733", "iappa1": "#CC4C02", "iappa2": "#1F6FB4"}
 
 
@@ -192,7 +190,7 @@ def _plot_objective(k, exact, iappa1, iappa2) -> None:
     _style(ax, "Số vòng lặp $k$", r"Sai số giá trị hàm $F(x_k) - F_\star$")
     ax.legend(loc="lower left", fontsize=10, framealpha=0.95)
     fig.tight_layout()
-    fig.savefig(FIG / "objective_convergence.png", dpi=200)
+    fig.savefig(FIG / "quartic-objective-convergence.png", dpi=200)
     plt.close(fig)
 
 
@@ -202,9 +200,9 @@ def _plot_error_accumulation(k, delta1, delta2) -> None:
               label="IAPPA1: thành phần sai số")
     ax.loglog(k[1:], delta2[1:], color=PALETTE["iappa2"], lw=1.7,
               label="IAPPA2: thành phần sai số")
-    # Reference slopes: the theory predicts the type-1 component decays like
-    # k^{-1/2} and the type-2 component like k^{-2}. Drawing both makes the
-    # measured slopes in summary.csv readable straight off the figure.
+    # Do doc tham chieu: ly thuyet du bao thanh phan loai 1 suy giam nhu
+    # k^{-1/2} va loai 2 nhu k^{-2}. Ve ca hai de doc duoc do doc do duoc
+    # trong results/quartic-summary.csv ngay tren hinh.
     ax.loglog(k[10:], delta1[10] * (k[10:] / 10) ** (-0.5), "--",
               color="#888888", lw=1.2, label=r"Tham chiếu $k^{-1/2}$")
     ax.loglog(k[10:], delta2[10] * (k[10:] / 10) ** (-2.0), ":",
@@ -212,14 +210,37 @@ def _plot_error_accumulation(k, delta1, delta2) -> None:
     _style(ax, "Số vòng lặp $k$", "Thành phần sai số tích luỹ")
     ax.legend(loc="lower left", fontsize=10, framealpha=0.95)
     fig.tight_layout()
-    fig.savefig(FIG / "error_accumulation.png", dpi=200)
+    fig.savefig(FIG / "quartic-error-accumulation.png", dpi=200)
     plt.close(fig)
 
 
-def main() -> None:
+def run_all(q: float = Q) -> dict[str, object]:
+    """Chay ca ba phuong phap va tra ve moi dai luong da do duoc.
+
+    Tach rieng khoi main() de test goi duoc ma khong sinh hinh / ghi file.
+    """
     exact = run_exact()
-    iappa1, cert1, delta1 = run_iappa1(Q)
-    iappa2, cert2, delta2 = run_iappa2(Q)
+    iappa1, cert1, delta1 = run_iappa1(q)
+    iappa2, cert2, delta2 = run_iappa2(q)
+    return {
+        "exact": exact,
+        "iappa1": iappa1,
+        "iappa2": iappa2,
+        "cert1": cert1,
+        "cert2": cert2,
+        "delta1": delta1,
+        "delta2": delta2,
+        "slope1": log_slope(delta1),
+        "slope2": log_slope(delta2),
+        "max_cert_dev1": float(np.max(np.abs(cert1 - 1.0))),
+        "max_cert_dev2": float(np.max(np.abs(cert2 - 1.0))),
+    }
+
+
+def main() -> None:
+    res = run_all()
+    exact, iappa1, iappa2 = res["exact"], res["iappa1"], res["iappa2"]
+    delta1, delta2 = res["delta1"], res["delta2"]
 
     k = np.arange(N + 1)
     pd.DataFrame(
@@ -231,12 +252,10 @@ def main() -> None:
             "delta1_bound_component": delta1,
             "delta2_bound_component": delta2,
         }
-    ).to_csv(OUT / "results.csv", index=False)
+    ).to_csv(OUT / "quartic-results.csv", index=False)
 
-    slope1 = log_slope(delta1)
-    slope2 = log_slope(delta2)
-    dev1 = float(np.max(np.abs(cert1 - 1.0)))
-    dev2 = float(np.max(np.abs(cert2 - 1.0)))
+    slope1, slope2 = res["slope1"], res["slope2"]
+    dev1, dev2 = res["max_cert_dev1"], res["max_cert_dev2"]
 
     summary = pd.DataFrame(
         {
@@ -246,7 +265,7 @@ def main() -> None:
             "max_abs_certificate_minus_1": [np.nan, dev1, dev2],
         }
     )
-    summary.to_csv(OUT / "summary.csv", index=False)
+    summary.to_csv(OUT / "quartic-summary.csv", index=False)
 
     _plot_objective(k, exact, iappa1, iappa2)
     _plot_error_accumulation(k, delta1, delta2)
