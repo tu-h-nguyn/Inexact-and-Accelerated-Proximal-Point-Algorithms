@@ -9,8 +9,9 @@
 #  make notes      ghi chú đọc bài báo (docs/ghi-chu-bai-bao.pdf)
 #  make figures    chạy lại thực nghiệm Python, sinh lại hình + bảng số liệu
 #  make test       kiểm chứng số học (các khẳng định toán học phải còn đúng)
+#  make lint       chạy ruff trên mã nguồn Python
 #  make verify     kiểm chứng chặn hội tụ của báo cáo bằng Octave (không cần MATLAB)
-#  make matfigures chạy lại thực nghiệm MATLAB/Octave, vẽ lại figures/*.pdf
+#  make matexp     chạy lại thực nghiệm MATLAB/Octave (Octave: bỏ qua phần vẽ hình)
 #  make clean      xoá file trung gian, giữ lại PDF
 #  make distclean  xoá cả PDF
 # ============================================================================
@@ -20,7 +21,7 @@ LATEXMKFLAGS ?= -pdf -interaction=nonstopmode -halt-on-error
 PYTHON    ?= python3
 OCTAVE    ?= octave --no-gui --quiet
 
-.PHONY: all report slides transcript essay notes figures matfigures test verify clean distclean help
+.PHONY: all report slides transcript essay notes figures matexp test verify lint format clean distclean help
 
 all: report slides transcript essay
 
@@ -44,9 +45,11 @@ figures:
 	$(PYTHON) code/python/quartic_iappa.py
 	$(PYTHON) code/python/lasso_iappa.py
 
-# Hình MATLAB. Chạy được bằng GNU Octave, không cần giấy phép MATLAB:
-# export_fig_pdf.m tự chọn exportgraphics (MATLAB) hoặc print (Octave).
-matfigures:
+# Thuc nghiem MATLAB. Phan TINH TOAN chay duoc bang GNU Octave (khong can
+# giay phep MATLAB) -- do la phan CI kiem. Phan VE HINH thi Octave khong chay
+# duoc tren cac may da thu, nen script tu bo qua; ba tep figures/*.pdf cua bao
+# cao van phai sinh bang MATLAB.
+matexp:
 	cd code/matlab && $(OCTAVE) --eval "main_experiment"
 
 # Kiem chung so hoc: khac `make figures` o cho no CO THE THAT BAI.
@@ -61,6 +64,12 @@ test:
 # giao dien do hoa, nen dung duoc truc tiep trong CI.
 verify:
 	cd code/matlab && $(OCTAVE) --eval "exit(~verify_bounds())"
+
+lint:
+	$(PYTHON) -m ruff check .
+
+format:
+	$(PYTHON) -m ruff check --fix .
 
 clean:
 	$(LATEXMK) -c main.tex slide.tex transcript.tex

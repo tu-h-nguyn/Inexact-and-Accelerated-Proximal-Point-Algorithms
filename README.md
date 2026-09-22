@@ -126,7 +126,7 @@ pip install -r code/python/requirements.txt
 make test           # ~25 giây, 52 phép kiểm chứng số học (Python)
 make figures        # ~13 giây, ghi đè figures/*.png và results/*.csv
 make verify         # ~40 giây, 38 phép kiểm chặn hội tụ (Octave, không cần MATLAB)
-make matfigures     # vẽ lại 3 hình vector .pdf của báo cáo
+make matexp         # chạy lại thực nghiệm MATLAB (Octave chạy được phần tính toán)
 ```
 
 `make test` **không** kiểm tra "script có chạy không" — việc đó `make figures` đã làm.
@@ -148,13 +148,20 @@ thay vì bất lợi…) — **cả 10 đều bị bắt**.
 
 ### Bản MATLAB — và vì sao nó được kiểm khác đi
 
-Bản MATLAB sinh 3 hình vector `.pdf` dùng trong báo cáo. Nó **chạy được bằng GNU
-Octave**, không cần giấy phép MATLAB:
+Bản MATLAB sinh 3 hình vector `.pdf` dùng trong báo cáo. **Phần tính toán** chạy
+được bằng GNU Octave, không cần giấy phép MATLAB — và CI kiểm đúng điều đó:
 
 ```bash
 cd code/matlab
-octave --no-gui --quiet --eval "main_experiment"     # hoặc: make matfigures
+octave --no-gui --quiet --eval "main_experiment"     # hoặc: make matexp
 ```
+
+**Phần vẽ hình thì không.** `ft_text_renderer` của Octave không nạp được font trên
+cả hai môi trường đã thử (kể cả sau khi cài `gnuplot-nox` và chỉ định font DejaVu),
+nên script tự phát hiện và bỏ qua phần đồ thị thay vì chết giữa chừng — kết quả số
+vẫn in ra đầy đủ. Ba tệp `figures/*.pdf` của báo cáo vẫn phải sinh bằng MATLAB.
+`export_fig_pdf.m` chọn `exportgraphics` hay `print` tuỳ môi trường, nên đường vẽ
+hình sẽ tự chạy nếu Octave trên máy bạn không dính lỗi font này.
 
 Nhưng nó **không thể** bị kiểm bằng cách so từng chữ số như bản Python. MATLAB và
 Octave dùng hai bộ sinh số ngẫu nhiên khác nhau, nên cùng một hạt giống vẫn cho hai
