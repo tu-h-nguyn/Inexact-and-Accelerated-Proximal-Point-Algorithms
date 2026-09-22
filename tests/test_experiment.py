@@ -95,16 +95,60 @@ def test_final_objective_ordering_matches_the_report(summary):
 
 
 # --------------------------------------------------------------------------
-# Tai lap tung bit -- chay lai that su
+# Tai lap -- va ranh gioi chinh xac cua no
 # --------------------------------------------------------------------------
+# Ban dau bo test nay doi hoi CA HAI tep khop tung byte, va CI tren runner cua
+# GitHub bac bo ngay. Sai khac nam DUNG o hai cot do bang polyfit:
+#
+#   -0.5207170429964162  ->  -0.5207170429964159
+#   -1.9888595374794573  ->  -1.988859537479457
+#
+# Vong lap sinh so lieu la mot day truy hoi mot chieu bang so vo huong thuan
+# tuy, khong co BLAS, nen results.csv tai lap tung byte tren moi may. Nhung
+# polyfit lai la mot bai toan binh phuong toi thieu giai bang LAPACK, va o do
+# thu tu cong don PHU THUOC may. Do chinh la hien tuong quen thuoc, chi an minh
+# trong mot buoc hau ky.
+def _relative(a: float, b: float) -> float:
+    return abs(a - b) / abs(b) if b else abs(a - b)
+
+
 @pytest.mark.slow
-def test_rerunning_the_experiment_reproduces_the_committed_csvs():
-    before = {p: p.read_bytes() for p in (EXP / "results.csv", EXP / "summary.csv")}
+def test_rerunning_reproduces_the_raw_iterates_byte_for_byte():
+    """results.csv khong chua phep quy gon nao cua BLAS -- no phai khop tung
+    byte, ke ca tren mot may khac."""
+    path = EXP / "results.csv"
+    before = path.read_bytes()
     subprocess.run([sys.executable, "run_experiment.py"], cwd=EXP, check=True,
                    capture_output=True)
     try:
-        for p, old in before.items():
-            assert p.read_bytes() == old, f"{p.name} thay doi sau khi chay lai"
+        assert path.read_bytes() == before
     finally:
-        for p, old in before.items():
-            p.write_bytes(old)
+        path.write_bytes(before)
+
+
+@pytest.mark.slow
+def test_rerunning_reproduces_the_summary_to_full_double_precision():
+    """summary.csv thi khong the doi hoi tung byte: hai cot do doc di qua
+    polyfit. Doi hoi dung muc ma chung thuc su dat duoc."""
+    path = EXP / "summary.csv"
+    before = path.read_bytes()
+    old = pd.read_csv(path).set_index("method")
+    subprocess.run([sys.executable, "run_experiment.py"], cwd=EXP, check=True,
+                   capture_output=True)
+    try:
+        new = pd.read_csv(path).set_index("method")
+        for method in old.index:
+            # Cac dai luong lay thang tu day lap: khop tung bit.
+            for col in ("final_objective", "max_abs_certificate_minus_1"):
+                a, b = new.loc[method, col], old.loc[method, col]
+                if pd.isna(a) or pd.isna(b):
+                    assert pd.isna(a) and pd.isna(b), (method, col)
+                else:
+                    assert a == b, (method, col, a, b)
+            # Do doc hoi quy: khop den vai ulp, khong hon.
+            a, b = (new.loc[method, "delta_log_slope_500_2000"],
+                    old.loc[method, "delta_log_slope_500_2000"])
+            if not (pd.isna(a) or pd.isna(b)):
+                assert _relative(a, b) < 1e-12, (method, a, b)
+    finally:
+        path.write_bytes(before)

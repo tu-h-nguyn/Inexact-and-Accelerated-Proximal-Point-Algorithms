@@ -50,11 +50,16 @@ jobs:
           python -m pip install -r test_01/requirements.txt
       - name: Re-run the experiment
         run: cd test_01 && python run_experiment.py
-      # This experiment is a deterministic 1-D recursion in plain numpy: no RNG
-      # and no parallel reduction, so it really does reproduce byte for byte.
-      # (The MATLAB experiment does not -- see the `bounds` job below.)
-      - name: Fail if the committed numbers are stale
-        run: git diff --exit-code -- test_01/results.csv test_01/summary.csv
+      # results.csv is a deterministic 1-D scalar recursion -- no RNG, no BLAS
+      # -- so it does reproduce byte for byte, on any machine.
+      - name: Fail if the committed iterates are stale
+        run: git diff --exit-code -- test_01/results.csv
+      # summary.csv is NOT byte-comparable: two of its columns come from
+      # np.polyfit, a least-squares solve whose LAPACK reduction order depends
+      # on the CPU. Those columns are checked numerically by the test suite
+      # instead; everything else in the file must still match exactly.
+      - name: Check the summary at the precision it supports
+        run: python -m pip install pytest && python -m pytest tests -q -k summary
       - uses: actions/upload-artifact@v4
         with:
           name: figures

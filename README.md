@@ -87,9 +87,17 @@ mutation-tested: perturbing the coefficient in the $\alpha_k$ formula from 4 to
 The repository deliberately gates them differently, because they are not equally
 reproducible:
 
-- **`test_01/` (Python)** is a deterministic 1-D recursion — no RNG, no parallel
-  reduction. It reproduces **byte for byte**, so CI does gate it with
-  `git diff --exit-code`.
+- **`test_01/` (Python)** is a deterministic 1-D scalar recursion — no RNG, no
+  BLAS. Its iterates (`results.csv`) reproduce **byte for byte** on any machine,
+  so CI gates that file with `git diff --exit-code`.
+
+  Its *summary* does not, and finding out why was instructive. The first version
+  of this gate demanded byte-equality for both files and GitHub's runners refused
+  it — in exactly two columns, both produced by `np.polyfit`. A least-squares fit
+  is a LAPACK solve, so its reduction order depends on the CPU just like any
+  other. The recursion was reproducible; a post-processing step quietly was not.
+  Those two columns are now checked numerically (they agree to 13 significant
+  figures); the rest of the file is still required to match exactly.
 - **`matlab/`** cannot be gated that way. MATLAB and Octave ship different random
   number generators, so the same seed builds a *different problem instance*.
   Comparing digits would fail on the first environment change while catching no
