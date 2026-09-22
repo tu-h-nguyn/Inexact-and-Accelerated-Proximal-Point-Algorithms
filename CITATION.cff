@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+title: Inexact and Accelerated Proximal Point Algorithms
+message: "If you use this software or the accompanying report, please cite it."
+type: software
+authors:
+  - family-names: Nguyễn
+    given-names: Hoàng Tú
+  - family-names: Bùi
+    given-names: Công Hoàng Vũ
+  - family-names: Huỳnh
+    given-names: Trung Kiên
+  - family-names: Nguyễn
+    given-names: Ngọc Diễm Quỳnh
+abstract: >-
+  A report and numerical study of accelerated proximal point algorithms whose
+  subproblems are solved only approximately. Two notions of inexactness are
+  analysed, each giving a different accumulated-error term, and the experiments
+  check the resulting convergence bounds numerically rather than illustrating
+  them: the bounds are tested at every outer iteration, and the decay rate of
+  each error component is measured against the order the theory predicts.
+keywords:
+  - convex optimization
+  - proximal point algorithm
+  - Nesterov acceleration
+  - estimate sequences
+  - inexact subproblem solves
+license: MIT
+version: 1.0.0
+date-released: "2026-07-24"

@@ -1,0 +1,37 @@
+# ---- LaTeX build artifacts ----
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+*.run.xml
+*.bcf
+*.xdv
+main.pdf
+slide.pdf
+transcript.pdf
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# ---- MATLAB / Octave / editors / OS ----
+*.asv
+*.mex*
+octave-workspace
+.vscode/
+.idea/
+.DS_Store

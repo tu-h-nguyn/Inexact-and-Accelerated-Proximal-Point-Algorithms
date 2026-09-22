@@ -8,7 +8,10 @@ import numpy as np
 import pandas as pd
 
 OUT = Path(__file__).resolve().parent
-FIG = OUT.parent / "figures"
+# The LaTeX sources say \includegraphics{figures/...}, and they resolve that
+# relative to this directory -- not to the repository root. Writing anywhere
+# else leaves the paper unable to find its own figures.
+FIG = OUT / "figures"
 FIG.mkdir(parents=True, exist_ok=True)
 
 N = 2000
@@ -58,7 +61,12 @@ def boundary_points(y: float, lam: float, eps: float, kind: int) -> tuple[float,
 
     points: list[float] = []
     for direction in (-1.0, 1.0):
-        def residual(t: float) -> float:
+        # `direction` is bound as a default so the closure captures this
+        # iteration's value rather than the loop variable. The bisection below
+        # consumes `residual` before the next iteration, so behaviour is
+        # unchanged -- this just stops the function from silently depending on
+        # that fact.
+        def residual(t: float, direction: float = direction) -> float:
             z = p + direction * t
             value = (
                 phi(z, y, lam) - phi(p, y, lam)
@@ -159,6 +167,55 @@ def log_slope(values: np.ndarray, start: int = 500, end: int = 2000) -> float:
     return float(np.polyfit(np.log(idx[mask]), np.log(values[idx][mask]), 1)[0])
 
 
+# Matplotlib's defaults put the legend over the curves and label the axes in
+# ASCII. The figures the paper actually prints use a wider box, the Okabe-Ito
+# palette and real mathematical notation; keep the code producing those, so
+# regenerating a figure does not quietly downgrade the paper.
+PALETTE = {"exact": "#117733", "iappa1": "#CC4C02", "iappa2": "#1F6FB4"}
+
+
+def _style(ax, xlabel, ylabel):
+    ax.set_xlabel(xlabel, fontsize=11)
+    ax.set_ylabel(ylabel, fontsize=11)
+    ax.grid(True, which="both", alpha=0.3, linewidth=0.6)
+    ax.tick_params(labelsize=9)
+
+
+def _plot_objective(k, exact, iappa1, iappa2) -> None:
+    fig, ax = plt.subplots(figsize=(10.5, 5.2))
+    ax.loglog(k[1:], exact[1:], color=PALETTE["exact"], lw=1.7,
+              label="Thuật toán tham chiếu")
+    ax.loglog(k[1:], iappa1[1:], color=PALETTE["iappa1"], lw=1.7,
+              label="IAPPA1 (loại 1)")
+    ax.loglog(k[1:], iappa2[1:], color=PALETTE["iappa2"], lw=1.7,
+              label="IAPPA2 (loại 2)")
+    _style(ax, "Số vòng lặp $k$", r"Sai số giá trị hàm $F(x_k) - F_\star$")
+    ax.legend(loc="lower left", fontsize=10, framealpha=0.95)
+    fig.tight_layout()
+    fig.savefig(FIG / "objective_convergence.png", dpi=200)
+    plt.close(fig)
+
+
+def _plot_error_accumulation(k, delta1, delta2) -> None:
+    fig, ax = plt.subplots(figsize=(10.5, 5.2))
+    ax.loglog(k[1:], delta1[1:], color=PALETTE["iappa1"], lw=1.7,
+              label="IAPPA1: thành phần sai số")
+    ax.loglog(k[1:], delta2[1:], color=PALETTE["iappa2"], lw=1.7,
+              label="IAPPA2: thành phần sai số")
+    # Reference slopes: the theory predicts the type-1 component decays like
+    # k^{-1/2} and the type-2 component like k^{-2}. Drawing both makes the
+    # measured slopes in summary.csv readable straight off the figure.
+    ax.loglog(k[10:], delta1[10] * (k[10:] / 10) ** (-0.5), "--",
+              color="#888888", lw=1.2, label=r"Tham chiếu $k^{-1/2}$")
+    ax.loglog(k[10:], delta2[10] * (k[10:] / 10) ** (-2.0), ":",
+              color="#333333", lw=1.2, label=r"Tham chiếu $k^{-2}$")
+    _style(ax, "Số vòng lặp $k$", "Thành phần sai số tích luỹ")
+    ax.legend(loc="lower left", fontsize=10, framealpha=0.95)
+    fig.tight_layout()
+    fig.savefig(FIG / "error_accumulation.png", dpi=200)
+    plt.close(fig)
+
+
 def main() -> None:
     exact = run_exact()
     iappa1, cert1, delta1 = run_iappa1(Q)
@@ -191,30 +248,8 @@ def main() -> None:
     )
     summary.to_csv(OUT / "summary.csv", index=False)
 
-    plt.figure(figsize=(8, 5))
-    plt.loglog(k[1:], exact[1:], label="Thuật toán tham chiếu")
-    plt.loglog(k[1:], iappa1[1:], label="IAPPA1 (loại 1)")
-    plt.loglog(k[1:], iappa2[1:], label="IAPPA2 (loại 2)")
-    plt.xlabel("Số vòng lặp k")
-    plt.ylabel("Sai số giá trị hàm F(x_k) - F*")
-    plt.grid(True, which="both", alpha=0.3)
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(FIG / "objective_convergence.png", dpi=200)
-    plt.close()
-
-    plt.figure(figsize=(8, 5))
-    plt.loglog(k[1:], delta1[1:], label="IAPPA1: thành phần sai số")
-    plt.loglog(k[1:], delta2[1:], label="IAPPA2: thành phần sai số")
-    plt.loglog(k[10:], delta1[10] * (k[10:] / 10) ** (-0.5), "--", label="Tham chiếu k^{-1/2}")
-    plt.loglog(k[10:], delta2[10] * (k[10:] / 10) ** (-2.0), "--", label="Tham chiếu k^{-2}")
-    plt.xlabel("Số vòng lặp k")
-    plt.ylabel("Thành phần sai số tích lũy")
-    plt.grid(True, which="both", alpha=0.3)
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(FIG / "error_accumulation.png", dpi=200)
-    plt.close()
+    _plot_objective(k, exact, iappa1, iappa2)
+    _plot_error_accumulation(k, delta1, delta2)
 
     print(summary.to_string(index=False))
 
