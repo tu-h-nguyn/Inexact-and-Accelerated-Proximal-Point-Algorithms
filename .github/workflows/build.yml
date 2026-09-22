@@ -91,8 +91,15 @@ jobs:
       # ngay khi doi moi truong ma khong bat duoc loi that nao. verify_bounds.m
       # kiem nhung dieu phai dung tren MOI thuc the -- chan cua Dinh ly 3.2 tai
       # moi buoc lap ngoai, gia thiet cua chinh dinh ly, va cac dang thuc dong.
+      # gnuplot-nox va bo font la BAT BUOC cho buoc ve hinh: `octave` cai voi
+      # --no-install-recommends khong keo theo backend do hoa nao, va Octave se
+      # bao "no graphics toolkits are available!" ngay khi goi figure().
       - name: Cài Octave
-        run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends octave
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            octave gnuplot-nox fonts-dejavu-core fontconfig
+          fc-cache -f
       - name: Kiểm chứng chặn hội tụ
         run: cd code/matlab && octave --no-gui --quiet --eval "exit(~verify_bounds())"
       # Kiem luon duong VE HINH duoi Octave: export_fig_pdf.m phai chon duoc
